@@ -14,6 +14,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.craftcollectivesalongroup.com/" />
   <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Craft Collective Salon Group | Pittsburgh's Premier Hair Salon" />
+  <meta name="twitter:description" content="Award-winning hair salon in Pittsburgh's North Hills. Balayage, highlights, blonding, keratin, extensions, and color. Led by globally recognized Wella Professionals artist Derek Piekarski." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85" />
 
   <!-- Schema: LocalBusiness (both locations) -->
   <script type="application/ld+json">
@@ -693,6 +700,171 @@
       font-weight: 300;
     }
 
+    /* GALLERY PREVIEW */
+    .gallery-preview {
+      padding: 6rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .gallery-preview-inner { }
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 3rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto;
+      gap: 4px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    .gallery-item-tall {
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+    .gallery-item-wide {
+      grid-column: span 2;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85) contrast(1.05);
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.04);
+      filter: brightness(0.95) contrast(1.05);
+    }
+    .gallery-tag {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--off-white);
+      background: rgba(14,13,11,0.7);
+      padding: 0.35rem 0.8rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* TESTIMONIALS */
+    .testimonials {
+      background: var(--black);
+      padding: 6rem 4rem;
+    }
+    .testimonials-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5px;
+      background: rgba(184,154,106,0.15);
+      margin-top: 3rem;
+    }
+    .testimonial-card {
+      background: rgba(255,255,255,0.03);
+      padding: 2.5rem;
+    }
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 1.2rem;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.75;
+      color: rgba(247,244,239,0.7);
+      margin-bottom: 1.8rem;
+    }
+    .testimonial-author { }
+    .testimonial-name {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--off-white);
+      letter-spacing: 0.05em;
+    }
+    .testimonial-detail {
+      font-size: 0.7rem;
+      color: rgba(247,244,239,0.35);
+      margin-top: 0.2rem;
+      font-weight: 300;
+    }
+
+    /* CTA SECTION */
+    .cta-section {
+      background: var(--gold);
+      padding: 6rem 4rem;
+      text-align: center;
+    }
+    .cta-inner {
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    .cta-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--black);
+      margin-bottom: 1.2rem;
+    }
+    .cta-headline em {
+      font-style: italic;
+      color: var(--off-white);
+    }
+    .cta-sub {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: rgba(14,13,11,0.6);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-dark {
+      background: var(--black);
+      color: var(--off-white);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .btn-dark:hover { background: #1a1917; }
+    .btn-outline-dark {
+      border: 1.5px solid var(--black);
+      color: var(--black);
+      padding: 0.9rem 2.2rem;
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: all 0.2s;
+      background: transparent;
+    }
+    .btn-outline-dark:hover { background: var(--black); color: var(--off-white); }
+
     /* RESPONSIVE */
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
@@ -704,6 +876,14 @@
       .services { padding: 4rem 2rem; }
       .services-grid { grid-template-columns: 1fr 1fr; }
       .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .gallery-preview { padding: 4rem 2rem; }
+      .gallery-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item-tall { grid-row: span 1; aspect-ratio: 4/3; }
+      .gallery-item-wide { grid-column: span 2; }
+      .testimonials { padding: 4rem 2rem; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .cta-section { padding: 4rem 2rem; }
       .locations { padding: 4rem 2rem; }
       .locations-grid { grid-template-columns: 1fr; }
       .faq { padding: 4rem 2rem; }
@@ -730,7 +910,7 @@
         <li><a href="/meet-the-team">Team</a></li>
         <li><a href="/about-pittsburgh-hair-salon">About</a></li>
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
-        <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="nav-book" target="_blank" rel="noopener">Book Now</a></li>
+        <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
     </div>
   </nav>
@@ -742,7 +922,7 @@
       <h1 class="hero-headline">Where great<br>hair becomes<br><em>your signature.</em></h1>
       <p class="hero-sub">Led by globally recognized Wella Professionals artist Derek Piekarski. Serving Pittsburgh's North Hills and Canonsburg with award-winning color, balayage, and precision cutting.</p>
       <div class="hero-actions">
-        <a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="btn-primary" target="_blank" rel="noopener">Book an Appointment</a>
+        <a href="/book" class="btn-primary">Book an Appointment</a>
         <a href="/hair-services-pittsburgh" class="btn-ghost">View Services</a>
       </div>
       <div class="hero-locations">
@@ -871,7 +1051,7 @@
             <strong>Phone:</strong> 724-514-7231<br>
             <strong>Online booking available</strong>
           </div>
-          <a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="location-cta" target="_blank" rel="noopener">Book Online</a>
+          <a href="/book" class="location-cta">Book Online</a>
         </div>
         <div class="location-card">
           <p class="location-tag">Second Location</p>
@@ -918,6 +1098,92 @@
     </div>
   </section>
 
+  <!-- GALLERY PREVIEW -->
+  <section class="gallery-preview" aria-labelledby="gallery-heading">
+    <div class="gallery-preview-inner">
+      <div class="gallery-header">
+        <div>
+          <p class="section-label">Our Work</p>
+          <h2 id="gallery-heading" class="section-headline">The <em>craft</em><br>speaks for itself</h2>
+        </div>
+        <a href="/hair-salon-gallery-pittsburgh" class="btn-ghost" style="color:var(--gold);border-color:rgba(184,154,106,0.4)">View Full Gallery</a>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item gallery-item-tall">
+          <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=85" alt="Balayage hair color by Craft Collective Salon Pittsburgh" loading="lazy" />
+          <span class="gallery-tag">Balayage</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=85" alt="Precision haircut at Craft Collective Salon Pittsburgh" loading="lazy" />
+          <span class="gallery-tag">Color</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=85" alt="Hair extensions by Craft Collective Salon Pittsburgh" loading="lazy" />
+          <span class="gallery-tag">Extensions</span>
+        </div>
+        <div class="gallery-item gallery-item-wide">
+          <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=800&q=85" alt="Craft Collective Salon studio interior Pittsburgh" loading="lazy" />
+          <span class="gallery-tag">Studio</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" aria-labelledby="testimonials-heading">
+    <div class="testimonials-inner">
+      <p class="section-label">Client Testimonials</p>
+      <h2 id="testimonials-heading" class="section-headline" style="color:var(--off-white)">What our <em>guests</em> say</h2>
+      <div class="testimonials-grid">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"I've been going to salons in Pittsburgh for over fifteen years, and nothing comes close to Craft Collective. Derek understood exactly what I wanted from a single consultation. My balayage has never looked this natural or lasted this long."</p>
+          <div class="testimonial-author">
+            <p class="testimonial-name">Sarah M.</p>
+            <p class="testimonial-detail">Balayage Client, North Hills</p>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"The level of expertise here is just different. I came in with damaged, over-processed hair and they put together a plan to get me back to healthy blonde over a few visits. Patient, honest, and incredibly skilled."</p>
+          <div class="testimonial-author">
+            <p class="testimonial-name">Megan K.</p>
+            <p class="testimonial-detail">Blonding Client, Cranberry Township</p>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"Found Craft Collective after moving from New York and I was worried I wouldn't find a salon on the same level. I was wrong. This team is world-class. The attention to detail, the atmosphere, the results -- it's all exceptional."</p>
+          <div class="testimonial-author">
+            <p class="testimonial-name">Lauren T.</p>
+            <p class="testimonial-detail">Color & Cut Client, Shadyside</p>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"I drive 45 minutes each way for my appointments because there is nobody else I trust with my extensions. The team at Craft Collective takes the time to do it right and my hair has never been healthier."</p>
+          <div class="testimonial-author">
+            <p class="testimonial-name">Jessica R.</p>
+            <p class="testimonial-detail">Extensions Client, Canonsburg</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" aria-label="Book appointment call to action">
+    <div class="cta-inner">
+      <p class="section-label" style="color:var(--black);opacity:0.4">Your Hair Deserves This</p>
+      <h2 class="cta-headline">Ready for your<br><em>transformation?</em></h2>
+      <p class="cta-sub">Book online for our North Hills location or call 724-514-7231 for both Pittsburgh and Canonsburg appointments. We are accepting new clients.</p>
+      <div class="cta-actions">
+        <a href="/book" class="btn-dark">Book an Appointment</a>
+        <a href="tel:+17245147231" class="btn-outline-dark">Call 724-514-7231</a>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
@@ -958,7 +1224,7 @@
       <div>
         <p class="footer-col-head">Book</p>
         <ul class="footer-links">
-          <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noopener">Book Online</a></li>
+          <li><a href="/book">Book Online</a></li>
           <li><a href="/locations/north-hills-pittsburgh">North Hills Location</a></li>
           <li><a href="/locations/canonsburg">Canonsburg Location</a></li>
           <li><a href="https://www.instagram.com/craftcollectivesalongroup/" target="_blank" rel="noopener">Instagram</a></li>

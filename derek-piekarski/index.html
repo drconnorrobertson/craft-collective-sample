@@ -7,6 +7,21 @@
   <meta name="description" content="Derek Piekarski is the owner of Craft Collective Salon Group and one of the most decorated hairdressers in North America. Wella Professionals Franz Stroher Global Award winner. Featured in Vogue India." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.craftcollectivesalongroup.com/derek-piekarski" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Meet Derek Piekarski | Award-Winning Hair Stylist Pittsburgh" />
+  <meta property="og:description" content="Derek Piekarski is the owner of Craft Collective Salon Group. Wella Professionals Franz Stroher Global Award winner. Featured in Vogue India." />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://www.craftcollectivesalongroup.com/derek-piekarski" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=1200&q=85" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Meet Derek Piekarski | Craft Collective Salon Group Pittsburgh" />
+  <meta name="twitter:description" content="Globally recognized hairdresser and owner of Pittsburgh's premier salon. Franz Stroher Global Award recipient, Wella Professionals Signature Artist." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=1200&q=85" />
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -85,12 +100,19 @@
     .book-cta p { font-size: 0.875rem; color: rgba(14,13,11,0.6); margin-bottom: 2rem; }
     .btn-dark { display: inline-block; background: var(--black); color: var(--off-white); padding: 0.9rem 2.5rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
 
-    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 3rem 4rem; }
-    .footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 4rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--off-white); margin-bottom: 0.8rem; }
+    .footer-tagline { font-size: 0.75rem; color: rgba(247,244,239,0.4); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 1.5rem; }
+    .footer-contact { font-size: 0.78rem; color: rgba(247,244,239,0.5); line-height: 2; font-weight: 300; }
+    .footer-contact a { color: var(--gold); text-decoration: none; }
+    .footer-col-head { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; font-weight: 400; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.6rem; }
+    .footer-links a { font-size: 0.78rem; color: rgba(247,244,239,0.5); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom { max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
     .footer-copy { font-size: 0.7rem; color: rgba(247,244,239,0.25); font-weight: 300; }
-    .footer-links-row { display: flex; gap: 2rem; }
-    .footer-links-row a { font-size: 0.7rem; color: rgba(247,244,239,0.4); text-decoration: none; }
-    .footer-links-row a:hover { color: var(--gold); }
 
     @media (max-width: 900px) {
       .derek-hero { grid-template-columns: 1fr; min-height: auto; }
@@ -101,7 +123,8 @@
       .derek-story { padding: 3rem 2rem; }
       .brands { padding: 3rem 2rem; }
       .book-cta { padding: 3rem 2rem; }
-      footer { padding: 2rem; }
+      footer { padding: 3rem 2rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
     }
   </style>
@@ -117,7 +140,7 @@
         <li><a href="/meet-the-team">Team</a></li>
         <li><a href="/about-pittsburgh-hair-salon">About</a></li>
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
-        <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="nav-book" target="_blank" rel="noopener">Book Now</a></li>
+        <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
     </div>
   </nav>
@@ -136,7 +159,7 @@
           Named one of the Top Trainers in the World for Wella Professionals
         </div>
       </div>
-      <a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="btn-primary" target="_blank" rel="noopener">Book with Derek</a>
+      <a href="/book" class="btn-primary">Book with Derek</a>
     </div>
     <div class="derek-image">
       <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=900&q=85" alt="Derek Piekarski - award-winning hairstylist and owner of Craft Collective Salon Group Pittsburgh" loading="eager" />
@@ -204,18 +227,54 @@
   <div class="book-cta">
     <h2>Book with Derek</h2>
     <p>Available at our North Hills Pittsburgh location. Online booking open 24/7.</p>
-    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="btn-dark" target="_blank" rel="noopener">Book an Appointment</a>
+    <a href="/book" class="btn-dark">Book an Appointment</a>
   </div>
 
   <footer>
-    <div class="footer-bottom">
-      <p class="footer-copy">&copy; 2026 Craft Collective Salon Group. Pittsburgh, PA. 724-514-7231.</p>
-      <div class="footer-links-row">
-        <a href="/">Home</a>
-        <a href="/hair-services-pittsburgh">Services</a>
-        <a href="/meet-the-team">Meet the Team</a>
-        <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noopener">Book Now</a>
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand-name">Craft Collective Salon Group</p>
+        <p class="footer-tagline">Pittsburgh's Premier Hair Salon</p>
+        <div class="footer-contact">
+          <a href="tel:+17245147231">724-514-7231</a><br>
+          <a href="mailto:info@craftcollectivesalongroup.com">info@craftcollectivesalongroup.com</a><br><br>
+          2014D Babcock Blvd, Pittsburgh PA 15209<br>
+          115 W Pike St, Canonsburg PA 15317
+        </div>
       </div>
+      <div>
+        <p class="footer-col-head">Services</p>
+        <ul class="footer-links">
+          <li><a href="/hair-services-pittsburgh">Balayage</a></li>
+          <li><a href="/hair-services-pittsburgh">Highlights</a></li>
+          <li><a href="/hair-services-pittsburgh">Blonding</a></li>
+          <li><a href="/hair-services-pittsburgh">Hair Color</a></li>
+          <li><a href="/hair-services-pittsburgh">Extensions</a></li>
+          <li><a href="/hair-services-pittsburgh">Keratin</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Salon</p>
+        <ul class="footer-links">
+          <li><a href="/about-pittsburgh-hair-salon">About Us</a></li>
+          <li><a href="/derek-piekarski">Meet Derek</a></li>
+          <li><a href="/meet-the-team">Meet the Team</a></li>
+          <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Book</p>
+        <ul class="footer-links">
+          <li><a href="/book">Book Online</a></li>
+          <li><a href="/locations/north-hills-pittsburgh">North Hills Location</a></li>
+          <li><a href="/locations/canonsburg">Canonsburg Location</a></li>
+          <li><a href="https://www.instagram.com/craftcollectivesalongroup/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Craft Collective Salon Group. All rights reserved. Pittsburgh, PA.</p>
+      <p class="footer-copy">Award-Winning Hair Stylist Pittsburgh PA</p>
     </div>
   </footer>
 </body>

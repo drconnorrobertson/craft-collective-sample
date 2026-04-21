@@ -7,6 +7,21 @@
   <meta name="description" content="Craft Collective Salon Group's North Hills Pittsburgh location at 2014D Babcock Blvd. Book online. Serving North Hills, Shadyside, Lawrenceville, Squirrel Hill, McCandless, Wexford and greater Pittsburgh." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://www.craftcollectivesalongroup.com/locations/north-hills-pittsburgh" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Hair Salon North Hills Pittsburgh | 2014D Babcock Blvd | Craft Collective" />
+  <meta property="og:description" content="Craft Collective Salon Group North Hills at 2014D Babcock Blvd. Online booking available. Serving North Hills, Shadyside, Lawrenceville, and greater Pittsburgh." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.craftcollectivesalongroup.com/locations/north-hills-pittsburgh" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1200&q=85" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Hair Salon North Hills Pittsburgh | Craft Collective" />
+  <meta name="twitter:description" content="Visit our North Hills location at 2014D Babcock Blvd, Pittsburgh PA 15209. Online booking available 24/7." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1200&q=85" />
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -91,12 +106,19 @@
     .btn-outline { display: inline-block; border: 1.5px solid var(--gold); color: var(--gold); padding: 0.75rem 1.8rem; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
     .btn-outline:hover { background: var(--gold); color: var(--black); }
 
-    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 3rem 4rem; }
-    .footer-bottom { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 4rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--off-white); margin-bottom: 0.8rem; }
+    .footer-tagline { font-size: 0.75rem; color: rgba(247,244,239,0.4); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 1.5rem; }
+    .footer-contact-info { font-size: 0.78rem; color: rgba(247,244,239,0.5); line-height: 2; font-weight: 300; }
+    .footer-contact-info a { color: var(--gold); text-decoration: none; }
+    .footer-col-head { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; font-weight: 400; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.6rem; }
+    .footer-links a { font-size: 0.78rem; color: rgba(247,244,239,0.5); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom { max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
     .footer-copy { font-size: 0.7rem; color: rgba(247,244,239,0.25); font-weight: 300; }
-    .footer-links-row { display: flex; gap: 2rem; }
-    .footer-links-row a { font-size: 0.7rem; color: rgba(247,244,239,0.4); text-decoration: none; }
-    .footer-links-row a:hover { color: var(--gold); }
 
     @media (max-width: 900px) {
       .page-hero { padding: 8rem 2rem 3rem; }
@@ -105,7 +127,8 @@
       .areas-grid { grid-template-columns: repeat(2, 1fr); }
       .other-location { padding: 3rem 2rem; }
       .location-card { grid-template-columns: 1fr; }
-      footer { padding: 2rem; }
+      footer { padding: 3rem 2rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
     }
   </style>
@@ -121,7 +144,7 @@
         <li><a href="/meet-the-team">Team</a></li>
         <li><a href="/about-pittsburgh-hair-salon">About</a></li>
         <li><a href="/locations/north-hills-pittsburgh" style="color:var(--gold)">Locations</a></li>
-        <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="nav-book" target="_blank" rel="noopener">Book Now</a></li>
+        <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
     </div>
   </nav>
@@ -165,7 +188,7 @@
         <p class="info-label">Booking</p>
         <p class="info-value">Online booking available 24/7. Walk-ins welcome based on availability.</p>
       </div>
-      <a href="https://phorest.com/book/salons/craftcollectivesalongroup" class="btn-primary" target="_blank" rel="noopener">Book Online Now</a>
+      <a href="/book" class="btn-primary">Book Online Now</a>
     </div>
     <div class="map-embed">
       <iframe
@@ -211,14 +234,50 @@
   </div>
 
   <footer>
-    <div class="footer-bottom">
-      <p class="footer-copy">&copy; 2026 Craft Collective Salon Group. Pittsburgh, PA. 724-514-7231.</p>
-      <div class="footer-links-row">
-        <a href="/">Home</a>
-        <a href="/hair-services-pittsburgh">Services</a>
-        <a href="/locations/canonsburg">Canonsburg</a>
-        <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noopener">Book Now</a>
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand-name">Craft Collective Salon Group</p>
+        <p class="footer-tagline">Pittsburgh's Premier Hair Salon</p>
+        <div class="footer-contact-info">
+          <a href="tel:+17245147231">724-514-7231</a><br>
+          <a href="mailto:info@craftcollectivesalongroup.com">info@craftcollectivesalongroup.com</a><br><br>
+          2014D Babcock Blvd, Pittsburgh PA 15209<br>
+          115 W Pike St, Canonsburg PA 15317
+        </div>
       </div>
+      <div>
+        <p class="footer-col-head">Services</p>
+        <ul class="footer-links">
+          <li><a href="/hair-services-pittsburgh">Balayage</a></li>
+          <li><a href="/hair-services-pittsburgh">Highlights</a></li>
+          <li><a href="/hair-services-pittsburgh">Blonding</a></li>
+          <li><a href="/hair-services-pittsburgh">Hair Color</a></li>
+          <li><a href="/hair-services-pittsburgh">Extensions</a></li>
+          <li><a href="/hair-services-pittsburgh">Keratin</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Salon</p>
+        <ul class="footer-links">
+          <li><a href="/about-pittsburgh-hair-salon">About Us</a></li>
+          <li><a href="/derek-piekarski">Meet Derek</a></li>
+          <li><a href="/meet-the-team">Meet the Team</a></li>
+          <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Book</p>
+        <ul class="footer-links">
+          <li><a href="/book">Book Online</a></li>
+          <li><a href="/locations/north-hills-pittsburgh">North Hills Location</a></li>
+          <li><a href="/locations/canonsburg">Canonsburg Location</a></li>
+          <li><a href="https://www.instagram.com/craftcollectivesalongroup/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Craft Collective Salon Group. All rights reserved. Pittsburgh, PA.</p>
+      <p class="footer-copy">Hair Salon North Hills Pittsburgh PA</p>
     </div>
   </footer>
 </body>

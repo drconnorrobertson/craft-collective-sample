@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hair Salon Gallery Pittsburgh | Balayage, Color & Extensions Photos | Craft Collective</title>
+  <meta name="description" content="Browse the gallery of Craft Collective Salon Group in Pittsburgh. See real results: balayage, highlights, blonding, hair color, extensions, precision cuts, and salon studio photos." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.craftcollectivesalongroup.com/hair-salon-gallery-pittsburgh" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Gallery | Craft Collective Salon Group Pittsburgh" />
+  <meta property="og:description" content="See real results from Pittsburgh's premier hair salon. Balayage, blonding, color, extensions, and precision cuts by our team." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.craftcollectivesalongroup.com/hair-salon-gallery-pittsburgh" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1200&q=85" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gallery | Craft Collective Salon Group Pittsburgh" />
+  <meta name="twitter:description" content="See real results from Pittsburgh's premier hair salon. Balayage, blonding, color, extensions, and precision cuts." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1200&q=85" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --black: #0e0d0b; --off-white: #f7f4ef; --cream: #ede9e1; --gold: #b89a6a; --gold-light: #d4b98a; --mid: #6b6560; --rule: #d5cfc6; --text: #2a2724; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Jost', sans-serif; background: var(--off-white); color: var(--text); font-weight: 300; }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(14,13,11,0.96); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(184,154,106,0.2); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; letter-spacing: 0.12em; color: var(--off-white); text-decoration: none; text-transform: uppercase; }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a { color: rgba(247,244,239,0.7); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-book { background: var(--gold); color: var(--black) !important; padding: 0.5rem 1.2rem; font-weight: 500 !important; }
+    .nav-book:hover { background: var(--gold-light) !important; }
+
+    .page-hero { background: var(--black); padding: 9rem 4rem 5rem; }
+    .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+    .breadcrumb { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(247,244,239,0.35); margin-bottom: 1.5rem; }
+    .breadcrumb a { color: var(--gold); text-decoration: none; }
+    .breadcrumb span { margin: 0 0.5rem; }
+    .page-eyebrow { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; font-weight: 400; }
+    .page-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 300; color: var(--off-white); line-height: 1.05; }
+    .page-headline em { font-style: italic; color: var(--gold-light); }
+    .page-sub { font-size: 0.9rem; line-height: 1.8; color: rgba(247,244,239,0.55); max-width: 560px; margin-top: 1.5rem; font-weight: 300; }
+
+    /* FILTER TABS */
+    .gallery-filters {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 4rem 0;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--mid);
+      padding: 0.5rem 1.2rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active { background: var(--gold); color: var(--black); border-color: var(--gold); font-weight: 500; }
+
+    /* GALLERY GRID */
+    .gallery-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 4rem 6rem;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+    .gallery-item.landscape { aspect-ratio: 4/3; }
+    .gallery-item.wide { grid-column: span 2; aspect-ratio: 16/9; }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.85) contrast(1.05);
+      transition: transform 0.5s ease, filter 0.4s ease;
+    }
+    .gallery-item:hover img {
+      transform: scale(1.04);
+      filter: brightness(0.95) contrast(1.05);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14,13,11,0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+    .gallery-overlay-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--off-white);
+    }
+
+    /* BOOK CTA */
+    .book-cta { background: var(--black); padding: 5rem 4rem; text-align: center; }
+    .book-cta-inner { max-width: 600px; margin: 0 auto; }
+    .book-cta h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; color: var(--off-white); margin-bottom: 1rem; }
+    .book-cta h2 em { font-style: italic; color: var(--gold); }
+    .book-cta p { font-size: 0.875rem; color: rgba(247,244,239,0.5); line-height: 1.8; margin-bottom: 2.5rem; font-weight: 300; }
+    .btn-primary { display: inline-block; background: var(--gold); color: var(--black); padding: 0.9rem 2.5rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--gold-light); }
+
+    /* FOOTER */
+    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 4rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--off-white); margin-bottom: 0.8rem; }
+    .footer-tagline { font-size: 0.75rem; color: rgba(247,244,239,0.4); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 1.5rem; }
+    .footer-contact { font-size: 0.78rem; color: rgba(247,244,239,0.5); line-height: 2; font-weight: 300; }
+    .footer-contact a { color: var(--gold); text-decoration: none; }
+    .footer-col-head { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; font-weight: 400; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.6rem; }
+    .footer-links a { font-size: 0.78rem; color: rgba(247,244,239,0.5); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-bottom { max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { font-size: 0.7rem; color: rgba(247,244,239,0.25); font-weight: 300; }
+
+    @media (max-width: 900px) {
+      .page-hero { padding: 8rem 2rem 3rem; }
+      .gallery-filters { padding: 2rem 2rem 0; }
+      .gallery-main { padding: 2rem 2rem 4rem; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-item.wide { grid-column: span 2; }
+      .book-cta { padding: 4rem 2rem; }
+      footer { padding: 3rem 2rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.wide { grid-column: span 1; }
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Craft <span>Collective</span></a>
+      <ul class="nav-links">
+        <li><a href="/hair-services-pittsburgh">Services</a></li>
+        <li><a href="/hair-salon-gallery-pittsburgh" style="color:var(--gold)">Gallery</a></li>
+        <li><a href="/derek-piekarski">Meet Derek</a></li>
+        <li><a href="/meet-the-team">Team</a></li>
+        <li><a href="/about-pittsburgh-hair-salon">About</a></li>
+        <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
+        <li><a href="/book" class="nav-book">Book Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="page-hero">
+    <div class="page-hero-inner">
+      <p class="breadcrumb"><a href="/">Home</a><span>/</span>Gallery</p>
+      <p class="page-eyebrow">Hair Salon Gallery Pittsburgh</p>
+      <h1 class="page-headline">The craft<br>speaks for <em>itself.</em></h1>
+      <p class="page-sub">Real results from our team. Browse balayage, blonding, color transformations, extensions, precision cuts, and studio shots from Craft Collective Salon Group.</p>
+    </div>
+  </div>
+
+  <div class="gallery-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="color">Color</button>
+    <button class="filter-btn" data-filter="balayage">Balayage</button>
+    <button class="filter-btn" data-filter="extensions">Extensions</button>
+    <button class="filter-btn" data-filter="cuts">Cuts</button>
+    <button class="filter-btn" data-filter="studio">Studio</button>
+  </div>
+
+  <main class="gallery-main">
+    <div class="gallery-grid">
+
+      <div class="gallery-item" data-category="balayage">
+        <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=600&q=85" alt="Brunette balayage hair color Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Balayage</p>
+          <p class="gallery-overlay-title">Brunette Balayage</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="color">
+        <img src="https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=600&q=85" alt="Rich auburn hair color transformation Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Color</p>
+          <p class="gallery-overlay-title">Rich Auburn Transformation</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="cuts">
+        <img src="https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=600&q=85" alt="Precision bob haircut Pittsburgh salon" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Cuts</p>
+          <p class="gallery-overlay-title">Precision Bob</p>
+        </div>
+      </div>
+
+      <div class="gallery-item wide" data-category="studio">
+        <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=1000&q=85" alt="Craft Collective Salon interior Pittsburgh North Hills" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Studio</p>
+          <p class="gallery-overlay-title">North Hills Studio</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="color">
+        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&q=85" alt="Platinum blonde hair color Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Color</p>
+          <p class="gallery-overlay-title">Platinum Blonding</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="balayage">
+        <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=600&q=85" alt="Caramel balayage highlights Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Balayage</p>
+          <p class="gallery-overlay-title">Caramel Balayage</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="extensions">
+        <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&q=85" alt="Hair extensions volume Pittsburgh salon" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Extensions</p>
+          <p class="gallery-overlay-title">Volume Extensions</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="color">
+        <img src="https://images.unsplash.com/photo-1620122830785-a04db3198c8a?w=600&q=85" alt="Lived-in blonde hair color Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Color</p>
+          <p class="gallery-overlay-title">Lived-In Blonde</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="cuts">
+        <img src="https://images.unsplash.com/photo-1554519515-242161756769?w=600&q=85" alt="Textured layers haircut Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Cuts</p>
+          <p class="gallery-overlay-title">Textured Layers</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="balayage">
+        <img src="https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=600&q=85" alt="Honey blonde balayage Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Balayage</p>
+          <p class="gallery-overlay-title">Honey Blonde Balayage</p>
+        </div>
+      </div>
+
+      <div class="gallery-item wide" data-category="studio">
+        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1000&q=85" alt="Craft Collective Salon styling station Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Studio</p>
+          <p class="gallery-overlay-title">Styling Stations</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="extensions">
+        <img src="https://images.unsplash.com/photo-1519735777090-ec97162dc266?w=600&q=85" alt="Length extensions before and after Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Extensions</p>
+          <p class="gallery-overlay-title">Length Extensions</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="color">
+        <img src="https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?w=600&q=85" alt="Dimensional red hair color Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Color</p>
+          <p class="gallery-overlay-title">Dimensional Red</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="balayage">
+        <img src="https://images.unsplash.com/photo-1599351431613-18ef1fdd27e1?w=600&q=85" alt="Sunkissed balayage brunette Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Balayage</p>
+          <p class="gallery-overlay-title">Sun-Kissed Balayage</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="cuts">
+        <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&q=85" alt="Men's precision haircut Pittsburgh" loading="lazy" />
+        <div class="gallery-overlay">
+          <p class="gallery-overlay-tag">Cuts</p>
+          <p class="gallery-overlay-title">Men's Precision Cut</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="book-cta">
+    <div class="book-cta-inner">
+      <h2>Want results <em>like these?</em></h2>
+      <p>Book a consultation with our team. We will create a personalized plan for your hair goals, texture, and lifestyle.</p>
+      <a href="/book" class="btn-primary">Book an Appointment</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand-name">Craft Collective Salon Group</p>
+        <p class="footer-tagline">Pittsburgh's Premier Hair Salon</p>
+        <div class="footer-contact">
+          <a href="tel:+17245147231">724-514-7231</a><br>
+          <a href="mailto:info@craftcollectivesalongroup.com">info@craftcollectivesalongroup.com</a><br><br>
+          2014D Babcock Blvd, Pittsburgh PA 15209<br>
+          115 W Pike St, Canonsburg PA 15317
+        </div>
+      </div>
+      <div>
+        <p class="footer-col-head">Services</p>
+        <ul class="footer-links">
+          <li><a href="/hair-services-pittsburgh">Balayage</a></li>
+          <li><a href="/hair-services-pittsburgh">Highlights</a></li>
+          <li><a href="/hair-services-pittsburgh">Blonding</a></li>
+          <li><a href="/hair-services-pittsburgh">Hair Color</a></li>
+          <li><a href="/hair-services-pittsburgh">Extensions</a></li>
+          <li><a href="/hair-services-pittsburgh">Keratin</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Salon</p>
+        <ul class="footer-links">
+          <li><a href="/about-pittsburgh-hair-salon">About Us</a></li>
+          <li><a href="/derek-piekarski">Meet Derek</a></li>
+          <li><a href="/meet-the-team">Meet the Team</a></li>
+          <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-head">Book</p>
+        <ul class="footer-links">
+          <li><a href="/book">Book Online</a></li>
+          <li><a href="/locations/north-hills-pittsburgh">North Hills Location</a></li>
+          <li><a href="/locations/canonsburg">Canonsburg Location</a></li>
+          <li><a href="https://www.instagram.com/craftcollectivesalongroup/" target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; 2026 Craft Collective Salon Group. All rights reserved. Pittsburgh, PA.</p>
+      <p class="footer-copy">Best Hair Salon Pittsburgh PA</p>
+    </div>
+  </footer>
+
+  <script>
+    // Gallery filter
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.gallery-item').forEach(item => {
+          if (filter === 'all' || item.dataset.category === filter) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
