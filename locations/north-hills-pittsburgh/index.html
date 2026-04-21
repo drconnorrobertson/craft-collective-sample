@@ -118,7 +118,7 @@
     .btn-outline { display: inline-block; border: 1.5px solid var(--gold); color: var(--gold); padding: 0.75rem 1.8rem; text-decoration: none; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; transition: all 0.2s; }
     .btn-outline:hover { background: var(--gold); color: var(--black); }
 
-    footer { background: var(--black); border-top: 1px solid rgba(184,154,106,0.2); padding: 4rem; }
+    footer { background: var(--black); border-top: 2px solid rgba(184,154,106,0.4); padding: 4rem;  position: relative; z-index: 10; }
     .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
     .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--off-white); margin-bottom: 0.8rem; }
     .footer-tagline { font-size: 0.75rem; color: rgba(247,244,239,0.4); font-style: italic; font-family: 'Cormorant Garamond', serif; margin-bottom: 1.5rem; }
@@ -139,7 +139,7 @@
       .areas-grid { grid-template-columns: repeat(2, 1fr); }
       .other-location { padding: 3rem 2rem; }
       .location-card { grid-template-columns: 1fr; }
-      footer { padding: 3rem 2rem; }
+      footer { padding: 3rem 2rem;  position: relative; z-index: 10; }
       .footer-inner { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
     }
@@ -205,10 +205,12 @@
     </div>
     <div class="map-embed">
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3035.8!2d-79.9959!3d40.5005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s2014D+Babcock+Blvd%2C+Pittsburgh%2C+PA+15209!5e0!3m2!1sen!2sus!4v1"
+        src="https://maps.google.com/maps?q=2014D+Babcock+Blvd,+Pittsburgh,+PA+15209&t=&z=15&ie=UTF8&iwloc=&output=embed"
         title="Craft Collective Salon Group North Hills Pittsburgh map"
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
+        referrerpolicy="no-referrer-when-downgrade"
+        style="border:0;"
+        allowfullscreen>
       </iframe>
     </div>
   </div>

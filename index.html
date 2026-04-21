@@ -660,9 +660,9 @@
     /* FOOTER */
     footer {
       background: var(--black);
-      border-top: 1px solid rgba(184,154,106,0.2);
+      border-top: 2px solid rgba(184,154,106,0.4);
       padding: 4rem;
-    }
+     position: relative; z-index: 10; }
     .footer-inner {
       max-width: 1200px;
       margin: 0 auto;
@@ -913,7 +913,7 @@
       .locations { padding: 4rem 2rem; }
       .locations-grid { grid-template-columns: 1fr; }
       .faq { padding: 4rem 2rem; }
-      footer { padding: 3rem 2rem; }
+      footer { padding: 3rem 2rem;  position: relative; z-index: 10; }
       .footer-inner { grid-template-columns: 1fr 1fr; }
       .nav-links { display: none; }
     }
