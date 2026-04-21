@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /generate_pages.py
 
 Sitemap: https://www.craftcollectivesalongroup.com/sitemap.xml
