@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /generate_seo.py
 Disallow: /generate_pages.py
 
 Sitemap: https://www.craftcollectivesalongroup.com/sitemap.xml
+
+# Craft Collective Salon Group
+# Best Hair Salon in Pittsburgh, PA
+# Locations: North Hills (2014D Babcock Blvd) & Canonsburg (115 W Pike St)
