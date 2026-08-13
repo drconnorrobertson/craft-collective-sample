@@ -898,27 +898,7 @@
       .services-grid { grid-template-columns: 1fr; }
       .gallery-grid { grid-template-columns: 1fr; }
     }
-        /* MOBILE HAMBURGER MENU */
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: var(--off-white);
-      cursor: pointer;
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      z-index: 101;
-      min-width: 44px;
-      min-height: 44px;
-      align-items: center;
-      justify-content: center;
-    }
-    .nav-toggle span { display: flex; flex-direction: column; gap: 5px; }
-    .nav-toggle span::before, .nav-toggle span::after, .nav-toggle span::before { content: ''; width: 24px; height: 2px; background: var(--off-white); transition: all 0.3s; }
-    .nav-toggle.active span::before { transform: rotate(45deg) translateY(11px); }
-    .nav-toggle.active span::after { transform: rotate(-45deg) translateY(-11px); }
-    .nav-toggle.active span { background: none; }
-    
+        
     @media (max-width: 900px) {
       .nav-toggle { display: flex; }
       .nav-links { display: none; position: absolute; top: 68px; left: 0; right: 0; background: rgba(14, 13, 11, 0.98); flex-direction: column; gap: 0; list-style: none; padding: 1rem 0; }
@@ -978,14 +958,13 @@
       footer { padding: 2rem 1.5rem; }
     }
   
-      .footer-inner { grid-template-columns: 1fr; }
-    }
       img {
       max-width: 100%;
       height: auto;
       display: block;
     }
       </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
 
@@ -993,7 +972,7 @@
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -1003,6 +982,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -1349,5 +1332,6 @@
       });
     });
   </script>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

@@ -129,8 +129,6 @@
       .footer-inner { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .footer-inner { grid-template-columns: 1fr; }
-    }
   
     .article-content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem; }
     .article-content h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--text); margin: 2.5rem 0 1rem; }
@@ -154,12 +152,13 @@
     .related-card p { font-size: 0.8rem; color: var(--mid); line-height: 1.6; font-weight: 300; }
     @media (max-width: 900px) { .related-grid { grid-template-columns: 1fr; } }
   </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -169,6 +168,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -258,7 +261,7 @@
           115 W Pike St, Canonsburg PA 15317
         </div>
         <div class="social-proof-badges" style="margin-top:1.5rem;">
-          <span style="display:inline-block;background:var(--gold);color:var(--black);padding:0.4rem 0.8rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-right:0.5rem;">&#9733; 4.9 Stars - 200+ Reviews</span>
+          <span class="tag-pill">&#9733; 4.9 Stars - 200+ Reviews</span>
           
         </div>
       </div>
@@ -302,5 +305,6 @@
       <p class="footer-copy">Best Hair Salon Pittsburgh PA | Balayage, Highlights, Color, Extensions | North Hills &amp; Canonsburg</p>
     </div>
   </footer>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

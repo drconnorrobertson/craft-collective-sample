@@ -140,19 +140,19 @@
     }
           @media (max-width: 600px) {
       body { font-size: 16px; }
-      section { padding: 2.5rem 1.5rem !important; }
       .nav-inner { padding: 0 1rem; }
       .btn-primary, .nav-book { min-height: 44px; padding: 0.75rem 1.5rem; }
       button, a[role="button"] { min-height: 44px; min-width: 44px; }
     }
       </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
 
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -162,6 +162,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -277,5 +281,6 @@
     </div>
   </footer>
 
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

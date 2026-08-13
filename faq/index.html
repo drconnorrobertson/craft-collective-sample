@@ -241,8 +241,6 @@
       .footer-inner { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .footer-inner { grid-template-columns: 1fr; }
-    }
     .faq-section { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
     .faq-item { border-bottom: 1px solid var(--rule); }
     .faq-question { padding: 1.5rem 0; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
@@ -256,12 +254,13 @@
       display: block;
     }
       </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -271,6 +270,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -360,11 +363,11 @@
   </div>
 
   <section style="background:var(--black);padding:5rem 4rem;text-align:center;">
-    <div style="max-width:650px;margin:0 auto;">
+    <div class="wrap-650">
       <p class="section-label">Still Have Questions?</p>
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;color:var(--off-white);margin-bottom:1rem;">We are here to <em style="font-style:italic;color:var(--gold-light);">help</em></h2>
       <p style="font-size:0.9rem;color:rgba(247,244,239,0.55);margin-bottom:2rem;font-weight:300;">Contact us directly or book a consultation at either of our Pittsburgh-area locations.</p>
-      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <div class="cta-actions">
         <a href="/book" class="btn-primary">Book a Consultation</a>
         <a href="tel:+17245147231" style="color:var(--off-white);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:400;border-bottom:1px solid rgba(247,244,239,0.3);padding-bottom:2px;">Call 724-514-7231</a>
       </div>
@@ -383,7 +386,7 @@
           115 W Pike St, Canonsburg PA 15317
         </div>
         <div class="social-proof-badges" style="margin-top:1.5rem;">
-          <span style="display:inline-block;background:var(--gold);color:var(--black);padding:0.4rem 0.8rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-right:0.5rem;">&#9733; 4.9 Stars - 200+ Reviews</span>
+          <span class="tag-pill">&#9733; 4.9 Stars - 200+ Reviews</span>
           
         </div>
       </div>
@@ -441,5 +444,6 @@
       });
     });
   </script>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

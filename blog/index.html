@@ -182,8 +182,6 @@
       .footer-inner { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 600px) {
-      .footer-inner { grid-template-columns: 1fr; }
-    }
     .blog-grid { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5px; background: var(--rule); }
     .blog-card { background: var(--off-white); text-decoration: none; color: var(--text); transition: background 0.2s; display: flex; flex-direction: column; }
     .blog-card:hover { background: var(--cream); }
@@ -197,12 +195,13 @@
     .blog-card-date { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
     @media (max-width: 900px) { .blog-grid { grid-template-columns: 1fr; } }
   </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -212,6 +211,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -306,10 +309,10 @@
   </div>
 
   <section style="background:var(--gold);padding:5rem 4rem;text-align:center;">
-    <div style="max-width:650px;margin:0 auto;">
+    <div class="wrap-650">
       <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:300;color:var(--black);margin-bottom:1rem;">Ready to experience <em style="font-style:italic;color:var(--off-white);">the difference?</em></h2>
       <p style="font-size:0.9rem;color:rgba(14,13,11,0.6);margin-bottom:2rem;font-weight:300;">Book your appointment at Craft Collective Salon Group. Two locations in Pittsburgh's North Hills and Canonsburg.</p>
-      <a href="/book" style="background:var(--black);color:var(--off-white);padding:0.9rem 2.2rem;text-decoration:none;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;">Book an Appointment</a>
+      <a class="btn-dark" href="/book">Book an Appointment</a>
     </div>
   </section>
 
@@ -325,7 +328,7 @@
           115 W Pike St, Canonsburg PA 15317
         </div>
         <div class="social-proof-badges" style="margin-top:1.5rem;">
-          <span style="display:inline-block;background:var(--gold);color:var(--black);padding:0.4rem 0.8rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-right:0.5rem;">&#9733; 4.9 Stars - 200+ Reviews</span>
+          <span class="tag-pill">&#9733; 4.9 Stars - 200+ Reviews</span>
           
         </div>
       </div>
@@ -369,5 +372,6 @@
       <p class="footer-copy">Best Hair Salon Pittsburgh PA | Balayage, Highlights, Color, Extensions | North Hills &amp; Canonsburg</p>
     </div>
   </footer>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

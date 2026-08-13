@@ -144,18 +144,18 @@
     }
       @media (max-width: 600px) {
       body { font-size: 16px; }
-      section { padding: 2.5rem 1.5rem !important; }
       .nav-inner { padding: 0 1rem; }
       .btn-primary, .nav-book { min-height: 44px; padding: 0.75rem 1.5rem; }
       button, a[role="button"] { min-height: 44px; min-width: 44px; }
     }
       </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -165,6 +165,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -193,14 +197,14 @@
   </section>
 
   
-  <section class="about-section specialties-section" style="background:var(--off-white);padding:4rem;">
-    <div class="about-inner" style="max-width:1200px;margin:0 auto;">
+  <section class="about-section specialties-section panel-light">
+    <div class="about-inner wrap-1200">
       <p class="section-label">Specialties</p>
       <h2 class="section-headline">Amanda Melvin's <em>expertise</em></h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:1.5rem;">
+      <div class="split-grid">
         <div>
-          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:1rem;">Areas of Focus</h3>
-          <ul style="list-style:none;font-size:0.9rem;line-height:2.2;color:var(--mid);">
+          <h3 class="h-card">Areas of Focus</h3>
+          <ul class="plain-list muted-list">
           <li><strong>Balayage</strong></li>
           <li><strong>Hair Extensions</strong></li>
           <li><strong>Blonding</strong></li>
@@ -208,14 +212,14 @@
           </ul>
         </div>
         <div>
-          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;margin-bottom:1rem;">Related Services</h3>
-          <ul style="list-style:none;line-height:2.2;">
-          <li><a href="/services/balayage-pittsburgh" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">Balayage Services &rarr;</a></li>
-          <li><a href="/services/hair-extensions-pittsburgh" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">Hair Extensions Services &rarr;</a></li>
-          <li><a href="/services/highlights-pittsburgh" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">Blonding Services &rarr;</a></li>
-          <li><a href="/hair-services-pittsburgh" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">Dimensional Color Services &rarr;</a></li>
+          <h3 class="h-card">Related Services</h3>
+          <ul class="plain-list">
+          <li><a class="link-gold" href="/services/balayage-pittsburgh">Balayage Services &rarr;</a></li>
+          <li><a class="link-gold" href="/services/hair-extensions-pittsburgh">Hair Extensions Services &rarr;</a></li>
+          <li><a class="link-gold" href="/services/highlights-pittsburgh">Blonding Services &rarr;</a></li>
+          <li><a class="link-gold" href="/hair-services-pittsburgh">Dimensional Color Services &rarr;</a></li>
           </ul>
-          <p style="margin-top:1.5rem;"><a href="/meet-the-team" style="color:var(--gold);text-decoration:none;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;">View Full Team &rarr;</a></p>
+          <p style="margin-top:1.5rem;"><a class="link-caps" href="/meet-the-team">View Full Team &rarr;</a></p>
         </div>
       </div>
     </div>
@@ -239,7 +243,7 @@
           115 W Pike St, Canonsburg PA 15317
         </div>
         <div class="social-proof-badges" style="margin-top:1.5rem;">
-          <span style="display:inline-block;background:var(--gold);color:var(--black);padding:0.4rem 0.8rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-right:0.5rem;">&#9733; 4.9 Stars - 200+ Reviews</span>
+          <span class="tag-pill">&#9733; 4.9 Stars - 200+ Reviews</span>
           
         </div>
       </div>
@@ -278,5 +282,6 @@
       <p class="footer-copy">Stylist Pittsburgh PA</p>
     </div>
   </footer>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>

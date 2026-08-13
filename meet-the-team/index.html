@@ -336,15 +336,14 @@
     @media (max-width: 600px) {
       .team-card { grid-template-columns: 1fr; }
       .team-card-image { height: 250px; }
-      .footer-inner { grid-template-columns: 1fr; }
-    }
   </style>
+  <link rel="stylesheet" href="/assets/site.css" />
 </head>
 <body>
   <nav class="nav" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="/" class="nav-logo">Craft <span>Collective</span></a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="nav-links">
         <li><a href="/hair-services-pittsburgh">Services</a></li>
         <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
         <li><a href="/derek-piekarski">Meet Derek</a></li>
@@ -354,6 +353,10 @@
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
         <li><a href="/book" class="nav-book">Book Now</a></li>
       </ul>
+      <div class="nav-mobile-actions">
+        <a href="/book" class="nav-book-mobile">Book</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+      </div>
     </div>
   </nav>
 
@@ -404,7 +407,7 @@
           <h3 class="team-card-name">Abigail Radziminski</h3>
           <p class="team-card-role">Stylist / Lashes</p>
           <p class="team-card-bio">Being part of the beauty industry has been such an exciting and meaningful journey. She's loved learning new techniques and styles that let her expres...</p>
-          <a href="/team/abigail-radziminski" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/abigail-radziminski">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -416,7 +419,7 @@
           <h3 class="team-card-name">Alexis Tara</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Brings creativity, passion, and precision to every service. Specializes in bespoke color design, vivid fashion tones, and haircut transformations. Her...</p>
-          <a href="/team/alexis-tara" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/alexis-tara">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -428,7 +431,7 @@
           <h3 class="team-card-name">Allison Logan</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Licensed stylist with just over a decade behind the chair. Spent her time building her skill set by attending many classes and workshops. Her up-do an...</p>
-          <a href="/team/allison-logan" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/allison-logan">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -440,7 +443,7 @@
           <h3 class="team-card-name">Alyvia Merz</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/alyvia-merz" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/alyvia-merz">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -452,7 +455,7 @@
           <h3 class="team-card-name">Amanda Melvin</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Specializing in several methods of extensions, including sew in, keratin bonds and I-tips. Multiple certifications across different companies. Loves a...</p>
-          <a href="/team/amanda-melvin" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/amanda-melvin">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -464,7 +467,7 @@
           <h3 class="team-card-name">Angie Beattie</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Better known by her clients as the PGH Hair Maven. Passion lies in crafting striking, personalized color -- rich brunettes, sun-kissed balayage blends...</p>
-          <a href="/team/angie-beattie" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/angie-beattie">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -476,7 +479,7 @@
           <h3 class="team-card-name">Bethany Yates</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over 15 years of experience in the beauty industry. Built her career around a deep passion for hair color and creative transformation. Known for metic...</p>
-          <a href="/team/bethany-yates" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/bethany-yates">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -488,7 +491,7 @@
           <h3 class="team-card-name">Billy Bremer</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">13 years in the industry. Specializes in lived in colors, blondes, and vivid colors. Loves hair cutting and hot tool styling. Certified in Hot Heads t...</p>
-          <a href="/team/billy-bremer" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/billy-bremer">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -500,7 +503,7 @@
           <h3 class="team-card-name">Carlena Bonomi</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">5 years in the hair industry. Graduated from Empire Beauty school in May 2020. Loves all things color. From lived-in color to total color transform...</p>
-          <a href="/team/carlena-bonomi" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/carlena-bonomi">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -512,7 +515,7 @@
           <h3 class="team-card-name">Caroline Radziminski</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over three years delving into the world of Cosmetology. Has a flair for painting with vivid colors and crafting the smoothest blowouts. Commitment t...</p>
-          <a href="/team/caroline-radziminski" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/caroline-radziminski">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -524,7 +527,7 @@
           <h3 class="team-card-name">Cori Patterson</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Doing what she loves for over 20 years in Pittsburgh area salons. Favorite things include cutting, soft and smooth blowouts, and enhancing natural colo...</p>
-          <a href="/team/cori-patterson" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/cori-patterson">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -536,7 +539,7 @@
           <h3 class="team-card-name">Delilah Keller</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Graduate of South Hills Beauty Academy. Over 15 years as a licensed cosmetologist. She really cares and spends the time with consultations and conversat...</p>
-          <a href="/team/delilah-keller" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/delilah-keller">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -548,7 +551,7 @@
           <h3 class="team-card-name">Erin McCleary</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Three years in the industry. Likes to maintain a relaxing environment, keeping communication open. Gives an in depth consultation before coming up wit...</p>
-          <a href="/team/erin-mccleary" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/erin-mccleary">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -560,7 +563,7 @@
           <h3 class="team-card-name">Grace Hartle</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">3 years in the industry. Dedicated her high school years to working toward her license at A.W. Beattie, graduating in 2022. Tests creative boundarie...</p>
-          <a href="/team/grace-hartle" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/grace-hartle">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -572,7 +575,7 @@
           <h3 class="team-card-name">Greg McKenzie</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">U.S. Air Force veteran and trained mechanic. His foundation in structure and attention to detail translates into his work behind the chair. Known for...</p>
-          <a href="/team/greg-mckenzie" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/greg-mckenzie">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -584,7 +587,7 @@
           <h3 class="team-card-name">Greta Healy</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Doing hair for well over a decade. Passion for color and specializes in blonding. Her honesty and advice is one of her biggest strengths. Most clie...</p>
-          <a href="/team/greta-healy" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/greta-healy">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -596,7 +599,7 @@
           <h3 class="team-card-name">Ha Na Ko</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/ha-na-ko" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/ha-na-ko">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -608,7 +611,7 @@
           <h3 class="team-card-name">Jess Imler</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/jess-imler" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/jess-imler">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -620,7 +623,7 @@
           <h3 class="team-card-name">Jess Mitsch</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Licensed hairstylist with over 7 years of experience. Specializes in long hair, lived-in color, dimensional brunettes, and bright blondes. Prides...</p>
-          <a href="/team/jess-mitsch" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/jess-mitsch">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -632,7 +635,7 @@
           <h3 class="team-card-name">Kayla Quinn</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Started career in 2021 after graduating from the University of Pittsburgh. Favorite services are blondings, lived in color, and hand tied extensions...</p>
-          <a href="/team/kayla-quinn" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/kayla-quinn">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -644,7 +647,7 @@
           <h3 class="team-card-name">Kelly Buttermore</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over 20 years of experience. Graduated from the Aveda Institute Minneapolis in 2001. Honed her craft in color, color correction, tape-in extensions,...</p>
-          <a href="/team/kelly-buttermore" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/kelly-buttermore">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -656,7 +659,7 @@
           <h3 class="team-card-name">Kerrie Kipp</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/kerrie-kipp" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/kerrie-kipp">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -668,7 +671,7 @@
           <h3 class="team-card-name">Kim Hughes</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Seasoned artist elevating her craft since 2002. 20+ years behind the chair. Several New York Fashion Weeks for Zac Posen, Christopher Palu, Lujin Zha...</p>
-          <a href="/team/kim-hughes" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/kim-hughes">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -680,7 +683,7 @@
           <h3 class="team-card-name">Lauren Trudeau</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Talented hair stylist at Craft Collective Salon Group in Pittsburgh. Brings creativity and precision to every look.</p>
-          <a href="/team/lauren-trudeau" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/lauren-trudeau">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -692,7 +695,7 @@
           <h3 class="team-card-name">Laurel Seager</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Specializes in blonding, precision cuts, and natural curls. Believes great hair should feel effortless, confident, and full of personality.</p>
-          <a href="/team/laurel-seager" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/laurel-seager">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -704,7 +707,7 @@
           <h3 class="team-card-name">Liz Potts</h3>
           <p class="team-card-role">Nail Tech</p>
           <p class="team-card-bio">Nail technician at Craft Collective Salon Group. Offers classic manicures, gel manicures, structure gel, pedicures, and Gel X extensions.</p>
-          <a href="/team/liz-potts" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/liz-potts">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -716,7 +719,7 @@
           <h3 class="team-card-name">Logan Goetz</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over 10 years in the industry. Graduating from cosmetology school in 2013, senior stylist position in Pittsburgh for six years. Went to New York City...</p>
-          <a href="/team/logan-goetz" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/logan-goetz">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -728,7 +731,7 @@
           <h3 class="team-card-name">Mallory Puniak</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/mallory-puniak" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/mallory-puniak">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -740,7 +743,7 @@
           <h3 class="team-card-name">Marie Puniak</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/marie-puniak" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/marie-puniak">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -752,7 +755,7 @@
           <h3 class="team-card-name">Nicolette Chieffe</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/nicolette-chieffe" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/nicolette-chieffe">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -764,7 +767,7 @@
           <h3 class="team-card-name">Olivia Spearl</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">One of the newest additions to the team. Focused on mastering modern techniques in color, cutting, and styling. Loves connecting with guests, unders...</p>
-          <a href="/team/olivia-spearl" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/olivia-spearl">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -776,7 +779,7 @@
           <h3 class="team-card-name">Rachel Batykefer</h3>
           <p class="team-card-role">Esthetician</p>
           <p class="team-card-bio">Over 15 years of experience and dedication. Multi certified skincare specialist and brow expert. Specializes in precise brow shaping, custom facials...</p>
-          <a href="/team/rachel-batykefer" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/rachel-batykefer">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -788,7 +791,7 @@
           <h3 class="team-card-name">Sarah Emeigh</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over 10 years experience behind the chair. Loves having a range of clientele that reflects all ages. Helps people have full gender expression and br...</p>
-          <a href="/team/sarah-emeigh" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/sarah-emeigh">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -800,7 +803,7 @@
           <h3 class="team-card-name">Sean Boyle</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Took a unique path into the hair world, completing an apprenticeship under Derek. Excited to start taking clients while also assisting whenever n...</p>
-          <a href="/team/sean-boyle" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/sean-boyle">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -812,7 +815,7 @@
           <h3 class="team-card-name">Selena Pace</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Over 10 years of experience. Passion for color and understanding of current trends enables her to make any client's vision a reality. Easy going...</p>
-          <a href="/team/selena-pace" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/selena-pace">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -824,7 +827,7 @@
           <h3 class="team-card-name">Shari Geldrich</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Hairstylist for over 40 years. Color trainer for Wella and Matrix, National Education Manager for Framesi. Owned Isle of You Hair Color Studio for 1...</p>
-          <a href="/team/shari-geldrich" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/shari-geldrich">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -836,7 +839,7 @@
           <h3 class="team-card-name">Sherry Maiolini</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Stylist at Craft Collective Salon Group. Bio coming soon.</p>
-          <a href="/team/sherry-maiolini" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/sherry-maiolini">View Profile &rarr;</a>
         </div>
       </div>
 
@@ -848,7 +851,7 @@
           <h3 class="team-card-name">Susie Ober</h3>
           <p class="team-card-role">Stylist</p>
           <p class="team-card-bio">Brings creativity, precision, and genuine care to every appointment. Refined eye for detail and passion for personalized service. Specializes in...</p>
-          <a href="/team/susie-ober" style="display:inline-block;margin-top:1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,154,106,0.3);padding-bottom:2px;">View Profile &rarr;</a>
+          <a class="link-arrow" href="/team/susie-ober">View Profile &rarr;</a>
         </div>
       </div>
     </div>
@@ -882,7 +885,7 @@
           115 W Pike St, Canonsburg PA 15317
         </div>
         <div class="social-proof-badges" style="margin-top:1.5rem;">
-          <span style="display:inline-block;background:var(--gold);color:var(--black);padding:0.4rem 0.8rem;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;margin-right:0.5rem;">&#9733; 4.9 Stars - 200+ Reviews</span>
+          <span class="tag-pill">&#9733; 4.9 Stars - 200+ Reviews</span>
           
         </div>
       </div>
@@ -921,5 +924,6 @@
       <p class="footer-copy">Best Hair Stylists North Hills Pittsburgh</p>
     </div>
   </footer>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>
