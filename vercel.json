@@ -6,15 +6,51 @@
       "source": "/(.*)",
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=(), interest-cohort=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+        { "key": "X-DNS-Prefetch-Control", "value": "on" }
       ]
     },
     {
-      "source": "/images/(.*)",
+      "source": "/(.*).html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }
+      ]
+    },
+    {
+      "source": "/(favicon.svg|favicon.ico|apple-touch-icon.png|icon-192.png|icon-512.png|icon-maskable-512.png|og-card.jpg)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=31536000" }
+      ]
+    },
+    {
+      "source": "/(sitemap.xml|robots.txt|site.webmanifest)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]
     }
+  ],
+  "redirects": [
+    { "source": "/services", "destination": "/hair-services-pittsburgh", "permanent": true },
+    { "source": "/locations", "destination": "/locations/north-hills-pittsburgh", "permanent": true },
+    { "source": "/team", "destination": "/meet-the-team", "permanent": true },
+    { "source": "/about", "destination": "/about-pittsburgh-hair-salon", "permanent": true },
+    { "source": "/gallery", "destination": "/hair-salon-gallery-pittsburgh", "permanent": true },
+    { "source": "/contact", "destination": "/book", "permanent": true },
+    { "source": "/appointments", "destination": "/book", "permanent": true },
+    { "source": "/balayage", "destination": "/services/balayage-pittsburgh", "permanent": true },
+    { "source": "/highlights", "destination": "/services/highlights-pittsburgh", "permanent": true },
+    { "source": "/extensions", "destination": "/services/hair-extensions-pittsburgh", "permanent": true },
+    { "source": "/keratin", "destination": "/services/keratin-treatment-pittsburgh", "permanent": true },
+    { "source": "/derek", "destination": "/derek-piekarski", "permanent": true }
   ]
 }

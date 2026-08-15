@@ -213,6 +213,56 @@ h4,
   color: var(--gold-light);
 }
 
+/* Current section. The underline carries the state visually; aria-current
+   carries it to assistive tech. */
+.nav-links a[aria-current='page'] {
+  color: var(--gold-light);
+  position: relative;
+}
+
+.nav-links a[aria-current='page']:not(.nav-book)::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+  background: var(--gold-fill);
+}
+
+@media (max-width: 900px) {
+  .nav-links a[aria-current='page'] {
+    box-shadow: inset 3px 0 0 var(--gold-fill);
+  }
+  .nav-links a[aria-current='page']:not(.nav-book)::after { display: none; }
+}
+
+/* ------------------------------------------------- scroll reveal */
+
+/* Sections lift in as they enter the viewport. Applied only once JS confirms
+   support, so with JS off (or before it runs) nothing is ever left hidden —
+   the class that hides them is added by script, not shipped in the markup. */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.js-reveal .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .nav-book {
   background: var(--gold-fill);
   color: #17150f !important;
@@ -1224,6 +1274,103 @@ footer {
 
 @media print {
   .cta-bar, .nav { display: none !important; }
+}
+
+/* ------------------------------------------- 5a-bis. page imagery */
+
+/* Nine service pages and twenty location pages had no image on them at all.
+   These give every page a full-bleed shot under the masthead, sized by
+   aspect-ratio so the space is reserved before the file arrives. */
+.loc-hero-img,
+.blog-hero-img {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+  aspect-ratio: 21 / 9;
+  max-height: 60vh;
+}
+
+.blog-hero-img { aspect-ratio: 3 / 1; }
+
+.loc-hero-img img,
+.blog-hero-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .loc-hero-img { aspect-ratio: 16 / 10; }
+  .blog-hero-img { aspect-ratio: 16 / 9; }
+}
+
+@media (max-width: 600px) {
+  .loc-hero-img,
+  .blog-hero-img { aspect-ratio: 4 / 3; }
+}
+
+/* Recent-work three-up on service pages. "Balayage" is something people want
+   to see before they book it. */
+.svc-work {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--rule);
+  padding: 5rem 2rem;
+}
+
+.svc-work-inner { max-width: 1200px; margin: 0 auto; }
+
+.svc-work h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 2.25rem;
+}
+
+.svc-work h2 em { font-style: italic; color: var(--gold); }
+
+.svc-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.svc-shot {
+  margin: 0;
+  overflow: hidden;
+  background: var(--cream);
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--rule);
+}
+
+.svc-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .svc-shot:hover img { transform: scale(1.04); }
+}
+
+.svc-work-note { margin-top: 1.5rem; }
+
+@media (max-width: 900px) {
+  .svc-work { padding: 3.5rem 1.5rem; }
+  .svc-work-grid { gap: 0.75rem; }
+}
+
+@media (max-width: 600px) {
+  .svc-work { padding: 3rem 1.25rem; }
+  /* Three stacked full-width photos is a long scroll; two-up keeps the
+     section scannable, with the third running full width beneath. */
+  .svc-work-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .svc-shot:last-child { grid-column: span 2; aspect-ratio: 16 / 9; }
 }
 
 /* ------------------------------------------------------ 5b. trust bar */

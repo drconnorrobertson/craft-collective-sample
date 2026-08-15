@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found | Craft Collective Salon Group Pittsburgh</title>
+  <meta name="description" content="That page has moved or no longer exists. Find hair services, our Pittsburgh North Hills and Canonsburg locations, the team, or book an appointment at Craft Collective Salon Group." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#17150f" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #17150f; --off-white: #fbf9f5; --cream: #f4efe6;
+      --gold: #866336; --gold-light: #d4b98a; --mid: #5f584f;
+      --rule: #e6e0d5; --text: #2c2823;
+    }
+    body { font-family: 'Jost', sans-serif; background: #fff; color: var(--text); font-weight: 300; }
+
+    .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(23,21,15,0.97); border-bottom: 1px solid rgba(176,141,87,0.28); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .nav-logo { display: inline-flex; align-items: center; gap: 0.3em; min-height: 44px; font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; letter-spacing: 0.12em; color: #fbf9f5; text-decoration: none; text-transform: uppercase; }
+    .nav-logo span { color: var(--gold-light); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a { color: rgba(251,249,245,0.82); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    .lost { padding: 12rem 2rem 5rem; text-align: center; background: linear-gradient(180deg, var(--cream) 0%, #fbf9f5 100%); border-bottom: 1px solid var(--rule); }
+    .lost-code { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 1.4rem; }
+    .lost h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 300; line-height: 1.1; color: var(--black); margin-bottom: 1.2rem; }
+    .lost h1 em { font-style: italic; color: var(--gold); }
+    .lost p { font-size: 1rem; line-height: 1.8; color: var(--mid); max-width: 46ch; margin: 0 auto 2.4rem; }
+    .lost-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; background: #b08d57; color: #17150f; padding: 0.9rem 2.2rem; text-decoration: none; font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+    .btn-primary:hover { background: var(--gold); color: #fff; }
+    .btn-outline { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; border: 1.5px solid var(--black); color: var(--black); padding: 0.9rem 2.2rem; text-decoration: none; font-size: 0.8125rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500; }
+    .btn-outline:hover { background: var(--black); color: #fbf9f5; }
+
+    .paths { max-width: 1000px; margin: 0 auto; padding: 4.5rem 2rem 5rem; }
+    .paths h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: var(--black); margin-bottom: 1.6rem; text-align: center; }
+    .paths-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+    .paths-grid a { display: inline-flex; align-items: center; min-height: 44px; padding: 0.55rem 1.1rem; background: #fbf9f5; border: 1px solid var(--rule); color: var(--text); font-size: 0.8125rem; text-decoration: none; transition: all 0.2s; }
+    .paths-grid a:hover { background: #f7f1e6; border-color: #b08d57; color: var(--gold); }
+
+    footer { background: var(--black); border-top: 3px solid #b08d57; padding: 3rem 2rem; text-align: center; }
+    .footer-brand-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fbf9f5; margin-bottom: 0.8rem; }
+    .footer-contact { font-size: 0.85rem; color: rgba(251,249,245,0.78); line-height: 2; }
+    .footer-contact a { display: inline-flex; align-items: center; min-height: 44px; color: var(--gold-light); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-inner { height: 64px; padding: 0 1rem; }
+      .lost { padding: 8rem 1.25rem 3.5rem; }
+      .lost-actions { flex-direction: column; align-items: stretch; }
+      .paths { padding: 3rem 1.25rem 3.5rem; }
+      body { padding-bottom: 58px; }
+    }
+
+    .cta-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 120; display: none; background: rgba(23,21,15,0.98); border-top: 1px solid rgba(176,141,87,0.4); padding-bottom: env(safe-area-inset-bottom); }
+    .cta-bar-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(176,141,87,0.3); }
+    .cta-bar a { display: flex; align-items: center; justify-content: center; min-height: 56px; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+    .cta-bar-call { background: #17150f; color: #fbf9f5; }
+    .cta-bar-book { background: #b08d57; color: #17150f; }
+    @media (max-width: 900px) { .cta-bar { display: block; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">Craft <span>Collective</span></a>
+      <ul class="nav-links">
+        <li><a href="/hair-services-pittsburgh">Services</a></li>
+        <li><a href="/hair-salon-gallery-pittsburgh">Gallery</a></li>
+        <li><a href="/meet-the-team">Team</a></li>
+        <li><a href="/reviews">Reviews</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/book">Book Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="lost">
+      <p class="lost-code">Error 404</p>
+      <h1>This page has <em>grown out.</em></h1>
+      <p>The page you were looking for has moved or no longer exists. Everything else is exactly where you left it — including online booking, open 24 hours a day.</p>
+      <div class="lost-actions">
+        <a href="/book" class="btn-primary">Book an Appointment</a>
+        <a href="/" class="btn-outline">Back to Home</a>
+      </div>
+    </section>
+
+    <section class="paths">
+      <h2>Or pick up where you were</h2>
+      <nav class="paths-grid" aria-label="Popular pages">
+        <a href="/hair-services-pittsburgh">All Services</a>
+        <a href="/services/balayage-pittsburgh">Balayage</a>
+        <a href="/services/highlights-pittsburgh">Highlights</a>
+        <a href="/services/hair-color-pittsburgh">Hair Color</a>
+        <a href="/services/hair-extensions-pittsburgh">Hair Extensions</a>
+        <a href="/services/keratin-treatment-pittsburgh">Keratin Treatment</a>
+        <a href="/services/haircuts-pittsburgh">Haircuts</a>
+        <a href="/services/bridal-hair-pittsburgh">Bridal Hair</a>
+        <a href="/meet-the-team">Meet the Team</a>
+        <a href="/derek-piekarski">Derek Piekarski</a>
+        <a href="/hair-salon-gallery-pittsburgh">Gallery</a>
+        <a href="/reviews">Reviews</a>
+        <a href="/blog">Blog</a>
+        <a href="/faq">FAQ</a>
+        <a href="/locations/north-hills-pittsburgh">North Hills Salon</a>
+        <a href="/locations/canonsburg">Canonsburg Salon</a>
+      </nav>
+    </section>
+  </main>
+<footer>
+    <p class="footer-brand-name">Craft Collective Salon Group</p>
+    <div class="footer-contact">
+      <a href="tel:+17245147231">724-514-7231</a><br />
+      2014D Babcock Blvd, Pittsburgh PA 15209<br />
+      115 W Pike St, Canonsburg PA 15317
+    </div>
+  </footer>
+
+  <div class="cta-bar" role="region" aria-label="Call or book an appointment">
+    <div class="cta-bar-inner">
+      <a class="cta-bar-call" href="tel:+17245147231">Call 724-514-7231</a>
+      <a class="cta-bar-book" href="/book">Book Now</a>
+    </div>
+  </div>
+
+</body>
+</html>

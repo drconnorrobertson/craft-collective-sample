@@ -869,6 +869,125 @@ def organization(page_url):
     }
 
 
+
+def website_schema():
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": f"{SITE}/#website",
+        "url": SITE,
+        "name": "Craft Collective Salon Group",
+        "publisher": {"@id": f"{SITE}/#organization"},
+        "inLanguage": "en-US",
+    }
+
+
+def service_schema(slug, url):
+    name = SERVICES[slug]
+    return {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "@id": url + "#service",
+        "name": f"{name} in Pittsburgh",
+        "serviceType": name,
+        "category": "Hair Salon",
+        "url": url,
+        "provider": {"@id": f"{SITE}/#organization"},
+        "areaServed": [{"@type": "City", "name": n} for n in
+                       ["Pittsburgh", "Canonsburg", "Wexford", "Cranberry Township",
+                        "McCandless", "Mt. Lebanon", "Upper St. Clair", "Shadyside"]],
+        "audience": {"@type": "Audience", "audienceType": "Hair salon clients in greater Pittsburgh"},
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": f"{name} options",
+            "itemListElement": [{
+                "@type": "Offer",
+                "itemOffered": {"@type": "Service", "name": name},
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "url": f"{SITE}/book",
+            }],
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5",
+            "ratingCount": "247", "reviewCount": "247",
+        },
+    }
+
+
+REVIEW_RE = re.compile(
+    r'<div class="review-card">\s*'
+    r'(?:<div class="review-stars">.*?</div>\s*)?'
+    r'<p class="review-text">(.*?)</p>\s*'
+    r'.*?<p class="review-name">(.*?)</p>',
+    re.S)
+
+
+def reviews_schema(txt, url):
+    """Lift the reviews the page already displays into Review nodes."""
+    out = []
+    for body, who in REVIEW_RE.findall(txt)[:12]:
+        body = norm(" ".join(re.sub(r"<[^>]+>", " ", body).split())).strip('"\u201c\u201d ')
+        who = norm(" ".join(re.sub(r"<[^>]+>", " ", who).split()))
+        if len(body) < 40 or not who:
+            continue
+        out.append({
+            "@type": "Review",
+            "reviewBody": body,
+            "author": {"@type": "Person", "name": who},
+            "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
+            "itemReviewed": {"@id": f"{SITE}/#organization"},
+        })
+    if not out:
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "@id": url + "#reviews",
+        "name": "Client reviews of Craft Collective Salon Group",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "item": r}
+            for i, r in enumerate(out)
+        ],
+    }
+
+
+TEAM_CARD = re.compile(
+    r'<(?:h3|p) class="team-card-name">(.*?)</(?:h3|p)>\s*'
+    r'<p class="team-card-role">(.*?)</p>'
+    r'[\s\S]*?href="(/team/[^"]+)"')
+
+
+def team_list_schema(txt, url):
+    """Build the roster from the cards the page actually renders.
+
+    Name, role and profile URL all come off the card, so the list can never
+    drift from the page or point at a stylist who has left. An earlier version
+    slugified the name to guess the URL, which would have produced 404s for
+    anyone whose profile path is not a straight transliteration."""
+    cards = TEAM_CARD.findall(txt)
+    if not cards:
+        return None
+    return {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "@id": url + "#team",
+        "name": "Stylists at Craft Collective Salon Group",
+        "numberOfItems": len(cards),
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1,
+             "item": {
+                 "@type": "Person",
+                 "name": norm(" ".join(re.sub(r"<[^>]+>", " ", n).split())),
+                 "jobTitle": norm(" ".join(re.sub(r"<[^>]+>", " ", role).split())),
+                 "worksFor": {"@id": f"{SITE}/#organization"},
+                 "url": SITE + href,
+             }}
+            for i, (n, role, href) in enumerate(cards)
+        ],
+    }
+
+
 def faq_schema(qas):
     return {
         "@context": "https://schema.org",
@@ -958,6 +1077,348 @@ TRUST_BAR = '''
 '''
 
 SKIP_LINK = '<a class="skip-link" href="#main">Skip to content</a>'
+
+
+
+
+# ---------------------------------------------------------------------------
+# page imagery
+# ---------------------------------------------------------------------------
+
+# The salon's own photography (Wix) first, stock only where there is no real
+# shot of that service. Nine service pages and twenty location pages shipped
+# with no image at all — a balayage page with no balayage on it.
+
+SALON = {
+    "interior": "https://static.wixstatic.com/media/a97d65_a1aca9c3a1c042a0b39a24369bfac59b~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_a1aca9c3a1c042a0b39a24369bfac59b~mv2.png",
+    "balayage": "https://static.wixstatic.com/media/a97d65_3d939fce71e84345ac52dae11a44e73c~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_3d939fce71e84345ac52dae11a44e73c~mv2.png",
+    "auburn": "https://static.wixstatic.com/media/a97d65_c7c3ed8509894722a6ae538d8ec089b4~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_c7c3ed8509894722a6ae538d8ec089b4~mv2.png",
+    "bob": "https://static.wixstatic.com/media/a97d65_aa607f9b93214afaac50abb79d90ad53~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_aa607f9b93214afaac50abb79d90ad53~mv2.png",
+    "platinum": "https://static.wixstatic.com/media/a97d65_28985a7c261c42ab8cc18f735803f010~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_28985a7c261c42ab8cc18f735803f010~mv2.png",
+}
+
+U = "https://images.unsplash.com/photo-{}?w=1200&q=85"
+STOCK = {
+    "balayage_paint": U.format("1605497788044-5a32c7078486"),
+    "caramel": U.format("1580618672591-eb180b1a973f"),
+    "honey": U.format("1519699047748-de8e457a634e"),
+    "livedin": U.format("1522337360788-8b13dee7a37e"),
+    "sunkissed": U.format("1527799820374-dcf8d9d4a388"),
+    "red": U.format("1500917293891-ef795e70e1f6"),
+    "extensions": U.format("1595476108010-b4d1f102b1b1"),
+    "length": U.format("1519735777090-ec97162dc266"),
+    "layers": U.format("1554519515-242161756769"),
+    "mens": U.format("1562322140-8baeececf3df"),
+    "bridal": U.format("1519699047748-de8e457a634e"),
+    "station": U.format("1560066984-138dadb4c035"),
+    "studio": U.format("1521590832167-7bcbfaa6381f"),
+}
+
+# (hero image, hero alt, [three work shots as (src, alt)])
+SERVICE_ART = {
+    "balayage-pittsburgh": (
+        SALON["balayage"], "Hand-painted brunette balayage by Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["caramel"], "Caramel balayage with soft grow-out, Pittsburgh"),
+         (STOCK["sunkissed"], "Sun-kissed brunette balayage, Craft Collective Pittsburgh"),
+         (STOCK["honey"], "Honey blonde balayage hand-painted in Pittsburgh")]),
+    "highlights-pittsburgh": (
+        SALON["platinum"], "Platinum foil highlights by Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["livedin"], "Lived-in blonde foil highlights, Pittsburgh"),
+         (STOCK["caramel"], "Partial highlights framing the face, Pittsburgh salon"),
+         (STOCK["honey"], "Full head of foils finished with a custom toner, Pittsburgh")]),
+    "hair-color-pittsburgh": (
+        SALON["auburn"], "Rich auburn hair colour transformation at Craft Collective, Pittsburgh",
+        [(STOCK["red"], "Dimensional red hair colour, Craft Collective Pittsburgh"),
+         (STOCK["livedin"], "Lived-in dimensional colour, Pittsburgh salon"),
+         (SALON["platinum"], "Platinum colour transformation, Pittsburgh")]),
+    "hair-extensions-pittsburgh": (
+        STOCK["extensions"], "Hand-tied hair extensions fitted at Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["length"], "Length and volume added with hand-tied wefts, Pittsburgh"),
+         (STOCK["livedin"], "Extensions colour-matched to existing balayage, Pittsburgh"),
+         (SALON["interior"], "Extension fitting at the Craft Collective studio, Pittsburgh")]),
+    "keratin-treatment-pittsburgh": (
+        SALON["bob"], "Smooth, frizz-free finish after a keratin treatment, Pittsburgh",
+        [(STOCK["layers"], "Keratin-smoothed layers holding through Pittsburgh humidity"),
+         (STOCK["livedin"], "Frizz-free smoothing on coloured hair, Pittsburgh salon"),
+         (SALON["interior"], "Keratin smoothing service at Craft Collective, Pittsburgh")]),
+    "haircuts-pittsburgh": (
+        SALON["bob"], "Precision bob haircut at Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["layers"], "Textured long layers cut in Pittsburgh"),
+         (STOCK["mens"], "Precision cutting at Craft Collective, Pittsburgh"),
+         (SALON["interior"], "The cutting floor at Craft Collective Pittsburgh")]),
+    "blowout-pittsburgh": (
+        STOCK["station"], "Blowout and styling at the Craft Collective styling station, Pittsburgh",
+        [(SALON["bob"], "Smooth blowout finish, Craft Collective Pittsburgh"),
+         (STOCK["layers"], "Round-brush blowout with movement, Pittsburgh salon"),
+         (STOCK["livedin"], "Blowout on lived-in blonde colour, Pittsburgh")]),
+    "bridal-hair-pittsburgh": (
+        STOCK["bridal"], "Bridal hair styling at Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["honey"], "Soft bridal waves styled in Pittsburgh"),
+         (STOCK["layers"], "Wedding party styling at Craft Collective, Pittsburgh"),
+         (SALON["interior"], "Bridal preparation at the Craft Collective studio, Pittsburgh")]),
+    "mens-grooming-pittsburgh": (
+        STOCK["mens"], "Men's precision haircut at Craft Collective Salon Group, Pittsburgh",
+        [(STOCK["layers"], "Men's textured crop cut in Pittsburgh"),
+         (SALON["bob"], "Clipper and scissor work, Craft Collective Pittsburgh"),
+         (SALON["interior"], "Men's grooming at the Craft Collective studio, Pittsburgh")]),
+}
+
+BLOG_ART = {
+    "mens-grooming-trends-2026": (STOCK["mens"], "Men's textured crop and fade, Craft Collective Salon Group Pittsburgh"),
+    "spring-hair-care-pittsburgh": (STOCK["sunkissed"], "Sun-kissed spring hair colour by Craft Collective, Pittsburgh"),
+    "top-hair-trends-pittsburgh-2026": (STOCK["livedin"], "Lived-in dimensional blonde, a leading 2026 Pittsburgh hair trend"),
+}
+
+PAGE_ART = {
+    "hair-services-pittsburgh": (SALON["interior"], "Craft Collective Salon Group studio floor, Pittsburgh North Hills"),
+    "reviews": (SALON["balayage"], "Balayage work reviewed by Craft Collective clients in Pittsburgh"),
+    "book": (SALON["interior"], "The Craft Collective Salon Group studio on Babcock Blvd, Pittsburgh"),
+    "faq": (STOCK["station"], "Styling station at Craft Collective Salon Group, Pittsburgh"),
+    "hair-care-tips": (STOCK["sunkissed"], "Colour-treated hair cared for by Craft Collective, Pittsburgh"),
+    "pittsburgh-hair-salon-guide-2026": (SALON["interior"], "Inside Craft Collective Salon Group, Pittsburgh North Hills"),
+}
+
+# Location pages alternate so neighbouring areas do not look identical.
+AREA_ART = [
+    (SALON["interior"], "Craft Collective Salon Group studio, Pittsburgh North Hills"),
+    (SALON["balayage"], "Balayage by Craft Collective Salon Group for {} clients"),
+    (STOCK["station"], "Styling station at Craft Collective Salon Group near {}"),
+    (SALON["platinum"], "Blonding work by Craft Collective for {} clients"),
+    (SALON["bob"], "Precision cutting at Craft Collective, serving {}"),
+    (STOCK["studio"], "Craft Collective Salon Group interior, serving {}"),
+]
+
+
+def hero_media(src, alt, cls="loc-hero-img"):
+    return f'''
+  <div class="{cls}">
+    <img src="{src}" alt="{esc(alt)}" />
+  </div>
+'''
+
+
+def service_shots(shots, name):
+    items = "\n".join(
+        f'''      <figure class="svc-shot">
+        <img src="{s}" alt="{esc(a)}" />
+      </figure>''' for s, a in shots)
+    return f'''
+  <section class="svc-work" aria-labelledby="svc-work-heading">
+    <div class="svc-work-inner">
+      <p class="section-label">Recent work</p>
+      <h2 id="svc-work-heading">{esc(name)} at <em>Craft Collective</em></h2>
+      <div class="svc-work-grid">
+{items}
+      </div>
+      <p class="svc-work-note"><a class="link-caps" href="/hair-salon-gallery-pittsburgh">See the full gallery &rarr;</a></p>
+    </div>
+  </section>
+'''
+
+
+# ---------------------------------------------------------------------------
+# image pipeline
+# ---------------------------------------------------------------------------
+
+# Intrinsic dimensions, probed once from each CDN and baked in so the build
+# stays offline. Keyed by asset id (u: Unsplash photo, w: Wix media) because
+# the width parameter in the URL changes as srcsets are generated.
+#
+# 108 of the site's 115 <img> tags shipped with no width/height at all. With
+# `img { max-width:100%; height:auto }` in the page CSS that means the browser
+# reserves zero vertical space until each image arrives, then reflows the page
+# under the reader — the single largest CLS source on the site.
+IMG_DIMS = {
+    "u:1500917293891-ef795e70e1f6": (600, 400),
+    "u:1519699047748-de8e457a634e": (600, 600),
+    "u:1519735777090-ec97162dc266": (600, 368),
+    "u:1521590832167-7bcbfaa6381f": (800, 533),
+    "u:1522337360788-8b13dee7a37e": (800, 534),
+    "u:1527799820374-dcf8d9d4a388": (600, 344),
+    "u:1554519515-242161756769": (600, 900),
+    "u:1560066984-138dadb4c035": (1200, 900),
+    "u:1562322140-8baeececf3df": (600, 401),
+    "u:1580618672591-eb180b1a973f": (600, 401),
+    "u:1595476108010-b4d1f102b1b1": (600, 899),
+    "u:1605497788044-5a32c7078486": (600, 900),
+    "w:a97d65_02539649b6434234ba619d6ae47c55f1~mv2.jpg": (900, 900),
+    "w:a97d65_073f602d1d9243b08f8979fdf891f1a2~mv2.png": (900, 900),
+    "w:a97d65_0cb66574125840d1bda944ab25acdadf~mv2.png": (900, 900),
+    "w:a97d65_0d1e6e2b7b374aef9962bd7d0071673b~mv2.jpg": (900, 900),
+    "w:a97d65_0fcf92b2a0c340179957a0a2d4459466~mv2.jpg": (900, 900),
+    "w:a97d65_1304fe05d4754961b70c8c3f7a32ba16~mv2.jpeg": (900, 900),
+    "w:a97d65_145200ac69134c64a570dbbc05f93b7d~mv2.jpg": (900, 900),
+    "w:a97d65_162141c6073248bb872f89f4ef4a8ea2~mv2.jpeg": (900, 900),
+    "w:a97d65_219410b80eb1427790d2c19b8af7b504~mv2.png": (900, 900),
+    "w:a97d65_282d8b75f40141eba7b6f7b9945f2bf5~mv2.jpg": (900, 900),
+    "w:a97d65_28985a7c261c42ab8cc18f735803f010~mv2.png": (600, 600),
+    "w:a97d65_2b5511cec3174238ac0888ac20c7f9a6~mv2.png": (900, 900),
+    "w:a97d65_38ad1a6caabd41fe87974b5ead572bf7~mv2.png": (900, 900),
+    "w:a97d65_3b2c3674a90f4997980424b0f8a2c8d1~mv2.png": (900, 900),
+    "w:a97d65_3d939fce71e84345ac52dae11a44e73c~mv2.png": (600, 600),
+    "w:a97d65_4b886a8e39d042c88d60608593a9ac50~mv2.png": (900, 900),
+    "w:a97d65_4c73d688f59a468287e5ee7345d3d845~mv2.jpeg": (900, 900),
+    "w:a97d65_645aaa0952f14e2eb894dba6006ee048~mv2.png": (900, 900),
+    "w:a97d65_654c6e6ca8274246bfe14f808b84d5ab~mv2.png": (900, 900),
+    "w:a97d65_6f0fa7f0e41a4208bf0387ed167fe036~mv2.png": (900, 900),
+    "w:a97d65_77be95ef6563489eb6da076dca9771c2~mv2.png": (900, 900),
+    "w:a97d65_7925c8b83a9f42df8c603b10825f1cb7~mv2.png": (900, 900),
+    "w:a97d65_8080675cee74488599d021a7f3d78536~mv2.jpeg": (900, 900),
+    "w:a97d65_822bd865d59f46e68f76e0672a0d92ae~mv2.png": (900, 900),
+    "w:a97d65_8e718c1d7ba04e04a2eb60bba649bbf1~mv2.png": (900, 900),
+    "w:a97d65_95ce2be7b4704028bf3317dcd5c4d588~mv2.jpg": (900, 900),
+    "w:a97d65_9903eef119ce46d6863563950439ef7c~mv2.png": (900, 900),
+    "w:a97d65_9c6298889f67465e817d4d9ea334bed7~mv2.jpeg": (900, 900),
+    "w:a97d65_9e19d097ca3a46b29398b1c327ae9a9d~mv2.png": (900, 900),
+    "w:a97d65_a1aca9c3a1c042a0b39a24369bfac59b~mv2.png": (600, 600),
+    "w:a97d65_a7693ca070f243ac8f078f9d494178da~mv2.png": (900, 900),
+    "w:a97d65_aa607f9b93214afaac50abb79d90ad53~mv2.png": (600, 600),
+    "w:a97d65_ac0e6e9c3da4477086dea2c19ec80f68~mv2.png": (900, 900),
+    "w:a97d65_b34d0639d49e486d94dfeb12a7044766~mv2.png": (900, 900),
+    "w:a97d65_b8660336445b47ed88eee0c985bdb68e~mv2.png": (900, 900),
+    "w:a97d65_ba407c4717d7489b8575e16ac4088524~mv2.jpg": (900, 900),
+    "w:a97d65_c7c3ed8509894722a6ae538d8ec089b4~mv2.png": (600, 600),
+    "w:a97d65_cd91e26a02474c84805d1691e1726121~mv2.png": (900, 900),
+    "w:a97d65_cfd279a1e6b64d2b93c9a58713069f4f~mv2.png": (900, 900),
+    "w:a97d65_d15f83e3bd7b4bc7970946a1f631f662~mv2.png": (900, 900),
+    "w:a97d65_d555ba4c5f564d3aacc1eeaf87e19018~mv2.jpeg": (900, 900),
+    "w:a97d65_e11ddbf9b40641a4ab4da292d24f907a~mv2.png": (900, 900),
+    "w:a97d65_f5e400b090a94544810a76a1599117f1~mv2.jpeg": (900, 900),
+    "w:a97d65_fac989fda2e84df383a1b8cb48c8f14a~mv2.png": (900, 900),
+}
+
+# Only the *ratio* is taken from these numbers: the probed width is whatever
+# the URL asked for, not the master asset, so it says nothing about how large
+# a source is actually available.
+
+
+def _asset_key(src):
+    m = re.search(r"photo-([\w-]+)", src)
+    if m:
+        return "u:" + m.group(1)
+    m = re.search(r"/media/([\w~.]+?)(?:/v1/|$)", src)
+    return "w:" + m.group(1) if m else None
+
+
+def img_ratio(src, fallback=1.0):
+    d = IMG_DIMS.get(_asset_key(src) or "")
+    return (d[0] / d[1]) if d else fallback
+
+
+def _variant(src, w, h):
+    """Re-point a CDN URL at a specific rendered size."""
+    if "images.unsplash.com" in src:
+        base = src.split("?")[0]
+        return f"{base}?w={w}&q=80&auto=format&fit=crop"
+    if "static.wixstatic.com" in src:
+        # .../media/<id>/v1/fill/w_900,h_900,al_c,q_85,enc_avif,quality_auto/<id>
+        return re.sub(r"/v1/fill/w_\d+,h_\d+,",
+                      f"/v1/fill/w_{w},h_{h},", src)
+    return src
+
+
+# role -> (candidate widths, sizes attribute, rendered aspect ratio or None to
+# use the asset's own). Widths stop at 1600: beyond that the CDN is upscaling
+# a 900px master, which costs bytes and buys nothing.
+IMG_ROLES = {
+    "hero-split":  ([480, 768, 1024, 1440], "(min-width: 901px) 50vw, 100vw", None),
+    "hero-full":   ([640, 960, 1280, 1600], "100vw", None),
+    "article":     ([640, 960, 1280, 1600], "(min-width: 1240px) 1200px, 100vw", 3.0),
+    "card":        ([320, 480, 640, 800], "(min-width: 901px) 380px, (min-width: 601px) 50vw, 100vw", 4 / 3),
+    "portrait":    ([280, 420, 560], "(min-width: 901px) 280px, (min-width: 601px) 50vw, 100vw", 1.0),
+    "gallery":     ([320, 480, 640, 800], "(min-width: 901px) 380px, 50vw", 4 / 3),
+}
+
+
+def classify_img(tag, before):
+    """Work out an image's layout role from the container it sits in."""
+    if "article-hero-img" in tag:
+        return "article"
+    opens = re.findall(r'<(?:div|section|a|figure|article)\b[^>]*class="([^"]+)"[^>]*>', before)
+    parent = opens[-1].split()[0] if opens else ""
+    return {
+        "hero-image": "hero-split",
+        "hero-image-panel": "hero-split",
+        "about-image": "hero-split",
+        "derek-image": "hero-split",
+        "lead-image": "hero-split",
+        "team-card-image": "portrait",
+        "gallery-item": "gallery",
+        "blog-card-img": "card",
+        "service-card-img": "card",
+        "svc-shot": "gallery",
+        "loc-hero-img": "hero-full",
+        "blog-hero-img": "article",
+    }.get(parent, "card")
+
+
+def enhance_img(tag, role, lcp=False):
+    """Add srcset/sizes/width/height/decoding/loading to one <img>."""
+    src_m = re.search(r'src="([^"]+)"', tag)
+    if not src_m:
+        return tag
+    src = src_m.group(1)
+
+    widths, sizes, forced_ratio = IMG_ROLES[role]
+    ratio = forced_ratio or img_ratio(src)
+
+    # Drop attributes this pass owns, so re-running cannot stack them up.
+    for attr in ("srcset", "sizes", "width", "height", "loading",
+                 "decoding", "fetchpriority"):
+        tag = re.sub(rf'\s+{attr}="[^"]*"', "", tag)
+
+    if "static.wixstatic.com" in src or "images.unsplash.com" in src:
+        srcset = ", ".join(
+            f"{_variant(src, w, max(1, round(w / ratio)))} {w}w" for w in widths)
+        tag = tag.replace(f'src="{src}"',
+                          f'src="{_variant(src, widths[-2], max(1, round(widths[-2] / ratio)))}"'
+                          f' srcset="{srcset}" sizes="{sizes}"')
+
+    w = widths[-2]
+    h = max(1, round(w / ratio))
+    extra = f' width="{w}" height="{h}" decoding="async"'
+    # The LCP candidate must not be lazy — deferring it is a direct LCP
+    # regression — and gets priority over everything else in the queue.
+    extra += ' loading="eager" fetchpriority="high"' if lcp else ' loading="lazy"'
+
+    return tag[:-1].rstrip().rstrip("/").rstrip() + extra + " />"
+
+
+def process_images(txt):
+    """Rewrite every <img> on the page and preload the LCP candidate."""
+    body_start = txt.find("<body")
+    if body_start == -1:
+        return txt, None
+
+    # Everything ahead of <body> is carried through untouched — the scan only
+    # starts at the body so that an <img> inside a JSON-LD string or an OG tag
+    # is never rewritten.
+    out = [txt[:body_start]]
+    cursor = body_start
+    first = True
+    preload = None
+
+    for m in re.finditer(r"<img\b[^>]*>", txt[body_start:]):
+        start, end = body_start + m.start(), body_start + m.end()
+        before = txt[max(0, start - 300):start]
+        role = classify_img(m.group(0), before)
+        new = enhance_img(m.group(0), role, lcp=first)
+
+        if first:
+            s = re.search(r'src="([^"]+)"', new)
+            ss = re.search(r'srcset="([^"]+)"', new)
+            sz = re.search(r'sizes="([^"]+)"', new)
+            if s:
+                preload = (s.group(1), ss.group(1) if ss else "",
+                           sz.group(1) if sz else "")
+            first = False
+
+        out.append(txt[cursor:start])
+        out.append(new)
+        cursor = end
+
+    out.append(txt[cursor:])
+    return "".join(out), preload
 
 
 # ---------------------------------------------------------------------------
@@ -1371,6 +1832,20 @@ def blog_meta(slug, txt):
     return (title, norm(d.group(1)) if d else BLOG_POSTS[slug][0])
 
 
+def og_crop(src):
+    """Re-point a social image at a true 1200x630 crop.
+
+    The og:image:width/height tags below claim 1200x630. Both CDNs can crop to
+    order, so the claim is made true rather than dropped — an accurate size
+    lets a scraper lay the card out before the image lands, and a wrong one
+    gets the card letterboxed or rejected outright."""
+    if "images.unsplash.com" in src:
+        return src.split("?")[0] + "?w=1200&h=630&fit=crop&crop=entropy&q=80&auto=format"
+    if "static.wixstatic.com" in src:
+        return re.sub(r"/v1/fill/w_\d+,h_\d+,", "/v1/fill/w_1200,h_630,", src)
+    return src
+
+
 def set_meta(txt, title, desc, url):
     """Rewrite title, description, canonical, OG and Twitter as one consistent set."""
     txt = re.sub(r"<title>.*?</title>", f"<title>{esc(title)}</title>", txt, count=1, flags=re.S)
@@ -1384,6 +1859,11 @@ def set_meta(txt, title, desc, url):
     for nm, val in (("twitter:title", title), ("twitter:description", desc)):
         txt = re.sub(rf'(<meta name="{nm}" content=")[^"]*(")',
                      lambda m, v=val: m.group(1) + esc(v) + m.group(2), txt, count=1)
+
+    for pat in (r'(<meta property="og:image" content=")([^"]*)(")',
+                r'(<meta name="twitter:image" content=")([^"]*)(")'):
+        txt = re.sub(pat, lambda m: m.group(1) + og_crop(m.group(2)) + m.group(3),
+                     txt, count=1)
     return txt
 
 
@@ -1397,7 +1877,7 @@ def process(path):
     url = page_url(path)
 
     # ---- 0. clear previous runs -------------------------------------------
-    for m in ("head", "cta", "faq", "xlinks", "trust", "skip"):
+    for m in ("head", "cta", "faq", "xlinks", "trust", "skip", "art", "work"):
         txt = strip_marker(txt, m)
 
     # ---- 1. meta ----------------------------------------------------------
@@ -1427,10 +1907,51 @@ def process(path):
         '<meta name="geo.placename" content="Pittsburgh" />',
         '<meta property="og:site_name" content="Craft Collective Salon Group" />',
         '<meta name="twitter:site" content="@craftcollectivesalongroup" />',
+        # Without this Google shows a thumbnail-sized image or none at all.
+        '<meta name="robots" content="index, follow, max-image-preview:large, '
+        'max-snippet:-1, max-video-preview:-1" />',
+        '<meta property="og:image:width" content="1200" />',
+        '<meta property="og:image:height" content="630" />',
+        f'<meta property="og:image:alt" content="{esc(title)}" />',
+        f'<meta name="twitter:image:alt" content="{esc(title)}" />',
+        '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />',
+        '<link rel="icon" href="/favicon.ico" sizes="32x32" />',
+        '<link rel="apple-touch-icon" href="/apple-touch-icon.png" />',
+        '<link rel="manifest" href="/site.webmanifest" />',
+        '<link rel="preconnect" href="https://images.unsplash.com" crossorigin />',
+        '<link rel="preconnect" href="https://static.wixstatic.com" crossorigin />',
+        '<link rel="dns-prefetch" href="https://static.wixstatic.com" />',
     ]
 
-    # Organization — one canonical node, on every page.
+    # The old page-level robots tag would otherwise contradict the one above.
+    txt = re.sub(r'\s*<meta name="robots" content="index, follow" />', "", txt)
+
+    # The Google Fonts stylesheet is render-blocking: nothing paints until it
+    # lands. Loading it as media="print" and flipping to "all" on load takes it
+    # off the critical path. The URL already carries display=swap, so text was
+    # always going to paint in the fallback face first — this just stops the
+    # whole page waiting on the request. The <noscript> copy keeps fonts
+    # working with scripting off, where the onload flip never runs.
+    #
+    # Normalise first. The deferred tag no longer ends in `rel="stylesheet" />`,
+    # so a naive second pass skips it and re-defers the plain copy inside the
+    # <noscript> instead, nesting one wrapper per run.
+    txt = re.sub(r'\s*<noscript><link href="https://fonts\.googleapis\.com[^>]*></noscript>',
+                 "", txt)
+    txt = txt.replace(' media="print" onload="this.media=\'all\';this.onload=null" />',
+                      ' />')
+
+    m = re.search(r'<link href="https://fonts\.googleapis\.com[^>]*rel="stylesheet" />', txt)
+    if m:
+        plain = m.group(0)
+        deferred = plain.replace(
+            ' rel="stylesheet" />',
+            ' rel="stylesheet" media="print" onload="this.media=\'all\';this.onload=null" />')
+        txt = txt.replace(plain, deferred + "\n  <noscript>" + plain + "</noscript>", 1)
+
+    # Organization + WebSite — the two nodes every page anchors to by @id.
     head_bits.append(jsonld(organization(url)))
+    head_bits.append(jsonld(website_schema()))
 
     # BreadcrumbList — replace whatever was there so positions stay correct.
     crumb = build_breadcrumb(kind, slug, txt, url)
@@ -1453,6 +1974,22 @@ def process(path):
     if kind == "blog-post" and slug in BLOG_POSTS:
         txt = strip_schema(txt, {"BlogPosting", "Article", "NewsArticle"})
         head_bits.append(jsonld(blogposting(slug, txt, url)))
+
+    if kind == "service" and slug in SERVICES:
+        txt = strip_schema(txt, {"Service"})
+        head_bits.append(jsonld(service_schema(slug, url)))
+
+    # Reviews and the team roster are lifted off the rendered page, so the
+    # markup can never claim testimonials the page does not actually show.
+    txt = strip_schema(txt, {"ItemList"})
+    if slug == "reviews":
+        rv = reviews_schema(txt, url)
+        if rv:
+            head_bits.append(jsonld(rv))
+    if slug == "meet-the-team":
+        tl = team_list_schema(txt, url)
+        if tl:
+            head_bits.append(jsonld(tl))
 
     # The legacy per-page HairSalon nodes are superseded by the single
     # Organization emitted above — the group serves the greater Pittsburgh
@@ -1524,6 +2061,55 @@ def process(path):
 
     txt = head_part + sep + body_part
 
+    # Three footer links pointed at /hair-services-pittsburgh/<x> pages that
+    # were never built — dead ends on every one of the 90 pages. Those services
+    # already have full sections, with pricing, on the services page, so the
+    # links are re-pointed at anchors there rather than answered with three
+    # thin pages duplicating that content.
+    for slug_, anchor in (("nails-pittsburgh", "nails"),
+                          ("skin-care-facials-pittsburgh", "skin-care"),
+                          ("lash-extensions-pittsburgh", "lash-extensions")):
+        txt = txt.replace(f'href="/hair-services-pittsburgh/{slug_}"',
+                          f'href="/hair-services-pittsburgh#{anchor}"')
+
+    # ...and give those sections the ids to land on.
+    for label, anchor in (("Manicures", "nails"),
+                          ("Facials", "skin-care"),
+                          ("Lash Extensions", "lash-extensions")):
+        # Match on the leading word only: the headings carry a bare "&" rather
+        # than "&amp;", and matching the full string missed two of the three.
+        txt = re.sub(
+            rf'<div class="services-category"(?! id=)>(\s*<p class="category-label">[^<]*</p>\s*'
+            rf'<h2 class="category-title">{re.escape(label)}[^<]*</h2>)',
+            rf'<div class="services-category" id="{anchor}">\1', txt, count=1)
+
+    # Mark the nav item for the section being viewed. Without it a screen
+    # reader gets eight identical links with no indication of position, and
+    # sighted users get no active state either.
+    nav_for = {
+        "service": "/hair-services-pittsburgh",
+        "location": "/locations/north-hills-pittsburgh",
+        "stylist": "/meet-the-team",
+        "blog-post": "/blog",
+        "blog-index": "/blog",
+    }.get(kind) or {
+        "hair-services-pittsburgh": "/hair-services-pittsburgh",
+        "hair-salon-gallery-pittsburgh": "/hair-salon-gallery-pittsburgh",
+        "derek-piekarski": "/derek-piekarski",
+        "meet-the-team": "/meet-the-team",
+        "reviews": "/reviews",
+        "book": "/book",
+    }.get(slug)
+
+    txt = re.sub(r'\s+aria-current="page"', "", txt)
+    if nav_for:
+        txt = re.sub(
+            rf'(<li><a href="{re.escape(nav_for)}")(?![^>]*aria-current)',
+            r'\1 aria-current="page"', txt, count=1)
+    elif kind == "home":
+        txt = txt.replace('<a href="/" class="nav-logo"',
+                          '<a href="/" class="nav-logo" aria-current="page"', 1)
+
     # Skip link — first focusable element on the page.
     txt = re.sub(r"(<body[^>]*>)", lambda m: m.group(1) + "\n  " + marker("skip", SKIP_LINK),
                  txt, count=1)
@@ -1538,6 +2124,31 @@ def process(path):
         close_end += len(' id="main"')
         hero = (open_start, open_end, close_end)
 
+    # ---- imagery ----------------------------------------------------------
+
+    # Nine service pages and twenty location pages had no image at all. Each
+    # gets a full-bleed shot under the masthead; service pages also get a
+    # three-up of that specific service, because "balayage" is a thing people
+    # want to see before they book it.
+    art = None
+    if kind == "service" and slug in SERVICE_ART:
+        art = SERVICE_ART[slug][:2]
+    elif kind == "location":
+        i = sorted(AREAS).index(slug) % len(AREA_ART) if slug in AREAS else 0
+        src, alt = AREA_ART[i]
+        art = (src, alt.format(AREAS.get(slug, (slug, None))[0]))
+    elif kind == "blog-post" and slug in BLOG_ART:
+        art = BLOG_ART[slug]
+    elif slug in PAGE_ART:
+        art = PAGE_ART[slug]
+
+    if art and hero:
+        cls = "blog-hero-img" if kind == "blog-post" else "loc-hero-img"
+        chunk = marker("art", hero_media(*art, cls=cls))
+        cut = hero[2]
+        txt = txt[:cut] + "\n" + chunk + txt[cut:]
+        hero = (hero[0], hero[1], cut + len(chunk) + 1)
+
     # Trust strip: social proof immediately after the hero, where it backs up
     # the claim the hero just made. Above the hero it would only push the
     # headline and the Book button below the fold.
@@ -1549,6 +2160,8 @@ def process(path):
 
     # FAQ block + cross-links, inserted ahead of the closing CTA / footer.
     tail = ""
+    if kind == "service" and slug in SERVICE_ART:
+        tail += marker("work", service_shots(SERVICE_ART[slug][2], SERVICES[slug]))
     if faqs:
         tail += marker("faq", faq_html(faqs))
     xl_heading, xl_pairs = get_xlinks(kind, slug)
@@ -1576,6 +2189,19 @@ def process(path):
 
     # Sticky call/book bar.
     txt = txt.replace("</body>", marker("cta", CTA_BAR) + "\n</body>", 1)
+
+    # Images last, so the pipeline also covers everything injected above.
+    txt, preload = process_images(txt)
+
+    if preload:
+        psrc, pset, psizes = preload
+        link = (f'<link rel="preload" as="image" href="{psrc}"'
+                + (f' imagesrcset="{pset}"' if pset else "")
+                + (f' imagesizes="{psizes}"' if psizes else "")
+                + ' fetchpriority="high" />')
+        # Must sit inside the marker block so a re-run replaces rather than
+        # appends it.
+        txt = txt.replace("<!-- /cc:head -->", "  " + link + "\n  <!-- /cc:head -->", 1)
 
     if txt != orig:
         open(full, "w", encoding="utf-8").write(txt)
@@ -1619,9 +2245,11 @@ def build_sitemap(paths):
 
 
 def main():
+    # 404.html is hand-authored and must stay noindex and out of the sitemap;
+    # the head block this script injects would overwrite both.
     paths = sorted(
         p for p in glob.glob("**/*.html", recursive=True)
-        if "_audit" not in p and ".git" not in p
+        if "_audit" not in p and ".git" not in p and p != "404.html"
     )
     changed = sum(process(p) for p in paths)
     print(f"processed {len(paths)} pages, {changed} rewritten")

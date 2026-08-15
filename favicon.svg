@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Craft Collective">
+  <title>Craft Collective</title>
+  <rect width="64" height="64" fill="#17150f"/>
+  <!-- Two interlocking C's. Drawn as stroked arcs rather than set as text so
+       the mark is identical everywhere and needs no font to render. -->
+  <g fill="none" stroke="#b08d57" stroke-width="5.5" stroke-linecap="round">
+    <path d="M30 18.5a15 15 0 1 0 0 27"/>
+    <path d="M46 18.5a15 15 0 1 0 0 27"/>
+  </g>
+</svg>

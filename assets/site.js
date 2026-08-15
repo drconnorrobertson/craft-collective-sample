@@ -102,4 +102,68 @@
     });
   });
 
+
+  /* ------------------------------------------------- scroll reveal ---- */
+
+  /* Sections ease in as they scroll into view.
+
+     This effect hides real page content, so it is built to fail open at every
+     step. The class that does the hiding is added by script, so no-JS never
+     hides anything. Anything already on screen at load is marked revealed
+     without animating — a hero that fades in after paint reads as jank, not
+     polish. And a timer removes the whole effect shortly after load, so an
+     observer that never fires (an unexpected overflow ancestor, a restored
+     scroll position, a browser quirk) costs an animation rather than a
+     section of the page. */
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var targets = document.querySelectorAll(
+    '.services, .gallery-preview, .locations, .testimonials, .faq, ' +
+    '.faq-block, .xlinks, .svc-work, .content-section, .about-section, ' +
+    '.related-posts, .team-section, .trust-bar, .book-cta, .cta-section, ' +
+    '.reviews-main, .areas, .pillars, .maps-section, .expect, .why-us'
+  );
+
+  if ('IntersectionObserver' in window && !reduceMotion.matches && targets.length) {
+    var armed = false;
+
+    var io = new IntersectionObserver(function (entries) {
+      /* Mark what is on screen first, then arm the effect. Both happen in one
+         task, so the browser paints the end state and nothing flashes. */
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        }
+      });
+
+      if (!armed) {
+        document.documentElement.classList.add('js-reveal');
+        armed = true;
+      }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.02 });
+
+    Array.prototype.forEach.call(targets, function (el) {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+
+    /* Nothing is hidden until the observer has actually fired.
+
+       The first attempt hid every section up front and relied on the observer
+       to reveal them. That inverts the risk: any environment where the
+       observer does not run — a background tab, where both it and rAF are
+       suspended — leaves the whole page blank rather than merely unanimated.
+       An observer always delivers an initial entry for each target it is
+       given, so arming the effect from inside that first callback makes "the
+       observer works" a precondition of hiding anything. No observer, no
+       animation, all content visible. */
+
+    var onRM = function (e) {
+      if (e.matches) document.documentElement.classList.remove('js-reveal');
+    };
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onRM);
+    else if (reduceMotion.addListener) reduceMotion.addListener(onRM);
+  }
 })();
