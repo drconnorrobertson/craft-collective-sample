@@ -794,7 +794,7 @@ def organization(page_url):
             "Piekarski, formerly of the Wella Professionals North America Signature Artist Team."
         ),
         "logo": {"@type": "ImageObject", "url": f"{SITE}/images/logo.png"},
-        "image": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85",
+        "image": SITE + "/og-card.jpg",
         "priceRange": "$$",
         "founder": {"@type": "Person", "name": "Derek Piekarski"},
         "address": {
@@ -1090,28 +1090,30 @@ SKIP_LINK = '<a class="skip-link" href="#main">Skip to content</a>'
 # with no image at all — a balayage page with no balayage on it.
 
 SALON = {
-    "interior": "https://static.wixstatic.com/media/a97d65_a1aca9c3a1c042a0b39a24369bfac59b~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_a1aca9c3a1c042a0b39a24369bfac59b~mv2.png",
-    "balayage": "https://static.wixstatic.com/media/a97d65_3d939fce71e84345ac52dae11a44e73c~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_3d939fce71e84345ac52dae11a44e73c~mv2.png",
-    "auburn": "https://static.wixstatic.com/media/a97d65_c7c3ed8509894722a6ae538d8ec089b4~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_c7c3ed8509894722a6ae538d8ec089b4~mv2.png",
-    "bob": "https://static.wixstatic.com/media/a97d65_aa607f9b93214afaac50abb79d90ad53~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_aa607f9b93214afaac50abb79d90ad53~mv2.png",
-    "platinum": "https://static.wixstatic.com/media/a97d65_28985a7c261c42ab8cc18f735803f010~mv2.png/v1/fill/w_1200,h_1200,al_c,q_85,enc_avif,quality_auto/a97d65_28985a7c261c42ab8cc18f735803f010~mv2.png",
+    "interior": "/images/salon-interior",
+    "balayage": "/images/blonde-balayage-smiling",
+    "auburn": "/images/icy-blonde-long",
+    "bob": "/images/blonde-balayage-waves",
+    "platinum": "/images/platinum-lob",
 }
 
-U = "https://images.unsplash.com/photo-{}?w=1200&q=85"
+# Every image on this site is the salon's own photography, downloaded from
+# craftcollectivesalongroup.com and their Instagram and committed under
+# /images. A path here is a *base*: `_variant` appends the rendered size.
 STOCK = {
-    "balayage_paint": U.format("1605497788044-5a32c7078486"),
-    "caramel": U.format("1580618672591-eb180b1a973f"),
-    "honey": U.format("1519699047748-de8e457a634e"),
-    "livedin": U.format("1522337360788-8b13dee7a37e"),
-    "sunkissed": U.format("1527799820374-dcf8d9d4a388"),
-    "red": U.format("1500917293891-ef795e70e1f6"),
-    "extensions": U.format("1595476108010-b4d1f102b1b1"),
-    "length": U.format("1519735777090-ec97162dc266"),
-    "layers": U.format("1554519515-242161756769"),
-    "mens": U.format("1562322140-8baeececf3df"),
-    "bridal": U.format("1519699047748-de8e457a634e"),
-    "station": U.format("1560066984-138dadb4c035"),
-    "studio": U.format("1521590832167-7bcbfaa6381f"),
+    "balayage_paint": "/images/blonde-balayage-waves",
+    "caramel": "/images/face-framing-blonde",
+    "honey": "/images/soft-blonde-balayage",
+    "livedin": "/images/dimensional-balayage",
+    "sunkissed": "/images/soft-blonde-lob",
+    "red": "/images/copper-dimensional",
+    "extensions": "/images/brunette-shag",
+    "length": "/images/ash-blonde-long",
+    "layers": "/images/platinum-long-waves",
+    "mens": "/images/derek-styling",
+    "bridal": "/images/soft-blonde-balayage",
+    "station": "/images/derek-at-the-chair",
+    "studio": "/images/salon-interior",
 }
 
 # (hero image, hero alt, [three work shots as (src, alt)])
@@ -1306,15 +1308,18 @@ def img_ratio(src, fallback=1.0):
 
 
 def _variant(src, w, h):
-    """Re-point a CDN URL at a specific rendered size."""
-    if "images.unsplash.com" in src:
-        base = src.split("?")[0]
-        return f"{base}?w={w}&q=80&auto=format&fit=crop"
-    if "static.wixstatic.com" in src:
-        # .../media/<id>/v1/fill/w_900,h_900,al_c,q_85,enc_avif,quality_auto/<id>
-        return re.sub(r"/v1/fill/w_\d+,h_\d+,",
-                      f"/v1/fill/w_{w},h_{h},", src)
-    return src
+    """Point a local image base at the committed derivative nearest to w x h."""
+    if not src.startswith("/images/"):
+        return src
+    base = re.sub(r"-\d+x\d+\.jpg$", "", src).rstrip("/")
+    have = sorted(
+        (int(m.group(1)), int(m.group(2)), os.path.basename(p))
+        for p in glob.glob(os.path.join(ROOT, "images", os.path.basename(base) + "-*.jpg"))
+        if (m := re.search(r"-(\d+)x(\d+)\.jpg$", p)))
+    if not have:
+        return src
+    fit = [c for c in have if c[0] >= w] or [have[-1]]
+    return "/images/" + fit[0][2]
 
 
 # role -> (candidate widths, sizes attribute, rendered aspect ratio or None to
@@ -1367,7 +1372,7 @@ def enhance_img(tag, role, lcp=False):
                  "decoding", "fetchpriority"):
         tag = re.sub(rf'\s+{attr}="[^"]*"', "", tag)
 
-    if "static.wixstatic.com" in src or "images.unsplash.com" in src:
+    if src.startswith("/images/"):
         srcset = ", ".join(
             f"{_variant(src, w, max(1, round(w / ratio)))} {w}w" for w in widths)
         tag = tag.replace(f'src="{src}"',
@@ -1839,11 +1844,7 @@ def og_crop(src):
     order, so the claim is made true rather than dropped — an accurate size
     lets a scraper lay the card out before the image lands, and a wrong one
     gets the card letterboxed or rejected outright."""
-    if "images.unsplash.com" in src:
-        return src.split("?")[0] + "?w=1200&h=630&fit=crop&crop=entropy&q=80&auto=format"
-    if "static.wixstatic.com" in src:
-        return re.sub(r"/v1/fill/w_\d+,h_\d+,", "/v1/fill/w_1200,h_630,", src)
-    return src
+    return "/og-card.jpg"
 
 
 def set_meta(txt, title, desc, url):
@@ -1918,9 +1919,6 @@ def process(path):
         '<link rel="icon" href="/favicon.ico" sizes="32x32" />',
         '<link rel="apple-touch-icon" href="/apple-touch-icon.png" />',
         '<link rel="manifest" href="/site.webmanifest" />',
-        '<link rel="preconnect" href="https://images.unsplash.com" crossorigin />',
-        '<link rel="preconnect" href="https://static.wixstatic.com" crossorigin />',
-        '<link rel="dns-prefetch" href="https://static.wixstatic.com" />',
     ]
 
     # The old page-level robots tag would otherwise contradict the one above.

@@ -191,12 +191,12 @@ def make_page(title, description, canonical, og_type, breadcrumbs, schema_json, 
   <meta property="og:description" content="{description}" />
   <meta property="og:type" content="{og_type}" />
   <meta property="og:url" content="{canonical}" />
-  <meta property="og:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85" />
+  <meta property="og:image" content="https://www.craftcollectivesalongroup.com/og-card.jpg" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{title}" />
   <meta name="twitter:description" content="{description}" />
-  <meta name="twitter:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85" />
+  <meta name="twitter:image" content="https://www.craftcollectivesalongroup.com/og-card.jpg" />
 {schema_tags}
 {extra_head}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
