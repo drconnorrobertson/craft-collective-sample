@@ -108,7 +108,8 @@ NAV_HTML = """
         <li><a href="/reviews">Reviews</a></li>
         <li><a href="/blog">Blog</a></li>
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
-        <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="nav-book">Book Now</a></li>
+        <li class="nav-book-item"><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="nav-book">Book Now</a></li>
+        <li class="nav-call-item"><a href="tel:+17245147231" class="nav-call">Call 724-514-7231</a></li>
       </ul>
       <div class="nav-mobile-actions">
         <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="nav-book-mobile">Book</a>
@@ -218,13 +219,13 @@ def make_page(title, description, canonical, og_type, breadcrumbs, schema_json, 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>{SHARED_CSS}</style>
-  <link rel="stylesheet" href="/assets/site.css?v=f90e7a83" />
+  <link rel="stylesheet" href="/assets/site.css?v=93788aa6" />
 </head>
 <body>
 {NAV_HTML}
 {body_html}
 {FOOTER_HTML}
-  <script src="/assets/site.js?v=22a66333" defer></script>
+  <script src="/assets/site.js?v=ceb510cb" defer></script>
 </body>
 </html>"""
 

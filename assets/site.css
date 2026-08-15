@@ -347,22 +347,32 @@ h4,
   .nav-mobile-actions { display: flex; }
   .nav-toggle { display: inline-flex; }
 
+  /* Above .cta-bar (120), so the drawer is never clipped by the sticky
+     booking bar — which it was in landscape, where the viewport is short
+     enough that the drawer runs the full height of the screen. */
+  .nav { z-index: 130; }
+
   .nav-inner {
     height: 64px;
     padding: 0 1rem;
     gap: 0.75rem;
   }
 
-  /* The panel: full-width drawer under the bar, scrollable if it runs long. */
+  /* The panel: full-width drawer under the bar, scrollable if it runs long.
+
+     It stays laid out and is hidden with visibility/opacity rather than
+     `display`, so opening and closing can animate. `visibility` is what keeps
+     the closed drawer out of the tab order and off the accessibility tree —
+     opacity alone would leave eight invisible links tabbable. */
   .nav-links {
-    display: none;
+    display: flex;
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
     flex-direction: column;
     gap: 0;
-    padding: 0.5rem 0 1rem;
+    padding: 0.5rem 0 max(1rem, env(safe-area-inset-bottom));
     margin: 0;
     list-style: none;
     background: #1A2440;
@@ -371,12 +381,25 @@ h4,
     max-height: calc(100vh - 64px);
     max-height: calc(100dvh - 64px);
     overflow-y: auto;
+    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     box-shadow: 0 18px 40px rgba(26, 36, 64, 0.28);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease,
+                visibility 0s linear 0.22s;
   }
 
   .nav-links.is-open,
-  .nav-links.active { display: flex; }
+  .nav-links.active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0s;
+  }
 
   .nav-links li {
     border-bottom: 1px solid rgba(176, 141, 87, 0.12);
@@ -398,14 +421,54 @@ h4,
   .nav-links a:hover,
   .nav-links a:focus { color: var(--gold-light); }
 
-  /* The desktop pill CTA is redundant beside the always-visible mobile one. */
+  /* Book Now is the one action the drawer exists to funnel people to, so it
+     keeps the filled pill rather than reading as the ninth link in a list. */
+  .nav-links .nav-book-item {
+    border-bottom: 0;
+    padding: 0.9rem 1.25rem 0.4rem;
+  }
+
   .nav-links .nav-book {
     display: flex;
-    justify-content: flex-start;
-    background: none;
-    color: var(--gold-light) !important;
-    padding: 0.85rem 1.25rem;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0.9rem 1.25rem;
+    background: var(--gold-fill);
+    color: #1A2440 !important;
+    font-weight: 500;
+    letter-spacing: 0.14em;
   }
+
+  /* Calling is the only way to book the Canonsburg studio, so the number is
+     a tap target in the drawer, not just something to read in the footer. */
+  .nav-links .nav-call-item {
+    border-bottom: 0;
+    padding: 0.35rem 1.25rem 0.25rem;
+  }
+
+  /* `display` is restated because the site-wide `a[href^='tel:']` rule further
+     down sets inline-flex, which left this one shrink-wrapped to its text
+     while Book Now above it ran the full width. */
+  .nav-links .nav-call {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0.9rem 1.25rem;
+    border: 1px solid rgba(176, 141, 87, 0.55);
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links .nav-call:hover,
+  .nav-links .nav-call:focus {
+    background: rgba(176, 141, 87, 0.14);
+    color: var(--gold-light);
+  }
+
+  /* The drawer's own CTAs replace the sticky bar while it is open — leaving
+     both up stacked two booking buttons over each other at the fold. */
+  body.nav-open .cta-bar { display: none; }
 
   /* Body scroll lock while the drawer is open. */
   body.nav-open { overflow: hidden; }
@@ -425,6 +488,46 @@ h4,
   }
 
   .nav-mobile-actions { flex: 0 0 auto; }  /* ...so these never get pushed out */
+}
+
+/* The scrim behind the open drawer.
+
+   It is not decoration. Tapping the page to dismiss a menu is implemented
+   everywhere as a document-level click listener, and on iOS Safari a tap on a
+   plain, non-interactive element does not produce a click event at document
+   level at all — so "tap outside to close" silently does nothing on iPhones,
+   which is where the drawer exists in the first place. A real element under
+   the finger always fires, so the scrim is what makes that gesture work. */
+.nav-scrim {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 125;
+  display: none;
+  background: rgba(10, 14, 26, 0.45);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 900px) {
+  .nav-scrim { display: block; pointer-events: none; }
+  /* `touch-action: none` is the scroll lock that actually holds on iOS, where
+     `overflow: hidden` on the body does not stop a drag on the page behind. */
+  body.nav-open .nav-scrim {
+    pointer-events: auto;
+    opacity: 1;
+    touch-action: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-links,
+  .nav-links.is-open,
+  .nav-links.active,
+  .nav-scrim { transition: none; }
 }
 
 /* At 320px the wordmark, the Book pill and the hamburger no longer fit at
@@ -1430,7 +1533,6 @@ footer {
   .trust-bar { padding: 1.5rem 1.25rem; }
   .trust-inner { grid-template-columns: repeat(2, 1fr); gap: 1.5rem 1rem; }
   .trust-value { font-size: 1.4rem; }
-  .trust-label { font-size: 0.6875rem; }
 }
 
 /* ----------------------------------------------------- 5c. FAQ section */
@@ -1691,6 +1793,39 @@ footer {
   .featured-badge span,
   .reviews-hero-meta,
   .social-proof-badges span {
+    font-size: 0.75rem;
+  }
+
+  /* The escape hatch under the Phorest iframe, promoted from a 13px inline
+     link to a button. It matters more on a phone than anywhere else: mobile
+     Safari's tracking prevention is the most likely thing to leave that
+     embed blank, and when it does this link is the only way to book. */
+  .booking-embed-fallback {
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .booking-embed-fallback a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    margin-top: 0.6rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--gold-fill);
+    color: var(--gold-deep);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  /* Two labels sit above the floor's specificity and so were still rendering
+     at 10–11px on a phone: the FAQ eyebrow is set by a descendant selector,
+     and .trust-label carries its own declaration. Restated at matching weight
+     rather than loosened, so the floor stays a floor. */
+  .faq-block .section-label,
+  .trust-bar .trust-label {
     font-size: 0.75rem;
   }
 
@@ -2076,21 +2211,25 @@ footer {
 
 /* Filter rows scroll horizontally instead of wrapping into a tall block. */
 @media (max-width: 600px) {
+  /* These wrap rather than scroll sideways. As a single nowrap row the last
+     two filters sat past the right edge of a 390px screen with nothing to
+     signal they were there — a horizontal scroller inside a vertically
+     scrolling page is a gesture almost nobody goes looking for. Five short
+     chips cost one extra row. */
   .gallery-filters,
   .filter-bar {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0.5rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
     padding-bottom: 0.25rem;
   }
 
-  .gallery-filters::-webkit-scrollbar,
-  .filter-bar::-webkit-scrollbar { display: none; }
-
-  .filter-btn { flex: 0 0 auto; }
+  .filter-btn {
+    flex: 0 0 auto;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 /* Header rows that pair a headline with a link stack instead of squashing. */
@@ -2452,6 +2591,45 @@ footer {
 .filter-btn {
   transition-duration: 0.2s;
   transition-property: background-color, color, border-color, box-shadow, transform;
+}
+
+/* The salon number wherever it appears in running copy. It reads as part of
+   the sentence and dials on tap; before this it was plain text, which on a
+   phone means selecting and copying a number to place a call.
+
+   Written as `a.tel-link` to outrank the site-wide `a[href^='tel:']` rule,
+   which turns tel links into 44px inline-flex boxes. That is right for the
+   footer and the NAP block, where the number stands alone, and wrong here:
+   mid-sentence it would blow out the line box it sits in. The hit area comes
+   back as block padding instead — padding on an inline box grows the tap
+   target without moving a single line of type. */
+a.tel-link {
+  display: inline;
+  min-height: 0;
+  padding: 0.4rem 0.1rem;
+  margin: 0 -0.1rem;
+  color: inherit;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(176, 141, 87, 0.75);
+}
+
+a.tel-link:hover,
+a.tel-link:focus {
+  color: var(--gold-deep);
+  text-decoration-color: currentColor;
+}
+
+/* On the ink sections the deep-gold hover would be unreadable. */
+.cta-section a.tel-link:hover,
+.cta-section a.tel-link:focus,
+.locations a.tel-link:hover,
+.locations a.tel-link:focus,
+footer a.tel-link:hover,
+footer a.tel-link:focus {
+  color: var(--gold-light);
 }
 
 @media (prefers-reduced-motion: reduce) {

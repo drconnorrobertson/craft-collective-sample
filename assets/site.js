@@ -10,6 +10,17 @@
   var links = document.getElementById('nav-links') || document.querySelector('.nav-links');
 
   if (toggle && links) {
+    /* The dismiss surface. Built here rather than shipped in the markup so
+       that a browser with JS off never gets an invisible sheet over the page.
+       See the note on `.nav-scrim` in site.css for why a real element is
+       required: on iOS Safari a document-level click listener never hears a
+       tap that lands on ordinary page content, so "tap outside to close" is
+       dead on exactly the devices the drawer is built for. */
+    var scrim = document.createElement('div');
+    scrim.className = 'nav-scrim';
+    scrim.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(scrim);
+
     var setOpen = function (open) {
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
@@ -24,6 +35,7 @@
     };
 
     toggle.addEventListener('click', function (e) {
+      e.preventDefault();
       e.stopPropagation();
       setOpen(!isOpen());
     });
@@ -33,6 +45,21 @@
       if (e.target.closest('a')) setOpen(false);
     });
 
+    /* Dismiss on the scrim. `pointerdown` rather than `click` so the drawer
+       is gone by the time the finger lifts — waiting for the click reads as
+       lag on touch. The `click` listener is the fallback for pointer-less
+       browsers, and both are idempotent. */
+    var dismiss = function (e) {
+      if (!isOpen()) return;
+      e.preventDefault();
+      setOpen(false);
+    };
+    if (window.PointerEvent) scrim.addEventListener('pointerdown', dismiss);
+    else scrim.addEventListener('touchstart', dismiss);
+    scrim.addEventListener('click', dismiss);
+
+    // Belt and braces for anything that lands outside both the drawer and
+    // the scrim — the header bar's own empty space, chiefly.
     document.addEventListener('click', function (e) {
       if (isOpen() && !links.contains(e.target) && !toggle.contains(e.target)) {
         setOpen(false);
@@ -45,6 +72,9 @@
         toggle.focus();
       }
     });
+
+    // A drawer left open across a back/forward restore is disorienting.
+    window.addEventListener('pageshow', function () { setOpen(false); });
 
     // Resizing past the breakpoint leaves the drawer orphaned open otherwise.
     var mq = window.matchMedia('(min-width: 901px)');
