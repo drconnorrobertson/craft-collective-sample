@@ -14,6 +14,8 @@
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       links.classList.toggle('is-open', open);
+      // Some pages' own CSS keys the drawer off `.active` instead.
+      links.classList.toggle('active', open);
       document.body.classList.toggle('nav-open', open);
     };
 
@@ -53,38 +55,51 @@
 
   /* ---------------------------------------------------- FAQ accordion ---- */
 
-  /* The accordion's open/close is handled by each page's inline script; this
-     only keeps the accessibility state in sync with the resulting class. */
+  /* This owns every accordion on the site. The three pages that shipped their
+     own inline handler have it stripped at build time — on /faq/ that script
+     ended up bound twice, so the first tap after load toggled an item open and
+     immediately closed it again, and the accordion looked dead.
+
+     Items toggle independently: closing a sibling to read a second answer is
+     busywork when the answers are a few lines long. */
+
   var questions = document.querySelectorAll('.faq-question');
+
+  var syncAll = function () {
+    Array.prototype.forEach.call(questions, function (other) {
+      var oItem = other.closest('.faq-item');
+      other.setAttribute(
+        'aria-expanded',
+        oItem && oItem.classList.contains('open') ? 'true' : 'false'
+      );
+    });
+  };
 
   Array.prototype.forEach.call(questions, function (q, i) {
     var item = q.closest('.faq-item');
     var answer = item && item.querySelector('.faq-answer');
-
     if (!q.hasAttribute('role')) q.setAttribute('role', 'button');
     if (!q.hasAttribute('tabindex')) q.setAttribute('tabindex', '0');
     q.setAttribute('aria-expanded', item && item.classList.contains('open') ? 'true' : 'false');
 
     if (answer) {
-      if (!answer.id) answer.id = 'faq-answer-' + i;
+      if (!answer.id) answer.id = 'faq-a-' + i;
       q.setAttribute('aria-controls', answer.id);
     }
 
-    var sync = function () {
-      // Runs after the inline handler, so the class already reflects the
-      // new state. Re-sync every question — the accordion closes siblings.
-      Array.prototype.forEach.call(questions, function (other) {
-        var oItem = other.closest('.faq-item');
-        other.setAttribute(
-          'aria-expanded',
-          oItem && oItem.classList.contains('open') ? 'true' : 'false'
-        );
+    if (item) {
+      q.addEventListener('click', function () {
+        item.classList.toggle('open');
+        syncAll();
       });
-    };
+    }
 
-    q.addEventListener('click', sync);
-    q.addEventListener('keyup', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') sync();
+    q.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        q.click();
+      }
     });
   });
+
 })();
