@@ -128,6 +128,45 @@
   if ('IntersectionObserver' in window && !reduceMotion.matches && targets.length) {
     var armed = false;
 
+    /* Geometry fallback, and the reason the effect can no longer strand a
+       section. The observer is the nice path; this is the guarantee.
+
+       Anything whose top edge has crossed the bottom of the viewport is
+       revealed, which covers both "scrolled into view from below" and
+       "already scrolled past" (negative top). It runs on scroll, resize,
+       bfcache restore and tab wake, so every way a section can end up on
+       screen is covered by plain arithmetic rather than by the observer
+       continuing to deliver callbacks. If the observer arms the effect and
+       then goes quiet — the failure that blanked everything below the fold —
+       the next scroll event still reveals the content. */
+    var revealVisible = function () {
+      var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+      var remaining = 0;
+      Array.prototype.forEach.call(targets, function (el) {
+        if (el.classList.contains('is-in')) return;
+        if (el.getBoundingClientRect().top < vh * 0.98) el.classList.add('is-in');
+        else remaining++;
+      });
+      return remaining;
+    };
+
+    var ticking = false;
+    var onScroll = function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        if (revealVisible() === 0) detach();
+      });
+    };
+
+    var detach = function () {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('pageshow', onScroll);
+      document.removeEventListener('visibilitychange', onScroll);
+    };
+
     var io = new IntersectionObserver(function (entries) {
       /* Mark what is on screen first, then arm the effect. Both happen in one
          task, so the browser paints the end state and nothing flashes. */
@@ -147,6 +186,19 @@
     Array.prototype.forEach.call(targets, function (el) {
       el.classList.add('reveal');
       io.observe(el);
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    window.addEventListener('pageshow', onScroll);
+    document.addEventListener('visibilitychange', onScroll);
+
+    /* Sweep once after arming, on the frame the hiding class lands. Anything
+       sitting in the opening viewport is revealed here even if the observer's
+       first callback disagreed, so the fold is never left blank waiting for a
+       scroll that may not come on a short page. */
+    window.requestAnimationFrame(function () {
+      if (armed && revealVisible() === 0) detach();
     });
 
     /* Nothing is hidden until the observer has actually fired.
