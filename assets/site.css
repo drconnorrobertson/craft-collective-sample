@@ -2593,6 +2593,37 @@ footer {
   transition-property: background-color, color, border-color, box-shadow, transform;
 }
 
+/* ==========================================================================
+   10. TEAM CARDS
+   ========================================================================== */
+
+/* The stylist photos are square crops, framed on each sitter's own face so the
+   head sits at the same height and the same scale across all thirty-nine. The
+   card has to honour that or the work is thrown away at the last step: a
+   fixed-height well re-crops the square to a letterbox band and puts the
+   frame back where the CSS wants it rather than where the face is. A square
+   well shows the crop exactly as cut. */
+@media (max-width: 600px) {
+  .team-card-image {
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+/* Equal cards. The bio was the only thing that varied — two, three or four
+   lines of it, which is where the 465 / 493 / 521px card heights came from —
+   so it is the only thing that needs pinning. Four lines is the length of the
+   longest bio on the page, so this pads the short ones out rather than
+   truncating anyone; the clamp is insurance for narrower columns. */
+.team-card-bio {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  min-height: calc(4 * 1.75em);   /* four lines at the 1.75 line-height */
+}
+
 /* The salon number wherever it appears in running copy. It reads as part of
    the sentence and dials on tap; before this it was plain text, which on a
    phone means selecting and copying a number to place a call.

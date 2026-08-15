@@ -61,6 +61,27 @@ To add a service, area or post, add it to the relevant table near the top of the
 script (`SERVICES`, `AREAS`, `BLOG_POSTS`, `SERVICE_ART`) along with its FAQ
 entries, then re-run.
 
+### Stylist photographs
+
+`images/team/<slug>-<size>.jpg` — every stylist's own photograph, pulled from
+the live Wix site (`craftcollectivesalongroup.com/meet-the-team`) at full
+resolution and matched to a person by the `alt` text Wix renders beside each
+one. Derek's is the exception: the team grid gives him an over-the-shoulder
+action shot, so his card uses the frontal frame from the About page instead.
+
+The originals arrive at sixteen different aspect ratios, from 0.46 to 1.5, so
+they are not cropped to a fixed rectangle — each is framed on its own sitter's
+face (detected with OpenCV's YuNet) to a square whose side is four times the
+face height, with the face centred at 36% down. That is what makes the set read
+as one team: identical head size and eyeline on every card regardless of how
+the photograph was shot. Seven sizes per stylist, 280 to 1024 square plus a
+1200×800 for schema.
+
+Two things to know before regenerating. The card CSS must keep a square image
+well — a fixed-height well re-crops the square and throws the framing away. And
+`nicolette-chieffe` is the one low-resolution source on the site (585×777), so
+her larger variants are upscaled; replace the original if a better one turns up.
+
 ### Regenerating the brand assets
 
 `favicon.ico`, `apple-touch-icon.png`, `icon-*.png` and `og-card.jpg` were
