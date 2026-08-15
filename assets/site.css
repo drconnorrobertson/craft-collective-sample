@@ -40,12 +40,12 @@
   /* Ink. --black is left addressable because page CSS uses it for *text* on
      gold as often as for backgrounds; the background uses are re-pointed
      individually below rather than by redefining the token. */
-  --black: #17150f;
-  --ink: #17150f;
-  --ink-2: #241f18;
-  --text: #2c2823;
-  --mid: #5f584f;
-  --muted: #5f584f;
+  --black: #1A2440;
+  --ink: #1A2440;
+  --ink-2: #232E4D;
+  --text: #232A3D;
+  --mid: #565F75;
+  --muted: #565F75;
 
   /* Brand gold, in two mixes.
 
@@ -64,12 +64,12 @@
   --gold-light: #d4b98a;  /* text mix for dark grounds only */
   --gold-wash: #f7f1e6;
 
-  --rule: #e6e0d5;
-  --rule-soft: #f0ebe2;
+  --rule: #e3e2e6;
+  --rule-soft: #eeedf1;
 
-  --shadow-sm: 0 1px 2px rgba(23, 21, 15, 0.04), 0 2px 8px rgba(23, 21, 15, 0.04);
-  --shadow-md: 0 2px 4px rgba(23, 21, 15, 0.04), 0 8px 24px rgba(23, 21, 15, 0.07);
-  --shadow-lg: 0 4px 8px rgba(23, 21, 15, 0.05), 0 18px 44px rgba(23, 21, 15, 0.10);
+  --shadow-sm: 0 1px 2px rgba(26, 36, 64, 0.04), 0 2px 8px rgba(26, 36, 64, 0.04);
+  --shadow-md: 0 2px 4px rgba(26, 36, 64, 0.04), 0 8px 24px rgba(26, 36, 64, 0.07);
+  --shadow-lg: 0 4px 8px rgba(26, 36, 64, 0.05), 0 18px 44px rgba(26, 36, 64, 0.10);
 
   --nav-h: 68px;
   --cta-bar-h: 0px;
@@ -188,11 +188,11 @@ h4,
    ========================================================================== */
 
 .nav {
-  background: rgba(23, 21, 15, 0.97);
+  background: rgba(26, 36, 64, 0.97);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(176, 141, 87, 0.28);
-  box-shadow: 0 1px 24px rgba(23, 21, 15, 0.10);
+  box-shadow: 0 1px 24px rgba(26, 36, 64, 0.10);
 }
 
 .nav-logo,
@@ -265,13 +265,13 @@ h4,
 
 .nav-book {
   background: var(--gold-fill);
-  color: #17150f !important;
+  color: #1A2440 !important;
 }
 
 .nav-book:hover,
 .nav-book:focus {
   background: var(--gold-light) !important;
-  color: #17150f !important;
+  color: #1A2440 !important;
 }
 
 .nav-mobile-actions {
@@ -287,7 +287,7 @@ h4,
   min-height: 44px;
   padding: 0 1.1rem;
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -299,7 +299,7 @@ h4,
 .nav-book-mobile:hover,
 .nav-book-mobile:focus {
   background: var(--gold-light);
-  color: #17150f;
+  color: #1A2440;
 }
 
 /* Hamburger — three bars, morphs to an X when open. */
@@ -365,14 +365,14 @@ h4,
     padding: 0.5rem 0 1rem;
     margin: 0;
     list-style: none;
-    background: #17150f;
+    background: #1A2440;
     border-top: 1px solid rgba(176, 141, 87, 0.25);
     border-bottom: 1px solid rgba(176, 141, 87, 0.25);
     max-height: calc(100vh - 64px);
     max-height: calc(100dvh - 64px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    box-shadow: 0 18px 40px rgba(23, 21, 15, 0.28);
+    box-shadow: 0 18px 40px rgba(26, 36, 64, 0.28);
   }
 
   .nav-links.is-open,
@@ -511,7 +511,7 @@ h4,
 
 .btn-ghost {
   color: var(--ink);
-  border-bottom-color: rgba(23, 21, 15, 0.28);
+  border-bottom-color: rgba(26, 36, 64, 0.28);
 }
 
 .lead-title,
@@ -699,7 +699,7 @@ h3 em {
 .about-image-badge,
 .contact-strip {
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
 }
 
 /* `:not([class*='btn'])` again: the contact strip contains a .btn-dark, and
@@ -715,7 +715,7 @@ h3 em {
 .contact-strip .section-label,
 .contact-strip h2,
 .contact-strip h3 {
-  color: #17150f !important;
+  color: #1A2440 !important;
 }
 
 .contact-strip a:not([class*='btn']) {
@@ -732,7 +732,7 @@ h3 em {
 }
 
 /* Reversed context: the footer and nav keep the dark ground, so gold there has
-   to move the other way — the text-safe mix is 3.5:1 against #17150f. This is
+   to move the other way — the text-safe mix is 3.5:1 against #1A2440. This is
    a bare `footer a` on purpose: it is the catch-all for links the theme layer
    has not named, and every footer link class that wants a different colour
    (.footer-links a) outranks it on specificity anyway. */
@@ -872,7 +872,7 @@ footer [class*='gold'],
 
 .gallery-tag,
 .gallery-overlay-tag {
-  background: rgba(23, 21, 15, 0.78);
+  background: rgba(26, 36, 64, 0.78);
   color: #fbf9f5;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -945,7 +945,7 @@ footer [class*='gold'],
 .article-cta .btn-primary,
 .book-cta .btn-primary {
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
 }
 
 .prose .btn-dark,
@@ -1008,7 +1008,7 @@ footer [class*='gold'],
 
 .btn-primary {
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
   font-weight: 500;
 }
 
@@ -1046,7 +1046,7 @@ footer [class*='gold'],
 
 .location-cta {
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
 }
 
 .location-cta:hover,
@@ -1088,7 +1088,7 @@ footer [class*='gold'],
 .book-cta h2,
 .cta-section .cta-headline,
 .cta-headline {
-  color: #17150f !important;
+  color: #1A2440 !important;
 }
 
 .book-cta h2 em,
@@ -1101,7 +1101,7 @@ footer [class*='gold'],
 
 .book-cta p,
 .cta-sub {
-  color: rgba(23, 21, 15, 0.82) !important;
+  color: rgba(26, 36, 64, 0.82) !important;
 }
 
 /* Gold-on-gold: the eyebrow label inherits --gold-deep from the light-surface
@@ -1114,7 +1114,7 @@ footer [class*='gold'],
 .cta-section .hero-eyebrow,
 .book-cta .footer-col-head,
 .cta-section .footer-col-head {
-  color: rgba(23, 21, 15, 0.72) !important;
+  color: rgba(26, 36, 64, 0.72) !important;
 }
 
 .book-cta .btn-dark,
@@ -1203,11 +1203,11 @@ footer {
   bottom: 0;
   z-index: 120;
   display: none;
-  background: rgba(23, 21, 15, 0.98);
+  background: rgba(26, 36, 64, 0.98);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid rgba(176, 141, 87, 0.4);
-  box-shadow: 0 -6px 24px rgba(23, 21, 15, 0.18);
+  box-shadow: 0 -6px 24px rgba(26, 36, 64, 0.18);
   padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -1236,19 +1236,19 @@ footer {
 }
 
 .cta-bar-call {
-  background: #17150f;
+  background: #1A2440;
   color: #fbf9f5;
 }
 
 .cta-bar-book {
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
 }
 
 .cta-bar-call:hover,
-.cta-bar-call:focus { background: #241f18; color: #ffffff; }
+.cta-bar-call:focus { background: #232E4D; color: #ffffff; }
 .cta-bar-book:hover,
-.cta-bar-book:focus { background: var(--gold-light); color: #17150f; }
+.cta-bar-book:focus { background: var(--gold-light); color: #1A2440; }
 
 .cta-bar svg {
   width: 16px;
@@ -1788,7 +1788,7 @@ footer {
 .tag-pill {
   display: inline-block;
   background: var(--gold-fill);
-  color: #17150f;
+  color: #1A2440;
   padding: 0.4rem 0.8rem;
   font-size: 0.65rem;
   letter-spacing: 0.1em;
@@ -1992,7 +1992,7 @@ footer {
 
   .hero-actions .btn-ghost {
     border-bottom: 0;
-    border: 1px solid rgba(23, 21, 15, 0.28);
+    border: 1px solid rgba(26, 36, 64, 0.28);
   }
 
   .book-cta .btn-dark,
