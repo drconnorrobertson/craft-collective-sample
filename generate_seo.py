@@ -108,7 +108,7 @@ NAV_HTML = """
         <li><a href="/reviews">Reviews</a></li>
         <li><a href="/blog">Blog</a></li>
         <li><a href="/locations/north-hills-pittsburgh">Locations</a></li>
-        <li><a href="/book" class="nav-book">Book Now</a></li>
+        <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="nav-book">Book Now</a></li>
       </ul>
     </div>
   </nav>
@@ -150,7 +150,7 @@ FOOTER_HTML = """
       <div>
         <p class="footer-col-head">Locations</p>
         <ul class="footer-links">
-          <li><a href="/book">Book Online</a></li>
+          <li><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book Online</a></li>
           <li><a href="/locations/north-hills-pittsburgh">North Hills</a></li>
           <li><a href="/locations/canonsburg">Canonsburg</a></li>
           <li><a href="https://www.instagram.com/craftcollectivesalongroup/" target="_blank" rel="noopener">Instagram</a></li>
@@ -327,7 +327,7 @@ def gen_location_pages():
     <p class="breadcrumb-bar"><a href="/">Home</a><span>/</span><a href="/locations/north-hills-pittsburgh">Locations</a><span>/</span>{name}</p>
     <h1>Best Hair Salon<br>Near <em>{name}</em></h1>
     <p class="subtitle">{desc_text}</p>
-    <a href="/book" class="btn-primary">Book Your Appointment</a>
+    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="btn-primary">Book Your Appointment</a>
   </section>
 
   <section class="content-section alt">
@@ -355,7 +355,7 @@ def gen_location_pages():
           <strong>Phone:</strong> <a href="tel:{PHONE_TEL}">{PHONE}</a><br>
           <strong>Email:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a><br>
           <strong>Hours:</strong> Tue-Fri 9am-7pm, Sat 9am-5pm<br>
-          <strong>Booking:</strong> <a href="/book">Book Online 24/7</a>
+          <strong>Booking:</strong> <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book Online 24/7</a>
         </p>
       </div>
     </div>
@@ -376,7 +376,7 @@ def gen_location_pages():
   <div class="book-cta">
     <h2>Ready to Book?</h2>
     <p>{name} residents can book online 24/7 or call {PHONE}.</p>
-    <a href="/book" class="btn-dark">Book an Appointment</a>
+    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="btn-dark">Book an Appointment</a>
   </div>
 """
         breadcrumbs = [("Home", SITE_URL), ("Locations", f"{SITE_URL}/locations/north-hills-pittsburgh"), (name, None)]
@@ -432,7 +432,7 @@ SERVICES = [
         <p><strong>Full color</strong> provides all-over coverage and can take you darker, warmer, cooler, or brighter. <strong>Root touch-ups</strong> maintain your existing color with seamless blending. <strong>Glossing and toning</strong> refresh your shade between full color appointments, adding shine and neutralizing unwanted warmth or brassiness.</p>
         <h3>Corrective Color</h3>
         <p>If a previous color service did not go as planned, our corrective color specialists can help. Whether you are dealing with banding, uneven tone, over-processed ends, or a shade that simply is not right, we will create a custom correction plan to get you where you want to be.</p>
-        <p>Call <a href="tel:+17245147231">724-514-7231</a> or <a href="/book">book a color consultation online</a>.</p>
+        <p>Call <a href="tel:+17245147231">724-514-7231</a> or <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">book a color consultation online</a>.</p>
         """
     },
     {
@@ -447,7 +447,7 @@ SERVICES = [
         <p>A keratin treatment infuses the hair shaft with a protein solution that fills gaps in the cuticle, smoothing the surface and creating a protective barrier against humidity. The result is smoother texture, dramatically reduced frizz, and styling time cut by up to 50%.</p>
         <h3>How Long Does It Last?</h3>
         <p>Most clients enjoy smooth, frizz-free results for 3 to 5 months depending on hair type, washing frequency, and product use. We recommend sulfate-free shampoo and conditioner to extend the life of your treatment.</p>
-        <p>Appointments typically take 2 to 3 hours. <a href="/book">Book your keratin treatment online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
+        <p>Appointments typically take 2 to 3 hours. <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book your keratin treatment online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
         """
     },
     {
@@ -479,7 +479,7 @@ SERVICES = [
         <p>Our men's cuts are tailored to the same high standard as our women's services. Fades, tapers, textured crops, and classic styles -- all finished with detail work and styling guidance.</p>
         <h3>Kids' Haircuts</h3>
         <p>We welcome kids of all ages. Our stylists make the experience comfortable and fun, whether it is a first haircut or a regular trim.</p>
-        <p><a href="/book">Book your haircut online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
+        <p><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book your haircut online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
         """
     },
     {
@@ -509,7 +509,7 @@ SERVICES = [
         <p>We offer precision haircuts, fades, tapers, textured crops, longer styles, and beard shaping. Every men's service includes a consultation, shampoo, cut, and styling finish with product recommendations tailored to your hair type.</p>
         <h3>Why Choose a Salon Over a Barbershop?</h3>
         <p>Our stylists are trained in both barbering techniques and salon-level finishing. You get the precision of a barber with the refinement and product knowledge of a full-service salon. Plus, our team can handle color services for men -- gray blending, highlights, and fashion color.</p>
-        <p><a href="/book">Book your men's cut online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
+        <p><a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book your men's cut online</a> or call <a href="tel:+17245147231">724-514-7231</a>.</p>
         """
     },
     {
@@ -522,7 +522,7 @@ SERVICES = [
         <p>Sometimes you just need your hair to look incredible. Our professional blowout service gives you smooth, voluminous, camera-ready hair in about 45 minutes. Perfect before a date, event, interview, or just because.</p>
         <h3>What is Included</h3>
         <p>Every blowout includes a shampoo with professional products, a customized blow-dry using round brushes and the right heat tools for your hair type, and a finishing spray for hold and shine. We can do sleek and straight, bouncy and voluminous, or textured waves.</p>
-        <p>Walk-ins welcome when stylists are available, or <a href="/book">book your blowout online</a>.</p>
+        <p>Walk-ins welcome when stylists are available, or <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">book your blowout online</a>.</p>
         """
     },
 ]
@@ -556,7 +556,7 @@ def gen_service_pages():
     <p class="breadcrumb-bar"><a href="/">Home</a><span>/</span><a href="/hair-services-pittsburgh">Services</a><span>/</span>{svc["name"]}</p>
     <h1>{svc["h1"]} in <em>Pittsburgh</em></h1>
     <p class="subtitle">{meta}</p>
-    <a href="/book" class="btn-primary">Book This Service</a>
+    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="btn-primary">Book This Service</a>
   </section>
 
   <section class="content-section">
@@ -578,7 +578,7 @@ def gen_service_pages():
           <strong>Canonsburg:</strong> {CB_ADDRESS}, Canonsburg PA {CB_ZIP}<br>
           <strong>Phone:</strong> <a href="tel:{PHONE_TEL}">{PHONE}</a><br>
           <strong>Hours:</strong> Tue-Fri 9am-7pm, Sat 9am-5pm<br>
-          <strong>Booking:</strong> <a href="/book">Book Online 24/7</a>
+          <strong>Booking:</strong> <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book Online 24/7</a>
         </p>
       </div>
     </div>
@@ -587,7 +587,7 @@ def gen_service_pages():
   <div class="book-cta">
     <h2>Book {svc["name"]}</h2>
     <p>Online booking available 24/7. Or call {PHONE}.</p>
-    <a href="/book" class="btn-dark">Book an Appointment</a>
+    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="btn-dark">Book an Appointment</a>
   </div>
 """
         breadcrumbs = [("Home", SITE_URL), ("Services", f"{SITE_URL}/hair-services-pittsburgh"), (svc["name"], None)]
@@ -619,7 +619,7 @@ BLOG_POSTS = [
         <h2>Beard Shaping</h2>
         <p>A great haircut deserves a great beard to match. Our stylists offer precision beard shaping that complements your cut and face shape. Even if you maintain your beard at home, a professional shape-up every month keeps things looking intentional.</p>
 
-        <p>Ready to upgrade your grooming routine? <a href="/book">Book a men's appointment online</a> or call us at <a href="tel:+17245147231">724-514-7231</a>.</p>
+        <p>Ready to upgrade your grooming routine? <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book a men's appointment online</a> or call us at <a href="tel:+17245147231">724-514-7231</a>.</p>
         """
     },
     {
@@ -642,7 +642,7 @@ BLOG_POSTS = [
         <h2>Get a Trim</h2>
         <p>Winter takes a toll on ends. Even if you are growing your hair out, a light dusting or trim removes split ends and keeps your shape looking fresh. Our stylists recommend a trim every 8 to 10 weeks during the transition from winter to spring.</p>
 
-        <p>Need help with your spring hair routine? <a href="/book">Book a consultation</a> with any of our stylists.</p>
+        <p>Need help with your spring hair routine? <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book a consultation</a> with any of our stylists.</p>
         """
     },
     {
@@ -668,7 +668,7 @@ BLOG_POSTS = [
         <h2>Lived-In Texture</h2>
         <p>The blown-out, perfectly smooth look is giving way to more natural, lived-in texture. Clients want hair that looks effortlessly good -- tousled waves, air-dried curls, and soft bends that look like they happened naturally. This trend is as much about styling technique as it is about the cut.</p>
 
-        <p>Want to try one of these trends? <a href="/book">Book with one of our stylists</a> and bring your inspiration photos.</p>
+        <p>Want to try one of these trends? <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book with one of our stylists</a> and bring your inspiration photos.</p>
         """
     },
 ]
@@ -735,7 +735,7 @@ def gen_blog_posts():
   <div class="book-cta">
     <h2>Book Your Appointment</h2>
     <p>Online booking available 24/7. Or call {PHONE}.</p>
-    <a href="/book" class="btn-dark">Book Now</a>
+    <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener" class="btn-dark">Book Now</a>
   </div>
 """
         breadcrumbs = [("Home", SITE_URL), ("Blog", f"{SITE_URL}/blog"), (title.split('|')[0].strip(), None)]
