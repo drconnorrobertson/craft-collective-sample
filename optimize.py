@@ -160,14 +160,7 @@ STYLIST_STUDIO = {
 # and has asked not to carry a label yet. Listed rather than merely absent, so
 # that "no label" reads as a decision instead of an oversight.
 # Derek carries no studio label: he is the owner, not a floor stylist.
-# sarah-burke is here TEMPORARILY and must not stay. Her studio has not been
-# confirmed, and studio_of() defaults an unlisted slug to "north-hills" -- so
-# leaving her out of STYLIST_STUDIO alone would print "North Hills only" on
-# her card and her page as though we knew. Suppressing the label is the
-# honest state: her card is the only one without one, which is the signal
-# that she is not ready to go live. When the studio is confirmed, add her to
-# STYLIST_STUDIO and delete her from here -- two lines, one commit.
-STUDIO_UNLABELLED = {"derek-piekarski", "sarah-burke"}
+STUDIO_UNLABELLED = {"derek-piekarski"}
 
 # Stylist slugs that get no generated FAQ block at all. /team/derek-piekarski is
 # the only one: it is an orphan (39 directories under /team/, 38 cards on
