@@ -159,7 +159,15 @@ STYLIST_STUDIO = {
 # Derek is the lead bio block on /meet-the-team rather than one of the cards,
 # and has asked not to carry a label yet. Listed rather than merely absent, so
 # that "no label" reads as a decision instead of an oversight.
-STUDIO_UNLABELLED = {"derek-piekarski"}
+# Derek carries no studio label: he is the owner, not a floor stylist.
+# sarah-burke is here TEMPORARILY and must not stay. Her studio has not been
+# confirmed, and studio_of() defaults an unlisted slug to "north-hills" -- so
+# leaving her out of STYLIST_STUDIO alone would print "North Hills only" on
+# her card and her page as though we knew. Suppressing the label is the
+# honest state: her card is the only one without one, which is the signal
+# that she is not ready to go live. When the studio is confirmed, add her to
+# STYLIST_STUDIO and delete her from here -- two lines, one commit.
+STUDIO_UNLABELLED = {"derek-piekarski", "sarah-burke"}
 
 # Stylist slugs that get no generated FAQ block at all. /team/derek-piekarski is
 # the only one: it is an orphan (39 directories under /team/, 38 cards on
@@ -1511,6 +1519,13 @@ IMG_DIMS = {
     # social card is the same square on a blurred fill rather than a crop into
     # her face. IMG_DIMS carries the shape the square crops actually are.
     "l:team/angelina-labella": (1206, 1206),
+    # Sarah Burke's portrait. A proper studio headshot, 1122x1402 (4:5), so the
+    # square derivatives are a full-width cut from the top of the frame rather
+    # than a crop into the face. The 3:2 social card cannot hold head and
+    # shoulders at that aspect, so it is the square on a blurred fill of itself,
+    # the same treatment as Angelina's. The entry records the shape the square
+    # crops actually are.
+    "l:team/sarah-burke": (1122, 1122),
 
     "u:1500917293891-ef795e70e1f6": (600, 400),
     "u:1519699047748-de8e457a634e": (600, 600),
