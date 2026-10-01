@@ -1,0 +1,43 @@
+{
+  "pages": [
+    {
+      "path": "/guides/craft-collective-vs-studio-raw-elite",
+      "title": "Craft Collective vs. Studio Raw Elite in Pittsburgh",
+      "words": 401
+    },
+    {
+      "path": "/guides/craft-collective-vs-copacetic-beauty-lounge",
+      "title": "Craft Collective vs. Copacetic Beauty Lounge",
+      "words": 412
+    },
+    {
+      "path": "/guides/craft-collective-vs-salon-13",
+      "title": "Craft Collective vs. Salon 13: Pittsburgh Salon Options",
+      "words": 462
+    },
+    {
+      "path": "/guides/craft-collective-vs-bloom-beauty-parlor",
+      "title": "Craft Collective vs. BLOOM Beauty Parlor in Pittsburgh",
+      "words": 461
+    },
+    {
+      "path": "/guides/switching-hair-salons-pittsburgh",
+      "title": "Switching Hair Salons in Pittsburgh: A Practical Checklist",
+      "words": 380
+    },
+    {
+      "path": "/guides/pittsburgh-salon-alternatives",
+      "title": "Pittsburgh Salon Alternatives & Comparisons | Craft Collective",
+      "words": 375
+    }
+  ],
+  "source_date": "2026-10-01",
+  "sources": [
+    "https://www.studiorawelite.com/",
+    "https://www.copaceticpgh.com/",
+    "https://www.copaceticpgh.com/color",
+    "https://www.salon13.net/contact/",
+    "https://www.salon13.net/our-team/",
+    "https://bloombeautyparlor.com/"
+  ]
+}
