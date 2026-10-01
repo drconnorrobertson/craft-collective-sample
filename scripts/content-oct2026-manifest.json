@@ -1,0 +1,136 @@
+{
+  "pages": [
+    {
+      "path": "/blog/how-long-balayage-appointment-pittsburgh",
+      "title": "How Long Does a Balayage Appointment Take in Pittsburgh?",
+      "action": "new",
+      "words": 491
+    },
+    {
+      "path": "/blog/what-hair-color-service-to-book-pittsburgh",
+      "title": "Which Hair Color Service Should You Book in Pittsburgh?",
+      "action": "new",
+      "words": 469
+    },
+    {
+      "path": "/blog/box-dye-to-blonde-pittsburgh",
+      "title": "Box Dye to Blonde in Pittsburgh: Consultation Checklist",
+      "action": "new",
+      "words": 508
+    },
+    {
+      "path": "/blog/hair-extensions-budget-pittsburgh",
+      "title": "Hair Extensions in Pittsburgh: Plan the Full Budget",
+      "action": "new",
+      "words": 494
+    },
+    {
+      "path": "/blog/salon-consultation-photos-pittsburgh",
+      "title": "Hair Inspiration Photos: What to Bring to a Pittsburgh Salon",
+      "action": "new",
+      "words": 463
+    },
+    {
+      "path": "/blog/color-maintenance-calendar-pittsburgh",
+      "title": "Plan a Hair Color Maintenance Calendar in Pittsburgh",
+      "action": "new",
+      "words": 500
+    },
+    {
+      "path": "/post/why-regular-haircuts-matter-for-healthy-hair-in-north-hills-pittsburgh",
+      "title": "Haircut and Trim Schedules for Pittsburgh Hair Goals",
+      "action": "improved",
+      "words": 388
+    },
+    {
+      "path": "/post/how-to-build-a-healthy-hair-care-routine-in-north-hills-pittsburgh",
+      "title": "A Practical Hair Care Routine for Pittsburgh Seasons",
+      "action": "improved",
+      "words": 396
+    },
+    {
+      "path": "/post/why-professional-consultations-make-all-the-difference-in-north-hills-pittsburgh",
+      "title": "What to Ask at a Pittsburgh Hair Consultation",
+      "action": "improved",
+      "words": 375
+    },
+    {
+      "path": "/post/how-much-does-balayage-highlights-or-color-cost-in-pittsburgh-salons",
+      "title": "Pittsburgh Hair Color Cost: How to Compare Quotes",
+      "action": "improved",
+      "words": 375
+    },
+    {
+      "path": "/post/why-scalp-treatments-are-essential-for-hair-growth-in-north-hills-pittsburgh",
+      "title": "Scalp Care in Pittsburgh: Cosmetic Care vs Hair Loss",
+      "action": "improved",
+      "words": 346
+    },
+    {
+      "path": "/reviews/color-and-extensions",
+      "title": "Pittsburgh Color & Extension Reviews | Craft Collective",
+      "action": "new",
+      "words": 318
+    },
+    {
+      "path": "/reviews/haircuts-and-curls",
+      "title": "Pittsburgh Haircut & Curly Hair Reviews | Craft Collective",
+      "action": "new",
+      "words": 368
+    },
+    {
+      "path": "/post/where-to-get-hair-extensions-or-hair-restoration-services-in-pittsburgh",
+      "title": "Hair Extensions vs Hair Restoration in Pittsburgh",
+      "action": "improved",
+      "words": 357
+    }
+  ],
+  "redirects": {
+    "/post/how-much-does-balayage-and-highlights-cost-in-pittsburgh": "/post/how-much-does-balayage-highlights-or-color-cost-in-pittsburgh-salons",
+    "/post/the-role-of-trims-in-growing-healthy-hair-in-north-hills-pittsburgh": "/post/why-regular-haircuts-matter-for-healthy-hair-in-north-hills-pittsburgh",
+    "/post/north-hills-hair-care-routines-that-actually-work": "/post/how-to-build-a-healthy-hair-care-routine-in-north-hills-pittsburgh",
+    "/post/the-importance-of-professional-consultations-in-north-hills-pittsburgh": "/post/why-professional-consultations-make-all-the-difference-in-north-hills-pittsburgh"
+  },
+  "editorial_cleanup": [
+    "/post/2025-color-correction-trends-craft-collective-salon-group",
+    "/post/aveda-hair-color-pittsburgh",
+    "/post/balayage-vs-traditional-highlights-which-is-best-for-your-style",
+    "/post/behind-the-chair-transformations-craft-collective",
+    "/post/best-balayage-in-pittsburgh",
+    "/post/best-hair-salon-allison-park-pa",
+    "/post/best-hair-salon-near-me-pittsburgh",
+    "/post/best-hair-salon-ross-township-pa",
+    "/post/best-hair-salon-wexford-pa",
+    "/post/blonde-transformation-story-pittsburgh",
+    "/post/craft-collective-salon-group-pittsburgh",
+    "/post/dimensional-blonde-trends-in-wexford",
+    "/post/effortless-natural-styles-for-allison-park-professionals",
+    "/post/event-ready-hair-north-hills-updos-wedding-elegance",
+    "/post/everyday-to-effortless-client-transformation",
+    "/post/glossing-and-shine-revival-guide-for-wexford-clients",
+    "/post/hair-salon-north-hills",
+    "/post/holiday-hair-guide-2025",
+    "/post/how-allison-park-clients-maintain-shine-between-appointments",
+    "/post/how-wexford-clients-are-building-a-clean-hair-routine",
+    "/post/inside-craft-collective-the-art-of-teamwork-and-education",
+    "/post/inside-the-chair-signature-color-experiences",
+    "/post/low-maintenance-hair-trends-north-hills-2025",
+    "/post/meet-carlena-bonomi-craft-collective",
+    "/post/meet-the-artists-craft-collective-salon-group",
+    "/post/modern-mens-haircuts-north-hills",
+    "/post/north-hills-guide-to-sustainable-hair-trends-2025",
+    "/post/professional-haircuts-for-wexford-executives",
+    "/post/rco-bleu-sustainable-luxury-haircare",
+    "/post/redefining-the-modern-salon-experience",
+    "/post/rise-of-eco-luxury-haircare-in-pittsburgh",
+    "/post/sustainable-beauty-in-wexford-clean-conscious-and-confident",
+    "/post/sustainable-haircare-for-busy-professionals-in-wexford-and-allison-park",
+    "/post/sustainable-salons-in-pittsburgh-beauty-industry",
+    "/post/the-future-of-hair-color-clean-sustainable-customized",
+    "/post/top-2025-haircare-innovations-coming-to-craft-collective-salon-group",
+    "/post/top-hair-colorists-north-hills",
+    "/post/wella-professionals-hair-color-pittsburgh",
+    "/post/why-north-hills-clients-love-the-craft-collective-experience",
+    "/post/winter-hair-revival-keep-hair-healthy-glossy"
+  ]
+}
