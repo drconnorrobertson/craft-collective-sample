@@ -1,4 +1,4 @@
-/* Craft Collective Salon Group — shared behaviour.
+/* Craft Collective Salon Group — shared behavior.
    Loaded with `defer`, so it runs after each page's inline scripts have
    registered their own listeners. */
 (function () {
@@ -248,4 +248,100 @@
     if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onRM);
     else if (reduceMotion.addListener) reduceMotion.addListener(onRM);
   }
+
+  /* ----------------------------------------------- studio photo lightbox ---
+
+     Thumbnails on the location pages (a.loc-shot) ship as ordinary links to
+     the full-size photograph, so they work with JavaScript off. Where the page
+     carries a #loc-lightbox <dialog> and the browser supports showModal(), the
+     link is upgraded to open the photograph in place instead.
+
+     <dialog> is doing the accessibility heavy lifting: showModal() traps focus
+     inside the dialog, makes the rest of the document inert, and closes on
+     Escape without a keydown listener. The only thing it does not reliably do
+     across browsers is hand focus back to the element that opened it, so that
+     is tracked here. */
+
+  var lightbox = document.getElementById('loc-lightbox');
+  var shots = document.querySelectorAll('a.loc-shot');
+
+  if (lightbox && shots.length && typeof lightbox.showModal === 'function') {
+    var lbImg = lightbox.querySelector('.lightbox-img');
+    var lbClose = lightbox.querySelector('.lightbox-close');
+    var opener = null;
+
+    var open = function (link) {
+      var thumb = link.querySelector('img');
+      opener = link;
+      lbImg.src = link.getAttribute('href');
+      lbImg.alt = thumb ? thumb.getAttribute('alt') || '' : '';
+      if (link.dataset.srcset) lbImg.srcset = link.dataset.srcset;
+      // Sizes has to say "as wide as the dialog lets it be", or the srcset
+      // picks the small file for a photograph shown at 1200px.
+      lbImg.sizes = 'min(94vw, 1200px)';
+      // Declared up front so the backdrop does not jump when the file lands.
+      if (link.dataset.width) lbImg.width = link.dataset.width;
+      if (link.dataset.height) lbImg.height = link.dataset.height;
+      lightbox.showModal();
+      lbClose.focus();
+    };
+
+    Array.prototype.forEach.call(shots, function (link) {
+      link.addEventListener('click', function (e) {
+        // Leave modified clicks alone: cmd/ctrl-click and middle-click should
+        // still open the photograph in a new tab, as any link would.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        open(link);
+      });
+    });
+
+    /* Cleanup is a named step called from every path that shuts the dialog,
+       rather than hanging off the dialog's own 'close' event. That event is
+       standard, but it is not dispatched by every engine this site has been
+       checked in, and focus return is too important to leave to it. <dialog>
+       restores focus to the opener by itself in modern browsers; this makes it
+       certain, and is harmless when the browser has already done it. */
+    var teardown = function () {
+      lbImg.removeAttribute('src');
+      lbImg.removeAttribute('srcset');
+      if (opener) {
+        opener.focus();
+        opener = null;
+      }
+    };
+
+    var dismiss = function () {
+      if (lightbox.open) lightbox.close();
+      teardown();
+    };
+
+    lbClose.addEventListener('click', dismiss);
+
+    // Escape. 'cancel' fires ahead of the close on engines that implement it;
+    // the keydown is the fallback for those that do not, and both routes run
+    // the same idempotent teardown.
+    lightbox.addEventListener('cancel', function () { teardown(); });
+    lightbox.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        dismiss();
+      }
+    });
+
+    /* Clicking the backdrop closes. The dialog's own box is the full modal
+       rect, so "outside" is measured against the image itself rather than
+       against the dialog element. */
+    lightbox.addEventListener('click', function (e) {
+      if (e.target === lbClose || lbClose.contains(e.target)) return;
+      var r = lbImg.getBoundingClientRect();
+      var inside = e.clientX >= r.left && e.clientX <= r.right &&
+                   e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) dismiss();
+    });
+
+    // Belt and braces for any close this file did not initiate.
+    lightbox.addEventListener('close', teardown);
+  }
+
 })();

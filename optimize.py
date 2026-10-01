@@ -22,6 +22,7 @@ you like and the output is identical.
 import glob
 import html
 import json
+import math
 import os
 import re
 from datetime import date
@@ -32,9 +33,34 @@ PHONE_HREF = "+17245147231"
 EMAIL = "info@craftcollectivesalongroup.com"
 BOOKING = "https://phorest.com/book/salons/craftcollectivesalongroup"
 
+# The salon's Google listing, where the reviews live.
+#
+# This is the documented api=1 Maps search form, not a link copied out of a
+# browser address bar. An address-bar URL carries the session that produced it
+# — gs_ssp, oq, gs_lcrp, sourceid and a #mpd panel fragment — which is both
+# unstable and a small leak of whoever's search it was. This form has no
+# session state in it and is the URL shape Google documents for the purpose.
+#
+# Verified to resolve to Craft Collective Salon Group, 2014 Babcock Blvd,
+# Pittsburgh PA 15209, rated 5.0, phone (724) 514-7231.
+#
+# It is a search rather than an exact place reference. Google does not expose a
+# ChIJ-form Place ID for this listing anywhere reachable, so query_place_id is
+# not set; the full street address in the query makes the match unambiguous in
+# practice. The listing's feature ID is 0x8834f3284821ca9f:0xe8ccc74c24cef944,
+# and the equivalent exact link is https://maps.google.com/?cid=
+# 16775001841897240900 if an exact reference is ever wanted instead.
+#
+# The build does not inject this — the review call-to-action is hand-authored,
+# because running this script over main still rewrites all 90 pages. The same
+# URL appears in reviews/index.html and index.html, with & written as &amp;
+# because it sits in an href. Keep all three in step.
+GOOGLE_REVIEWS_URL = "https://www.google.com/maps/search/?api=1&query=Craft+Collective+Salon+Group+2014+Babcock+Blvd+Pittsburgh+PA+15209"
+
 NH_ADDR = "2014D Babcock Blvd, Pittsburgh, PA 15209"
 CB_ADDR = "115 W Pike St, Canonsburg, PA 15317"
-HOURS = "Tuesday-Friday 9am-7pm, Saturday 9am-5pm"
+HOURS = ("Monday 10am-6pm, Tuesday-Thursday 10am-9pm, Friday 9am-5pm, "
+         "Saturday 9am-4pm")
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -94,7 +120,208 @@ BLOG_POSTS = {
 
 
 # ---------------------------------------------------------------------------
+# WHICH STUDIO EACH STYLIST WORKS AT
+#
+# The single source of truth. It exists because the same fact has to appear in
+# two places -- the roster cards on /meet-the-team and each stylist's own hero
+# -- and this repository has already been bitten once by a fact living in many
+# places (see the Canonsburg appointment-only note above, which lists about
+# seventy).
+#
+# Keyed by slug, which is also the /team/<slug> path. Anything not listed is
+# "north-hills": thirty of the thirty-seven are, and listing them would make
+# the exceptions harder to see rather than easier.
+#
+# Values: "north-hills" | "canonsburg" | "both".
+#
+# process() writes the attribute and the label onto a stylist page from this
+# table, so once the build pass can be run again the profile side is derived
+# rather than maintained. The cards on /meet-the-team are still hand-carried;
+# to check the two have not drifted:
+#
+#   python3 -c "import optimize,re;s=open('meet-the-team/index.html').read();\
+#     print(sorted((sl,v) for v,sl in re.findall(r'data-studio=\"([a-z-]+)\".*?href=\"/team/([a-z0-9-]+)\"',s,re.S)\
+#     if v!=optimize.studio_of(sl)))"
+#
+# An empty list means they agree.
+STYLIST_STUDIO = {
+    "greta-healy": "canonsburg",
+    "angelina-labella": "canonsburg",
+
+    "amanda-melvin": "both",
+    "erin-mccleary": "both",
+    "kayla-quinn": "both",
+    "kelly-buttermore": "both",
+    "selena-pace": "both",
+    "sherry-maiolini": "both",
+}
+
+# Derek is the lead bio block on /meet-the-team rather than one of the cards,
+# and has asked not to carry a label yet. Listed rather than merely absent, so
+# that "no label" reads as a decision instead of an oversight.
+# Derek carries no studio label: he is the owner, not a floor stylist.
+STUDIO_UNLABELLED = {"derek-piekarski"}
+
+# Stylist slugs that get no generated FAQ block at all. /team/derek-piekarski is
+# the only one: it is an orphan (39 directories under /team/, 38 cards on
+# /meet-the-team -- Derek has his own page at /derek-piekarski instead), and its
+# five entries were the stylist_faq() template with his name in three of them,
+# duplicating a page that already duplicates it. Removed Sept 2026 with the four
+# on /derek-piekarski. A slug listed here keeps its page and loses only the FAQ.
+STYLIST_NO_FAQ = {"derek-piekarski"}
+
+
+def studio_of(slug):
+    """The studio for a stylist slug. Everyone not listed is North Hills."""
+    return STYLIST_STUDIO.get(slug, "north-hills")
+
+
+def studio_label(cls):
+    """The label markup, identical wherever it appears.
+
+    Four spans rather than one string: CSS shows the parts that apply and
+    hides the rest, so the attribute drives the wording, and the two studio
+    names can take their own colors. The spacing lives inside the spans, so
+    hiding a part hides its spacing with it."""
+    return (f'<p class="{cls}">'
+            '<span class="studio-nh">North Hills</span>'
+            '<span class="studio-sep"> / </span>'
+            '<span class="studio-cb">Canonsburg</span>'
+            '<span class="studio-only"> only</span>'
+            '</p>')
+
+
+# ---------------------------------------------------------------------------
 # FAQ content
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# CANONSBURG IS APPOINTMENT-ONLY TODAY. THAT IS EXPECTED TO CHANGE.
+#
+# The salon runs two studios. North Hills has published hours and takes online
+# bookings through Phorest. Canonsburg does not: it is appointment-only and
+# books by telephone, and the site says so in a lot of places. The owner has
+# said Canonsburg will move to regular hours and online booking at some point.
+#
+# This is the list of everything that has to change on that day. It is written
+# out because the list is much longer than it looks, and because most of it is
+# not where you would go looking for it.
+#
+# TWO THINGS PEOPLE MISS
+#
+#   1. The stylist-page FAQ. "Where does {name} work?" in stylist_faq() below
+#      says the Canonsburg studio runs by appointment, and it is generated onto
+#      EVERY STYLIST PAGE -- 38 of them at the time of writing. Change the one
+#      string, but understand that you are changing 38 pages, and that each one
+#      carries the sentence twice: once as visible text and once inside the
+#      page's FAQPage JSON-LD. Fixing the visible copy and forgetting the
+#      schema leaves the site telling Google something it no longer tells
+#      people.
+#
+#   2. /book. It is easy to think of this as a Canonsburg-page problem. It is
+#      not. book/index.html makes THREE separate assertions of its own -- the
+#      booking-embed subhead, the Hours value in the Canonsburg column, and the
+#      "Call to Book" button -- and it carries its own copy of the .appt-notice
+#      box, the same gold-bordered panel that sits on the Canonsburg location
+#      page. Two notice boxes exist. Both have to go.
+#
+# GENERATED HERE, REPLICATED EVERYWHERE (each appears twice per page: visible
+# .faq-answer text, and the FAQPage JSON-LD)
+#
+#   BOOK_A ................................ line  254    22 pages
+#   stylist_faq(), "Where does {name} work?" line  668    38 pages
+#   PAGE_FAQ["canonsburg"], the appointment
+#     question -- delete the Q&A outright
+#     rather than soften it ................ line  625     1 page
+#   PAGE_FAQ["book"], "Can I book online
+#     for both locations?" ................. line  698    1 page
+#   PAGE_FAQ["meet-the-team"], "Which
+#     location does each stylist work at?" . line  796     1 page
+#   The Canonsburg title/description entry . line 1936     1 page, 3 tags
+#     (description, og:description and twitter:description, which land at
+#      locations/canonsburg/index.html lines 7, 12 and 21)
+#
+# HAND-AUTHORED, NOT GENERATED -- eleven lines the build will never touch
+#
+#   index.html:1299 .......... "By appointment only" on the homepage card
+#   index.html:1302 .......... "Call to Book" -> tel:, becomes the Phorest button
+#   index.html:1319 .......... homepage FAQ answer. Visible only; the homepage
+#                              FAQPage node does not carry this one, so it is a
+#                              single edit rather than two
+#   locations/canonsburg/index.html:434-436 ... the .appt-notice box
+#   locations/canonsburg/index.html:447 ....... Booking info-value
+#   locations/canonsburg/index.html:449 ....... "Call to Book" button
+#   locations/north-hills-pittsburgh/index.html:546 ... the reciprocal
+#                              "Also serving Canonsburg" card detail line
+#   book/index.html:675 ...... booking-embed subhead
+#   book/index.html:727-729 .. the second .appt-notice box
+#   book/index.html:744 ...... Hours info-value
+#   book/index.html:746 ...... "Call to Book" button
+#
+#   Line numbers drift. Grep is the reliable way in:
+#     grep -rn "by appointment\|appointment only\|Call to Book\|appt-notice" \
+#       --include=*.html .
+#
+# THE TRAP: THE HOURS BLOCK BRINGS ITS OWN CSS
+#
+#   Canonsburg has no Hours block at all. Its info column is Address, Phone,
+#   Booking. North Hills has Address, Phone, Email, Hours, Booking. You will be
+#   adding a block, not editing one -- copy the markup from
+#   locations/north-hills-pittsburgh/index.html (the .info-block holding
+#   .hours-grid and its seven .hours-day / .hours-time pairs).
+#
+#   The styling does not come with it. .hours-grid, .hours-day and .hours-time
+#   are defined ONLY in the North Hills page's own inline <style>, near the top
+#   of that file. assets/site.css carries just the narrow-screen stacking
+#   override for them, not the base rules. Paste the markup into Canonsburg
+#   without those three declarations and you get an unstyled two-column mess.
+#
+#   The right fix at that point is to move the three rules into site.css once
+#   and drop the inline copy -- but site.css is cache-busted by hand on 91
+#   pages, so that is a deliberate decision, not something to do casually.
+#
+#   Canonsburg has no Email block either, if the two info columns are meant to
+#   match completely.
+#
+# SCHEMA: BOTH LOCATIONS OR NEITHER
+#
+#   Nothing needs changing. openingHours appears in zero built pages today. The
+#   two Place nodes in organization() carry address and telephone only, for
+#   both studios, so the markup makes no claim about hours either way.
+#
+#   Adding openingHoursSpecification is therefore a decision rather than an
+#   edit -- and if you add it for Canonsburg you must add it for North Hills in
+#   the same pass. North Hills already publishes its hours as visible text, so
+#   there is no obstacle. Adding it to one and not the other rebuilds, inside
+#   the structured data, exactly the imbalance that was deliberately taken out
+#   of the visible page -- and it is far harder to spot there.
+#
+#   generate_seo.py has an openingHoursSpecification block. That file is
+#   superseded scaffolding with a DO-NOT-RUN header. It is not a route to
+#   changing anything.
+#
+# WHAT DOES NOT CHANGE
+#
+#   vercel.json; sitemap.xml (both locations are already priority 0.8); the
+#   navigation; the studio photographs, galleries and hero bands; the
+#   .locations-grid parity CSS in site.css; and the AREAS entries that mention
+#   drive time to Canonsburg -- those are geography, not booking policy.
+#
+# HOW LONG THIS TAKES, AND WHY
+#
+#   With the build runnable: edit the six strings above, run this script once,
+#   then do the eleven hand-authored lines and the Hours block. Ten minutes.
+#
+#   Without it: about half a day. The build pass on main is behind the pages it
+#   generates, so running it over them regresses the site, and the ~60
+#   generated instances have to be hand-mirrored instead -- importing this
+#   module and calling faq_html(), faq_schema() and stylist_faq() directly,
+#   then splicing the output into each file. Thirty-eight of those are stylist
+#   pages.
+#
+#   That difference -- ten minutes against half a day, for one ordinary change
+#   to one fact about the business -- is the running cost of the build repair
+#   not being merged. It is worth quoting to whoever can merge it.
 # ---------------------------------------------------------------------------
 
 BOOK_A = (
@@ -109,13 +336,13 @@ SERVICE_FAQ = {
          "Balayage pricing at Craft Collective depends on hair length, density and how much lift you want. "
          "Because every head of hair takes a different amount of product and time, we quote at consultation "
          f"rather than from a flat price list. Call {PHONE} or book a free consultation and we will give you "
-         "an exact number before any colour is mixed."),
+         "an exact number before any color is mixed."),
         ("How long does a balayage appointment take?",
          "Plan on 2.5 to 4 hours. That covers the consultation, the freehand painting itself, processing, a "
          "custom toner to perfect the shade, a deep conditioning treatment and a blowout finish. A first-time "
          "transformation from dark to bright blonde may be booked across two sessions to protect hair integrity."),
         ("How often do I need to come back for balayage?",
-         "Most balayage clients go 12 to 16 weeks between appointments. Because the colour is painted rather "
+         "Most balayage clients go 12 to 16 weeks between appointments. Because the color is painted rather "
          "than foiled from the root, there is no hard regrowth line, so it grows out softly. A gloss or toner "
          "refresh at around week eight keeps the tone from going brassy between full appointments."),
         ("Is balayage better than highlights for my hair?",
@@ -123,10 +350,10 @@ SERVICE_FAQ = {
          "brighter, more uniform lift from the root. Fine hair and clients wanting maximum brightness often do "
          "better in foils, and many people get the best result from a combination. Read our "
          "balayage vs highlights guide, or ask at your consultation."),
-        ("Do you do balayage on dark or previously coloured hair?",
+        ("Do you do balayage on dark or previously colored hair?",
          "Yes. Dark bases and box-dye history are among the most common things we work with. Depending on how "
          "much existing pigment is in the hair, we may build the result over two or three appointments so the "
-         "hair stays healthy. Our colourists are trained by Derek Piekarski, who taught colour technique for "
+         "hair stays healthy. Our colorists are trained by Derek Piekarski, who taught color technique for "
          "Wella Professionals across North America."),
     ],
     "highlights-pittsburgh": [
@@ -153,24 +380,24 @@ SERVICE_FAQ = {
          "soft. Ask for a dimensional or lived-in blonde at your consultation."),
     ],
     "hair-color-pittsburgh": [
-        ("What hair colour services do you offer?",
-         "Single-process colour, root touch-ups, all-over grey coverage, dimensional colour, lived-in colour, "
-         "glossing and toning, fashion and vivid shades, and full colour correction. We colour exclusively with "
-         "Wella Professionals."),
-        ("How much does hair colour cost in Pittsburgh?",
-         f"A root touch-up sits at the lower end and a multi-step correction at the higher end. Because colour "
+        ("What hair color services do you offer?",
+         "Single-process color, root touch-ups, all-over gray coverage, dimensional color, lived-in color, "
+         "glossing and toning, fashion and vivid shades, and full color correction. We color with Wella "
+         "Professionals and R+Co."),
+        ("How much does hair color cost in Pittsburgh?",
+         f"A root touch-up sits at the lower end and a multi-step correction at the higher end. Because color "
          f"work is priced by time and product, we quote at consultation. Call {PHONE} or book a consultation "
          "online and you will have an exact price before we begin."),
-        ("Can you fix a box dye or a colour from another salon?",
-         "Yes — corrective colour is one of our specialities. Bring photos of what you have now and what you want. "
+        ("Can you fix a box dye or a color from another salon?",
+         "Yes — corrective color is one of our specialities. Bring photos of what you have now and what you want. "
          "Depending on how much artificial pigment is in the hair, a correction may take one long appointment or "
          "a series of sessions. We will not promise a result in one visit if getting there safely takes two."),
-        ("How do I keep my colour from fading?",
-         "Wash with sulphate-free colour-safe shampoo, turn the water temperature down, use heat protectant before "
-         "hot tools, and book a gloss between colour appointments. We will send you home with product recommendations "
+        ("How do I keep my color from fading?",
+         "Wash with sulphate-free color-safe shampoo, turn the water temperature down, use heat protectant before "
+         "hot tools, and book a gloss between color appointments. We will send you home with product recommendations "
          "matched to your specific formula."),
-        ("How often should I get my colour done?",
-         "Root touch-ups every 4 to 6 weeks, all-over colour every 6 to 8 weeks, and dimensional or painted colour "
+        ("How often should I get my color done?",
+         "Root touch-ups every 4 to 6 weeks, all-over color every 6 to 8 weeks, and dimensional or painted color "
          "every 12 to 16 weeks. Your stylist will set a rhythm around your hair and your schedule at the first visit."),
     ],
     "hair-extensions-pittsburgh": [
@@ -178,8 +405,8 @@ SERVICE_FAQ = {
          "We fit hand-tied wefts, tape-in extensions and individual bonds, and we will recommend a method based on "
          "your hair density, lifestyle and budget rather than defaulting to one system for everyone."),
         ("How much do hair extensions cost in Pittsburgh?",
-         "Extension pricing has two parts: the hair itself and the labour to install it. Both scale with how many "
-         "rows or wefts you need. A consultation is required before booking so we can colour-match, estimate the "
+         "Extension pricing has two parts: the hair itself and the labor to install it. Both scale with how many "
+         "rows or wefts you need. A consultation is required before booking so we can color-match, estimate the "
          f"amount of hair and give you a firm total. Call {PHONE} to arrange one."),
         ("How long do hair extensions last?",
          "The hair itself typically lasts 6 to 12 months with proper care. Move-up appointments to reposition the "
@@ -204,9 +431,9 @@ SERVICE_FAQ = {
         ("How much does a keratin treatment cost in Pittsburgh?",
          f"Pricing scales with hair length and density since both change how much solution and processing time the "
          f"service takes. We quote at consultation. Call {PHONE} or book online for an exact figure."),
-        ("Can I get a keratin treatment on coloured hair?",
-         "Yes. If you are colouring and smoothing in the same visit, colour first and smooth second. Many clients "
-         "find keratin actually helps colour last longer because the sealed cuticle holds pigment better."),
+        ("Can I get a keratin treatment on colored hair?",
+         "Yes. If you are coloring and smoothing in the same visit, color first and smooth second. Many clients "
+         "find keratin actually helps color last longer because the sealed cuticle holds pigment better."),
         ("How soon can I wash my hair after a keratin treatment?",
          "Follow your stylist's instruction for the specific formula used — with most of the systems we carry you "
          "can wash the same day, while a few require waiting. Either way, switch to a sulphate-free shampoo "
@@ -214,7 +441,7 @@ SERVICE_FAQ = {
     ],
     "haircuts-pittsburgh": [
         ("How much is a haircut in Pittsburgh at Craft Collective?",
-         f"Haircut pricing varies by stylist level and by whether you are booking a cut alone or a cut with a colour "
+         f"Haircut pricing varies by stylist level and by whether you are booking a cut alone or a cut with a color "
          f"service. Call {PHONE} or book online and we will confirm the price for the stylist you choose."),
         ("How long does a haircut appointment take?",
          "Around 45 minutes to an hour for a cut and style. That includes a consultation about how you actually wear "
@@ -223,7 +450,7 @@ SERVICE_FAQ = {
          "Every 6 to 8 weeks for short cuts and precision shapes, and every 10 to 12 weeks for longer hair where you "
          "are mainly maintaining ends. If you are growing your hair out, regular dusting of the ends actually helps."),
         ("Do you cut curly hair?",
-         "Yes. Several of our stylists specialise in curly and textured hair and cut dry so the shape is built around "
+         "Yes. Several of our stylists specialize in curly and textured hair and cut dry so the shape is built around "
          "how the curl actually falls. Mention curl when you book so we can match you to the right stylist."),
         ("Can I book a haircut with a specific stylist?",
          "Yes — our whole team has individual profiles with their specialities, and online booking lets you pick by "
@@ -259,23 +486,23 @@ SERVICE_FAQ = {
         ("Do you travel to the venue?",
          "On-location styling is available for wedding parties depending on date, party size and travel distance. "
          "Ask when you enquire and we will confirm availability for your date."),
-        ("Should I colour my hair before the wedding?",
-         "Yes — book colour for two to three weeks before the date. That gives the tone time to settle, leaves room "
+        ("Should I color my hair before the wedding?",
+         "Yes — book color for two to three weeks before the date. That gives the tone time to settle, leaves room "
          "for a small adjustment if you want one, and means your roots are fresh in the photographs."),
     ],
     "mens-grooming-pittsburgh": [
         ("What men's services do you offer?",
-         "Precision cuts, scissor and clipper work, fades, beard shaping and trims, grey blending, and men's colour "
+         "Precision cuts, scissor and clipper work, fades, beard shaping and trims, gray blending, and men's color "
          "including highlights and lowlights."),
         ("How much is a men's haircut in Pittsburgh?",
-         f"Pricing depends on the stylist and whether you are adding beard work or colour. Call {PHONE} or book "
+         f"Pricing depends on the stylist and whether you are adding beard work or color. Call {PHONE} or book "
          "online for the exact price."),
         ("How often should men get a haircut?",
          "Every 3 to 4 weeks for a fade or a tight taper to keep the line sharp, and every 6 to 8 weeks for longer "
          "or textured cuts."),
-        ("Do you offer grey blending for men?",
-         "Yes. Grey blending softens grey rather than covering it completely, so it grows out without an obvious line "
-         "and looks like your own hair rather than a dye job. It is one of our most requested men's colour services."),
+        ("Do you offer gray blending for men?",
+         "Yes. Gray blending softens gray rather than covering it completely, so it grows out without an obvious line "
+         "and looks like your own hair rather than a dye job. It is one of our most requested men's color services."),
         ("Can I book a men's cut with beard work in one appointment?",
          "Yes — book the cut and mention beard work in the notes, or call us and we will schedule the extra time so "
          "you are not rushed."),
@@ -284,15 +511,15 @@ SERVICE_FAQ = {
 
 BLOG_FAQ = {
     "best-balayage-pittsburgh": [
-        ("What makes a good balayage colourist?",
+        ("What makes a good balayage colorist?",
          "Freehand painting cannot be foiled into place afterwards, so the placement has to be right the first time. "
          "That means an eye for where light naturally falls on your specific head shape, plus enough chemistry "
-         "knowledge to know how far a given hair can lift safely. Ask to see a colourist's own portfolio on hair "
+         "knowledge to know how far a given hair can lift safely. Ask to see a colorist's own portfolio on hair "
          "similar to yours, not the salon's collective feed."),
         ("How much should balayage cost in Pittsburgh?",
          "Pittsburgh balayage pricing scales with hair length, density and how much lift is involved rather than "
          f"sitting at one flat rate. Book a consultation at Craft Collective, or call {PHONE}, and we will quote "
-         "your hair specifically before any colour is mixed."),
+         "your hair specifically before any color is mixed."),
         ("How long does balayage last?",
          "Twelve to sixteen weeks between full appointments for most clients, with a gloss around week eight to keep "
          "the tone from warming up. The painted grow-out is exactly why balayage is lower maintenance than foils."),
@@ -319,19 +546,19 @@ BLOG_FAQ = {
          "foils. A consultation settles it in ten minutes."),
     ],
     "best-hair-care-products-color-treated-2026": [
-        ("What shampoo is best for colour-treated hair?",
-         "A sulphate-free, colour-safe shampoo. Sulphates are the detergents that strip pigment fastest, so switching "
-         "shampoo does more for colour longevity than any other single change. Your stylist will match a specific "
+        ("What shampoo is best for color-treated hair?",
+         "A sulphate-free, color-safe shampoo. Sulphates are the detergents that strip pigment fastest, so switching "
+         "shampoo does more for color longevity than any other single change. Your stylist will match a specific "
          "product to your formula."),
         ("Do purple shampoos actually work?",
-         "Yes, on blonde and lightened hair — purple pigment counteracts the yellow tones that develop as colour "
+         "Yes, on blonde and lightened hair — purple pigment counteracts the yellow tones that develop as color "
          "oxidises. Use it once or twice a week, not daily; overuse leaves a dull violet cast and does nothing for "
          "the underlying condition."),
-        ("How often should I wash colour-treated hair?",
+        ("How often should I wash color-treated hair?",
          "Two to three times a week for most people. Every wash costs you some pigment, so stretching washes with dry "
-         "shampoo genuinely extends the life of a colour service."),
+         "shampoo genuinely extends the life of a color service."),
         ("Are salon products worth it over drugstore?",
-         "For colour-treated hair, generally yes — the difference is pigment-safe surfactants and higher-quality "
+         "For color-treated hair, generally yes — the difference is pigment-safe surfactants and higher-quality "
          "conditioning agents, not the label. What matters most is that the product suits your specific formula, "
          "which is why we recommend per client rather than blanket."),
     ],
@@ -341,8 +568,8 @@ BLOG_FAQ = {
          "wefts suit most medium-to-thick hair, tape-ins sit flattest on finer hair, and individual bonds give the "
          "most placement flexibility. A consultation is where this gets decided."),
         ("How much do extensions cost in Pittsburgh?",
-         "Two costs: the hair, and the labour to install it. Both scale with how much hair you need. Every extension "
-         f"client at Craft Collective starts with a consultation so we can colour-match and quote exactly. Call {PHONE}."),
+         "Two costs: the hair, and the labor to install it. Both scale with how much hair you need. Every extension "
+         f"client at Craft Collective starts with a consultation so we can color-match and quote exactly. Call {PHONE}."),
         ("How long do extensions take to install?",
          "Two to four hours for a first full install, depending on method and how many rows you need. Move-up "
          "appointments afterwards are shorter."),
@@ -353,9 +580,9 @@ BLOG_FAQ = {
     "how-to-choose-hair-salon-pittsburgh": [
         ("What should I look for in a Pittsburgh hair salon?",
          "Three things: verifiable credentials rather than marketing language, a portfolio showing hair like yours, "
-         "and a real consultation before any chemical service. A salon that will not consult before colouring is a "
+         "and a real consultation before any chemical service. A salon that will not consult before coloring is a "
          "salon guessing at your result."),
-        ("How do I find a good colourist near me?",
+        ("How do I find a good colorist near me?",
          "Look at individual stylist portfolios, not just the salon's feed — you book a person, not a building. At "
          "Craft Collective every stylist has their own page listing their specialities so you can match before you book."),
         ("What questions should I ask at a consultation?",
@@ -369,14 +596,14 @@ BLOG_FAQ = {
         ("How often should men get a haircut?",
          "Every 3 to 4 weeks for fades and tight tapers where the line goes soft quickly, and every 6 to 8 weeks for "
          "longer or textured cuts."),
-        ("What is grey blending for men?",
-         "A low-commitment colour service that softens grey rather than covering it. Because it is a blend rather than "
+        ("What is gray blending for men?",
+         "A low-commitment color service that softens gray rather than covering it. Because it is a blend rather than "
          "a block of pigment, it grows out with no visible line and reads as your own hair."),
         ("Do you do beard trims?",
          "Yes — beard shaping and trims, either on their own or added to a cut appointment. Mention it when booking so "
          "we schedule the extra time."),
         ("How much is a men's haircut in Pittsburgh?",
-         f"Pricing depends on the stylist and whether you are adding beard work or colour. Call {PHONE} or book online "
+         f"Pricing depends on the stylist and whether you are adding beard work or color. Call {PHONE} or book online "
          "for exact pricing."),
     ],
     "pittsburgh-wedding-hair": [
@@ -386,7 +613,7 @@ BLOG_FAQ = {
         ("Do I really need a bridal hair trial?",
          "Yes. A trial is where you find out how your hair holds through a long day, how the style photographs under "
          "flash, and how it sits with your veil. It is much better to discover a problem at the trial than on the morning."),
-        ("When should I colour my hair before my wedding?",
+        ("When should I color my hair before my wedding?",
          "Two to three weeks before. The tone settles, the roots are fresh in photographs, and there is still time for "
          "a small adjustment if you want one."),
         ("Can you style my bridesmaids too?",
@@ -405,14 +632,14 @@ BLOG_FAQ = {
          "A trim to take off split ends, a bond-building or protein treatment depending on whether the damage is "
          "structural or moisture-related, and a lighter conditioner as the humidity rises. Your stylist can tell which "
          "of the two your hair actually needs."),
-        ("Should I change my hair colour for spring?",
+        ("Should I change my hair color for spring?",
          "Many clients go a shade or two brighter as the light changes. Balayage is the usual route because it adds "
          "brightness without committing you to a hard root line through the summer."),
     ],
     "top-hair-trends-pittsburgh-2026": [
-        ("What hair colours are trending in 2026?",
+        ("What hair colors are trending in 2026?",
          "Lived-in dimensional blondes, soft expensive brunettes with subtle warmth, and face-framing money pieces "
-         "continue to dominate. The common thread is low-maintenance grow-out — clients want colour that looks "
+         "continue to dominate. The common thread is low-maintenance grow-out — clients want color that looks "
          "deliberate at week twelve, not just at week one."),
         ("What haircuts are popular right now?",
          "Long layered shapes with movement, blunt collarbone cuts, and the modern shag with curtain fringe. Texture "
@@ -425,17 +652,17 @@ BLOG_FAQ = {
          "every six weeks is the wrong trend if you can only come in twice a year — and a good stylist will say so."),
     ],
     "what-is-corrective-color": [
-        ("What is corrective colour?",
-         "Any service that fixes an unwanted colour result — banding, brassiness, uneven box dye, a failed at-home "
-         "attempt, or colour from another salon that did not land. It is technical work: you are removing and "
-         "rebalancing existing pigment, not just applying new colour on top."),
-        ("How much does corrective colour cost?",
-         "More than a standard colour service, because it takes more time and more product, and sometimes more than "
+        ("What is corrective color?",
+         "Any service that fixes an unwanted color result — banding, brassiness, uneven box dye, a failed at-home "
+         "attempt, or color from another salon that did not land. It is technical work: you are removing and "
+         "rebalancing existing pigment, not just applying new color on top."),
+        ("How much does corrective color cost?",
+         "More than a standard color service, because it takes more time and more product, and sometimes more than "
          f"one appointment. We quote after seeing your hair in person. Call {PHONE} to arrange a consultation."),
         ("Can you fix box dye?",
          "Usually, yes — it is one of the most common things we correct. Box dye deposits a lot of pigment unevenly, "
          "so removing it safely can take more than one session. We will tell you honestly how many."),
-        ("How long does corrective colour take?",
+        ("How long does corrective color take?",
          "A straightforward correction runs three to five hours. A significant change — very dark to blonde, for "
          "example — is often staged across two or three appointments, several weeks apart, to keep the hair healthy."),
     ],
@@ -452,12 +679,12 @@ def area_faq(slug):
              f"Our North Hills studio is at {NH_ADDR}, on Babcock Blvd just off McKnight Road. Free parking is "
              "available on site."),
             ("What are your North Hills salon hours?",
-             f"{HOURS}. We are closed Sunday and Monday. Online booking is open 24/7 even when the salon is not."),
+             f"{HOURS}. We are closed Sunday. Online booking is open 24/7 even when the salon is not."),
             ("Do I need an appointment or can I walk in?",
-             "Walk-ins are taken when there is availability, but colour services in particular book out well ahead, "
+             "Walk-ins are taken when there is availability, but color services in particular book out well ahead, "
              f"so we recommend booking. Reserve online any time or call {PHONE}."),
             ("What services are available at the North Hills location?",
-             "The full menu: balayage, highlights, blonding, dimensional and corrective colour, precision haircuts, "
+             "The full menu: balayage, highlights, blonding, dimensional and corrective color, precision haircuts, "
              "keratin smoothing, hair extensions, blowouts and bridal styling, plus nails, skin and lash services."),
             ("Is parking available?",
              "Yes — free on-site parking at the Babcock Blvd studio, directly outside the salon."),
@@ -466,20 +693,20 @@ def area_faq(slug):
     if slug == "canonsburg":
         return [
             ("Where is your Canonsburg salon?",
-             f"Our Canonsburg studio is at {CB_ADDR}, in the centre of town on W Pike St, serving Washington County "
+             f"Our Canonsburg studio is at {CB_ADDR}, in the center of town on W Pike St, serving Washington County "
              "and the South Hills."),
             ("Do I need an appointment for the Canonsburg location?",
              f"Yes — Canonsburg operates by appointment only. Call {PHONE} to schedule with one of our stylists. "
              "Online booking currently covers our North Hills studio."),
             ("What services do you offer in Canonsburg?",
-             "The same services and the same standard as North Hills: balayage, highlights, blonding, colour "
+             "The same services and the same standard as North Hills: balayage, highlights, blonding, color "
              "correction, precision cutting, keratin treatments and extensions."),
             ("Which areas does the Canonsburg salon serve?",
              "Canonsburg, Peters Township, McMurray, Cecil Township, Washington PA, Upper St. Clair, Bethel Park, "
              "Mt. Lebanon and the wider South Hills."),
             ("Is it the same team as the North Hills salon?",
              "Yes. Both studios are Craft Collective Salon Group, trained to the same standard under owner Derek "
-             "Piekarski, and both use Wella Professionals colour."),
+             "Piekarski, and both use Wella Professionals and R+Co color."),
         ]
 
     return [
@@ -487,28 +714,28 @@ def area_faq(slug):
          f"Yes — {name} clients are a regular part of our books. Our North Hills studio at {NH_ADDR} is {drive}, and "
          f"we also have a Canonsburg studio at {CB_ADDR}."),
         (f"What is the best hair salon near {name}?",
-         f"Craft Collective Salon Group is rated 4.9 stars across 247 reviews and is led by Derek Piekarski, a former "
+         f"Craft Collective Salon Group is rated 5.0 stars across 809 reviews and is led by Derek Piekarski, a former "
          f"Wella Professionals North America Signature Artist. {name} clients come to us for balayage, highlights, "
-         f"blonding, colour correction and precision cutting."),
+         f"blonding, color correction and precision cutting."),
         (f"How do I book an appointment from {name}?",
          BOOK_A),
         (f"What services can {name} clients book?",
-         "Balayage, highlights and lowlights, blonding, dimensional and corrective colour, precision haircuts, "
+         "Balayage, highlights and lowlights, blonding, dimensional and corrective color, precision haircuts, "
          "keratin smoothing treatments, hair extensions, blowouts and bridal styling."),
         ("What are your hours?",
-         f"{HOURS}, closed Sunday and Monday. Online booking stays open 24 hours a day."),
+         f"{HOURS}, closed Sunday. Online booking stays open 24 hours a day."),
     ]
 
 
 def stylist_faq(name, role, specialties):
     spec = ", ".join(specialties[:-1]) + " and " + specialties[-1] if len(specialties) > 1 else (
-        specialties[0] if specialties else "hair colour and cutting")
+        specialties[0] if specialties else "hair color and cutting")
     first = name.split()[0]
     return [
         (f"How do I book an appointment with {name}?",
          f"Book {first} directly through our online booking, which is open 24 hours a day, or call {PHONE} and we "
          f"will find you a slot. New clients are welcome."),
-        (f"What does {name} specialise in?",
+        (f"What does {name} specialize in?",
          f"{first} works in {spec}. Every appointment starts with a consultation, so bring photos of what you want "
          "and be honest about how much maintenance you are up for."),
         (f"Where does {name} work?",
@@ -517,10 +744,9 @@ def stylist_faq(name, role, specialties):
         ("What should I expect at my first appointment?",
          f"A consultation before anything else — {first} will look at your hair's history and condition, talk through "
          "what is realistic in one visit versus what needs staging, and quote you before starting. Allow extra time "
-         "if you are booking colour for the first time."),
-        ("What colour line does the salon use?",
-         "Wella Professionals, exclusively. Owner Derek Piekarski served on the Wella North America Signature Artist "
-         "Team and trained colourists for the brand across North America."),
+         "if you are booking color for the first time."),
+        ("What color line does the salon use?",
+         "We proudly utilize Wella Professionals, R+Co, and some Aveda color."),
     ]
 
 
@@ -529,14 +755,14 @@ PAGE_FAQ = {
         ("What makes Craft Collective different from other Pittsburgh salons?",
          "Our owner, Derek Piekarski, spent years training other stylists — he served on the Wella Professionals "
          "North America Signature Artist Team and was North America Manager of Technical Capabilities for Aveda. "
-         "Every colourist on our floor has been trained by him personally, to the same standard."),
+         "Every colorist on our floor has been trained by him personally, to the same standard."),
         ("Where are your salons located?",
          f"Two studios: {NH_ADDR} in Pittsburgh's North Hills, and {CB_ADDR} in Canonsburg. We see clients from "
          "across greater Pittsburgh."),
         ("What services do you offer?",
-         "Balayage, highlights, blonding, dimensional and corrective colour, precision haircuts, keratin smoothing, "
+         "Balayage, highlights, blonding, dimensional and corrective color, precision haircuts, keratin smoothing, "
          "hair extensions, blowouts and bridal styling, plus nails, skin and lash services."),
-        ("What are your hours?", f"{HOURS}. Closed Sunday and Monday. Online booking is open 24/7."),
+        ("What are your hours?", f"{HOURS}. Closed Sunday. Online booking is open 24/7."),
         ("How do I book?", BOOK_A),
     ],
     "book": [
@@ -545,10 +771,10 @@ PAGE_FAQ = {
          "Online booking currently covers our North Hills studio on Babcock Blvd. The Canonsburg studio on W Pike St "
          f"runs by appointment — call {PHONE} to schedule there."),
         ("How far in advance should I book?",
-         "Two to three weeks for colour services, and longer for Saturdays or for bridal. Cuts can often be "
+         "Two to three weeks for color services, and longer for Saturdays or for bridal. Cuts can often be "
          "accommodated sooner. Weddings should be booked six to nine months ahead."),
         ("Do you take walk-ins?",
-         "When there is availability, yes — but colour appointments in particular fill well ahead, so booking is "
+         "When there is availability, yes — but color appointments in particular fill well ahead, so booking is "
          "always safer."),
         ("What is your cancellation policy?",
          f"We ask for at least 24 hours' notice so the slot can be offered to someone else. Call {PHONE} as soon as "
@@ -559,62 +785,61 @@ PAGE_FAQ = {
          "Our stylists, led by owner Derek Piekarski — a former Wella Professionals North America Signature Artist "
          "and Master Trainer. Everything here comes from work done on the salon floor in Pittsburgh."),
         ("What topics do you cover?",
-         "Colour technique, balayage and highlights, hair care for coloured hair, extensions, keratin smoothing, "
+         "Color technique, balayage and highlights, hair care for colored hair, extensions, keratin smoothing, "
          "seasonal care for Pittsburgh's climate, and trend guides."),
         ("Can I book a consultation about something I read here?",
          f"Yes — that is what the articles are for. Book online 24/7 or call {PHONE} and mention what you have been "
          "reading."),
         ("Do you offer product recommendations?",
-         "Yes, both in our articles and in person. Recommendations in the salon are matched to your specific colour "
+         "Yes, both in our articles and in person. Recommendations in the salon are matched to your specific color "
          "formula and hair condition rather than given as blanket advice."),
     ],
-    "derek-piekarski": [
-        ("Who is Derek Piekarski?",
-         "Derek Piekarski is the owner of Craft Collective Salon Group and a globally recognised hairdresser. He "
-         "served on the North America Signature Artist Team for Wella Professionals and was North America Manager "
-         "of Technical Capabilities for Aveda / Estée Lauder."),
-        ("What awards has Derek won?",
-         "He was named one of the top trainers in the world for Wella Professionals in 2016 and received the Franz "
-         "Ströher Global Education Master Trainer Award. He has been featured in Vogue India and in the ELMI Cut "
-         "Craft video series."),
-        ("Can I book an appointment with Derek?",
-         f"Yes. Derek sees clients at our North Hills studio at {NH_ADDR}. Book online or call {PHONE} — his column "
-         "books out further ahead than most, so plan early."),
-        ("What does Derek specialise in?",
-         "Balayage, blonding, colour correction, dimensional colour, and hair education. Much of his career has been "
-         "spent teaching these techniques to other professionals."),
-        ("Does Derek train the rest of the team?",
-         "Yes. Every colourist at Craft Collective is trained by Derek directly, using the same curriculum he taught "
-         "to salon professionals across North America, Europe and Asia."),
-    ],
+    "derek-piekarski": None,   # removed Sept 2026 at the owner's request -- the four
+                               # entries restated the credentials section directly above
+                               # them, and "Can I book an appointment with Derek?" sat a
+                               # few hundred pixels above a "Book with Derek" CTA that
+                               # actually answers it. The cutting-only fact that lived in
+                               # the last entry now sits in .derek-story on the page.
     "hair-salon-gallery-pittsburgh": [
         ("Is the work in this gallery done at your salon?",
          "Yes — everything shown is work by Craft Collective stylists at our Pittsburgh North Hills and Canonsburg "
          "studios."),
         ("Can I bring a photo from the gallery to my appointment?",
-         "Please do. Reference photos are the single most useful thing you can bring to a colour consultation, and "
+         "Please do. Reference photos are the single most useful thing you can bring to a color consultation, and "
          "your stylist can tell you immediately what it takes to get there on your hair."),
         ("How do I book the look I want?",
          BOOK_A),
         ("Will my hair look exactly like the photo?",
-         "Your starting colour, hair history and texture all affect the outcome. A good consultation is where we tell "
+         "Your starting color, hair history and texture all affect the outcome. A good consultation is where we tell "
          "you honestly what is achievable in one appointment and what needs staging over two or three."),
-        ("What colour products do you use?",
-         "Wella Professionals, exclusively. Our owner served on the Wella North America Signature Artist Team."),
+        ("What color products do you use?",
+         "We proudly utilize Wella Professionals, R+Co, and some Aveda color. Our owner served on the Wella North America "
+         "Signature Artist Team."),
+    ],
+    "artist-team": [
+        ("Who at Craft Collective is on a brand artist team?",
+         "Kim Hughes is on the R+Co artist team and Sherry Maiolini is on the Wella "
+         f"Professionals artist team. Both see clients at our North Hills studio at {NH_ADDR}."),
+        ("What is a brand artist team?",
+         "A roster of working hairdressers a brand selects to represent it — testing and "
+         "demonstrating its techniques and products. Members bring what they learn back "
+         "to the floor, which is the point of having them here."),
+        ("Can I book with Kim or Sherry?",
+         f"Yes. Book online 24 hours a day, or call {PHONE} and we will find you a slot."),
     ],
     "hair-care-tips": [
-        ("How often should I wash coloured hair?",
+        ("How often should I wash colored hair?",
          "Two to three times a week for most people. Every wash costs pigment, so stretching washes with dry shampoo "
-         "meaningfully extends the life of a colour service."),
-        ("What products protect colour-treated hair?",
-         "Sulphate-free colour-safe shampoo first — it makes more difference than anything else — plus a heat "
+         "meaningfully extends the life of a color service."),
+        ("What products protect color-treated hair?",
+         "Sulphate-free color-safe shampoo first — it makes more difference than anything else — plus a heat "
          "protectant before hot tools and a weekly deep conditioner. Your stylist will match specifics to your formula."),
         ("How do I stop frizz in Pittsburgh humidity?",
          "Reduce heat damage, keep moisture balance up with regular conditioning, and consider a keratin smoothing "
          "treatment, which controls frizz for three to five months."),
         ("How often should I trim my hair?",
          "Every 6 to 8 weeks for short shapes and every 10 to 12 weeks for long hair. If you are growing your hair "
-         "out, regular dusting of the ends prevents splits travelling up the shaft."),
+         "out, regular dusting of the ends prevents splits traveling up the shaft."),
         ("Can I fix damaged hair at home?",
          "Bond-building and protein treatments help, but only if the damage is the type they address. Bring damaged "
          "hair in and we will tell you whether it needs protein, moisture, or simply cutting off."),
@@ -629,24 +854,24 @@ PAGE_FAQ = {
          f"Yes, online booking lets you choose by name. If you are new and unsure who to pick, call {PHONE} and we "
          "will match you."),
         ("Are all your stylists trained the same way?",
-         "Yes. Every colourist is trained directly by owner Derek Piekarski, formerly of the Wella Professionals "
+         "Yes. Every colorist is trained directly by owner Derek Piekarski, formerly of the Wella Professionals "
          "North America Signature Artist Team, using the curriculum he taught to professionals internationally."),
         ("Which location does each stylist work at?",
          f"Most of the team is at our North Hills studio at {NH_ADDR}; the Canonsburg studio at {CB_ADDR} runs by "
          f"appointment. Call {PHONE} to confirm for a specific stylist."),
         ("Do you take new clients?",
-         "Yes, at both studios and across the team. New colour clients should allow extra time at the first visit "
+         "Yes, at both studios and across the team. New color clients should allow extra time at the first visit "
          "for a full consultation."),
     ],
     "pittsburgh-hair-salon-guide-2026": [
         ("How do I choose a hair salon in Pittsburgh?",
          "Look for verifiable credentials rather than marketing language, a stylist portfolio showing hair like yours, "
-         "and a real consultation before any chemical service. A salon that will not consult before colouring is "
+         "and a real consultation before any chemical service. A salon that will not consult before coloring is "
          "guessing at your result."),
-        ("What should a colour consultation cover?",
+        ("What should a color consultation cover?",
          "Your hair's history, what is achievable in one appointment versus what needs staging, the maintenance the "
          "result will require, and a price — before anything is mixed."),
-        ("How much does hair colour cost in Pittsburgh?",
+        ("How much does hair color cost in Pittsburgh?",
          "It scales with length, density and complexity rather than sitting at a flat rate, which is why reputable "
          f"salons quote at consultation. Call {PHONE} and we will book you one."),
         ("What neighbourhoods do you serve?",
@@ -658,17 +883,17 @@ PAGE_FAQ = {
     ],
     "reviews": [
         ("How is Craft Collective Salon Group rated?",
-         "4.9 out of 5 stars across 247 client reviews, for balayage, highlights, colour correction and precision "
+         "5.0 out of 5 stars across 809 client reviews, for balayage, highlights, color correction and precision "
          "cutting."),
         ("Where can I read reviews?",
-         "Reviews appear on this page and on Google, and our work is posted on Instagram at "
-         "@craftcollectivesalongroup."),
+         "On our Google listing, where every review is published in full. Our work is posted on "
+         "Instagram at @craftcollectivesalongroup."),
         ("Can I leave a review?",
          "Please do — Google reviews help other Pittsburgh clients find a stylist who does the kind of work they want."),
         ("What do clients say most often?",
-         "Two things come up repeatedly: that the consultation is genuinely thorough, and that colour grows out well "
+         "Two things come up repeatedly: that the consultation is genuinely thorough, and that color grows out well "
          "enough to stretch the time between appointments."),
-        ("How do I book after reading these?", BOOK_A),
+        ("How do I book an appointment?", BOOK_A),
     ],
 }
 
@@ -693,6 +918,7 @@ AREA_LINKS = [
 CORE_LINKS = [
     ("/hair-services-pittsburgh", "All Services"),
     ("/meet-the-team", "Meet the Team"),
+    ("/artist-team", "Artist Team"),
     ("/derek-piekarski", "Derek Piekarski"),
     ("/hair-salon-gallery-pittsburgh", "Gallery"),
     ("/reviews", "Reviews"),
@@ -789,8 +1015,8 @@ def organization(page_url):
         "email": EMAIL,
         "description": (
             "Craft Collective Salon Group is a hair salon group serving the greater Pittsburgh "
-            "area, specialising in balayage, highlights, blonding, dimensional and corrective "
-            "colour, keratin smoothing, hair extensions and precision cutting. Led by Derek "
+            "area, specializing in balayage, highlights, blonding, dimensional and corrective "
+            "color, keratin smoothing, hair extensions and precision cutting. Led by Derek "
             "Piekarski, formerly of the Wella Professionals North America Signature Artist Team."
         ),
         "logo": {"@type": "ImageObject", "url": f"{SITE}/images/logo.png"},
@@ -850,14 +1076,11 @@ def organization(page_url):
             "https://www.instagram.com/derek.piekarski",
             BOOKING,
         ],
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "bestRating": "5",
-            "worstRating": "1",
-            "ratingCount": "247",
-            "reviewCount": "247",
-        },
+        # No aggregateRating. The figure the site shows is the salon's own
+        # reading of its Google listing, not a rating this site computes, and a
+        # business marking up its own aggregate is what Google's review-snippet
+        # guidance exists to stop. It stays as visible text next to a link to
+        # the listing, where a reader can check it.
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": PHONE_HREF,
@@ -908,48 +1131,57 @@ def service_schema(slug, url):
                 "url": f"{SITE}/book",
             }],
         },
-        "aggregateRating": {
-            "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5",
-            "ratingCount": "247", "reviewCount": "247",
-        },
     }
 
 
-REVIEW_RE = re.compile(
-    r'<div class="review-card">\s*'
-    r'(?:<div class="review-stars">.*?</div>\s*)?'
-    r'<p class="review-text">(.*?)</p>\s*'
-    r'.*?<p class="review-name">(.*?)</p>',
-    re.S)
+# ---------------------------------------------------------------------------
+# REVIEW MARKUP IS DISABLED ON PURPOSE. DO NOT RE-ENABLE IT.
+#
+# This function used to scrape the .review-card blocks off /reviews and emit
+# them as schema.org Review nodes (with a hardcoded 5-star reviewRating) inside
+# an ItemList. It no longer does, and the code that built those nodes has been
+# deleted rather than commented out, so it cannot be switched back on by
+# flipping a flag.
+#
+# Why:
+#
+#   The reviews this salon displays are GOOGLE reviews. They are written by
+#   guests on Google's platform, they live on the Google Business Profile, and
+#   they are reproduced on this site as page CONTENT with attribution back to
+#   Google. They are third-party review data.
+#
+#   Google's structured data policy for reviews is explicit that review markup
+#   is for first-party reviews — reviews the site itself collected — and that a
+#   site must not mark up reviews it has taken from another source. Copying
+#   Google reviews into Review/AggregateRating markup on your own domain is the
+#   textbook version of what that policy forbids. It earns no rich result, and
+#   it is the kind of thing that gets structured data ignored site-wide or draws
+#   a manual action.
+#
+#   The same reasoning is why aggregateRating was removed from organization()
+#   and service_schema(). See the comments there; this is the third leg of the
+#   same decision.
+#
+# What this means in practice:
+#
+#   - Real Google reviews CAN be displayed on the page. That is content, and
+#     content is fine. Show them with visible "via Google" attribution.
+#   - They must NOT be re-emitted as Review, AggregateRating, or an ItemList of
+#     Review nodes. Displaying and marking up are different things.
+#   - process() still calls strip_schema(txt, {"ItemList"}) before this point,
+#     so any Review ItemList baked into a page by an older build is removed on
+#     the next pass. That is deliberate — leave it.
+#
+# If a genuine first-party review system is ever built (reviews collected on
+# this site, by this business, verifiably from real guests), Review markup
+# becomes legitimate again and this can be written fresh against that data.
+# Scraping the page's visible cards is not that, whatever the cards contain.
+# ---------------------------------------------------------------------------
 
 
 def reviews_schema(txt, url):
-    """Lift the reviews the page already displays into Review nodes."""
-    out = []
-    for body, who in REVIEW_RE.findall(txt)[:12]:
-        body = norm(" ".join(re.sub(r"<[^>]+>", " ", body).split())).strip('"\u201c\u201d ')
-        who = norm(" ".join(re.sub(r"<[^>]+>", " ", who).split()))
-        if len(body) < 40 or not who:
-            continue
-        out.append({
-            "@type": "Review",
-            "reviewBody": body,
-            "author": {"@type": "Person", "name": who},
-            "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5"},
-            "itemReviewed": {"@id": f"{SITE}/#organization"},
-        })
-    if not out:
-        return None
-    return {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "@id": url + "#reviews",
-        "name": "Client reviews of Craft Collective Salon Group",
-        "itemListElement": [
-            {"@type": "ListItem", "position": i + 1, "item": r}
-            for i, r in enumerate(out)
-        ],
-    }
+    """Always returns None. Review markup is not emitted — see above."""
+    return None
 
 
 TEAM_CARD = re.compile(
@@ -1058,18 +1290,18 @@ TRUST_BAR = '''
     <div class="trust-inner">
       <div class="trust-item">
         <span class="trust-value"><span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span></span>
-        <span class="trust-label">4.9 from 247 reviews</span>
+        <span class="trust-label">5.0 from 809 reviews</span>
       </div>
       <div class="trust-item">
-        <span class="trust-value">Wella</span>
-        <span class="trust-label">Professionals Artist Team</span>
+        <span class="trust-value">2</span>
+        <span class="trust-label"><a class="trust-link" href="/artist-team">Stylists on Wella Professionals and R+Co artist teams</a></span>
       </div>
       <div class="trust-item">
         <span class="trust-value">2</span>
         <span class="trust-label">Pittsburgh-area studios</span>
       </div>
       <div class="trust-item">
-        <span class="trust-value">39</span>
+        <span class="trust-value">40+</span>
         <span class="trust-label">Stylists &amp; specialists</span>
       </div>
     </div>
@@ -1129,19 +1361,19 @@ SERVICE_ART = {
          (STOCK["caramel"], "Partial highlights framing the face, Pittsburgh salon"),
          (STOCK["honey"], "Full head of foils finished with a custom toner, Pittsburgh")]),
     "hair-color-pittsburgh": (
-        SALON["auburn"], "Rich auburn hair colour transformation at Craft Collective, Pittsburgh",
-        [(STOCK["red"], "Dimensional red hair colour, Craft Collective Pittsburgh"),
-         (STOCK["livedin"], "Lived-in dimensional colour, Pittsburgh salon"),
-         (SALON["platinum"], "Platinum colour transformation, Pittsburgh")]),
+        SALON["auburn"], "Rich auburn hair color transformation at Craft Collective, Pittsburgh",
+        [(STOCK["red"], "Dimensional red hair color, Craft Collective Pittsburgh"),
+         (STOCK["livedin"], "Lived-in dimensional color, Pittsburgh salon"),
+         (SALON["platinum"], "Platinum color transformation, Pittsburgh")]),
     "hair-extensions-pittsburgh": (
         STOCK["extensions"], "Hand-tied hair extensions fitted at Craft Collective Salon Group, Pittsburgh",
         [(STOCK["length"], "Length and volume added with hand-tied wefts, Pittsburgh"),
-         (STOCK["livedin"], "Extensions colour-matched to existing balayage, Pittsburgh"),
+         (STOCK["livedin"], "Extensions color-matched to existing balayage, Pittsburgh"),
          (SALON["interior"], "Extension fitting at the Craft Collective studio, Pittsburgh")]),
     "keratin-treatment-pittsburgh": (
         SALON["bob"], "Smooth, frizz-free finish after a keratin treatment, Pittsburgh",
         [(STOCK["layers"], "Keratin-smoothed layers holding through Pittsburgh humidity"),
-         (STOCK["livedin"], "Frizz-free smoothing on coloured hair, Pittsburgh salon"),
+         (STOCK["livedin"], "Frizz-free smoothing on colored hair, Pittsburgh salon"),
          (SALON["interior"], "Keratin smoothing service at Craft Collective, Pittsburgh")]),
     "haircuts-pittsburgh": (
         SALON["bob"], "Precision bob haircut at Craft Collective Salon Group, Pittsburgh",
@@ -1152,7 +1384,7 @@ SERVICE_ART = {
         STOCK["station"], "Blowout and styling at the Craft Collective styling station, Pittsburgh",
         [(SALON["bob"], "Smooth blowout finish, Craft Collective Pittsburgh"),
          (STOCK["layers"], "Round-brush blowout with movement, Pittsburgh salon"),
-         (STOCK["livedin"], "Blowout on lived-in blonde colour, Pittsburgh")]),
+         (STOCK["livedin"], "Blowout on lived-in blonde color, Pittsburgh")]),
     "bridal-hair-pittsburgh": (
         STOCK["bridal"], "Bridal hair styling at Craft Collective Salon Group, Pittsburgh",
         [(STOCK["honey"], "Soft bridal waves styled in Pittsburgh"),
@@ -1167,7 +1399,7 @@ SERVICE_ART = {
 
 BLOG_ART = {
     "mens-grooming-trends-2026": (STOCK["mens"], "Men's textured crop and fade, Craft Collective Salon Group Pittsburgh"),
-    "spring-hair-care-pittsburgh": (STOCK["sunkissed"], "Sun-kissed spring hair colour by Craft Collective, Pittsburgh"),
+    "spring-hair-care-pittsburgh": (STOCK["sunkissed"], "Sun-kissed spring hair color by Craft Collective, Pittsburgh"),
     "top-hair-trends-pittsburgh-2026": (STOCK["livedin"], "Lived-in dimensional blonde, a leading 2026 Pittsburgh hair trend"),
 }
 
@@ -1176,11 +1408,33 @@ PAGE_ART = {
     "reviews": (SALON["balayage"], "Balayage work reviewed by Craft Collective clients in Pittsburgh"),
     "book": (SALON["interior"], "The Craft Collective Salon Group studio on Babcock Blvd, Pittsburgh"),
     "faq": (STOCK["station"], "Styling station at Craft Collective Salon Group, Pittsburgh"),
-    "hair-care-tips": (STOCK["sunkissed"], "Colour-treated hair cared for by Craft Collective, Pittsburgh"),
+    "hair-care-tips": (STOCK["sunkissed"], "Color-treated hair cared for by Craft Collective, Pittsburgh"),
     "pittsburgh-hair-salon-guide-2026": (SALON["interior"], "Inside Craft Collective Salon Group, Pittsburgh North Hills"),
 }
 
-# Location pages alternate so neighbouring areas do not look identical.
+# The two studios show themselves. Everything else on a location page is
+# generic to the group, so the band under the masthead is the one place each
+# page can be about its own room -- North Hills the warehouse floor, Canonsburg
+# the loft and the brick wall. Both photographs are 3:2, which survives the
+# band's 21:9 desktop crop and its 4:3 phone crop with the room still legible.
+# These are real studio photographs and must not be swapped for stock or for a
+# model shot; the twenty area pages below are a different case, since there is
+# no room to show for an area we merely serve.
+STUDIO_ART = {
+    "north-hills-pittsburgh": (
+        "/images/salon-color-bar-1600x1066.jpg",
+        "The main floor of the North Hills studio: styling chairs on mats down a "
+        "wall of gilt mirrors and ring lights, with the color bar and shelves of "
+        "tube color across the back wall."),
+    "canonsburg": (
+        "/images/canonsburg-studio-wide-1600x1067.jpg",
+        "The Canonsburg studio: color stations, mirrors and backwash chairs on "
+        "dark original plank floors, beneath a timber loft and stair and an "
+        "exposed brick wall."),
+}
+
+# The remaining location pages are areas served, not studios, and alternate so
+# neighbouring areas do not look identical.
 AREA_ART = [
     (SALON["interior"], "Craft Collective Salon Group studio, Pittsburgh North Hills"),
     (SALON["balayage"], "Balayage by Craft Collective Salon Group for {} clients"),
@@ -1231,6 +1485,41 @@ def service_shots(shots, name):
 # reserves zero vertical space until each image arrives, then reflows the page
 # under the reader — the single largest CLS source on the site.
 IMG_DIMS = {
+    # Local masters, keyed "l:<base>" — see _asset_key.
+    "l:salon-floor": (3916, 5874),
+    "l:derek-at-the-chair": (1600, 1200),
+    # The North Hills studio photographs. Each base carries 4:3 thumbnail crops
+    # (320/480/640 wide) plus full-frame versions for the lightbox, so _variant
+    # has two shapes to choose between and matches on shape before size.
+    "l:salon-portrait-room": (5584, 3666),
+    "l:salon-wash-stations": (4000, 6000),
+    "l:salon-color-bar": (5164, 3443),
+    # The Canonsburg studio photographs. Same arrangement: 4:3 thumbnail crops
+    # plus full-frame files. All three masters are portrait, so the thumbnail
+    # crop is doing real work — see the note in the page markup about the
+    # front-room crop being biased upward rather than centered.
+    "l:canonsburg-styling-row": (1932, 2576),
+    "l:canonsburg-front-room": (1932, 2576),
+    "l:canonsburg-portrait-wall": (1932, 2576),
+    # The landscape band cut of the Canonsburg front room, carried under its own
+    # base name. The master is portrait, so a derivative filed under the same
+    # base would have IMG_DIMS reporting 3:4 and _variant would hand the hero
+    # band a portrait file for a 21:9 slot.
+    "l:canonsburg-studio-wide": (1932, 1288),
+    # Angelina Labella's portrait. The master is a tall phone photograph
+    # (1206x2622), not a studio frame like the rest of the team, so the square
+    # derivatives are cut head-and-shoulders from the upper third and the 3:2
+    # social card is the same square on a blurred fill rather than a crop into
+    # her face. IMG_DIMS carries the shape the square crops actually are.
+    "l:team/angelina-labella": (1206, 1206),
+    # Sarah Burke's portrait. A proper studio headshot, 1122x1402 (4:5), so the
+    # square derivatives are a full-width cut from the top of the frame rather
+    # than a crop into the face. The 3:2 social card cannot hold head and
+    # shoulders at that aspect, so it is the square on a blurred fill of itself,
+    # the same treatment as Angelina's. The entry records the shape the square
+    # crops actually are.
+    "l:team/sarah-burke": (1122, 1122),
+
     "u:1500917293891-ef795e70e1f6": (600, 400),
     "u:1519699047748-de8e457a634e": (600, 600),
     "u:1519735777090-ec97162dc266": (600, 368),
@@ -1299,7 +1588,15 @@ def _asset_key(src):
     if m:
         return "u:" + m.group(1)
     m = re.search(r"/media/([\w~.]+?)(?:/v1/|$)", src)
-    return "w:" + m.group(1) if m else None
+    if m:
+        return "w:" + m.group(1)
+    # Local artwork. Without this every /images/ path misses IMG_DIMS and
+    # img_ratio hands back its 1.0 fallback, which declares a portrait
+    # photograph square and builds the srcset around that.
+    m = re.search(r"^/images/(.+?)(?:-\d+x\d+)?\.(?:jpg|png)$|^/images/(.+?)$", src)
+    if m:
+        return "l:" + (m.group(1) or m.group(2))
+    return None
 
 
 def img_ratio(src, fallback=1.0):
@@ -1318,8 +1615,17 @@ def _variant(src, w, h):
         if (m := re.search(r"-(\d+)x(\d+)\.jpg$", p)))
     if not have:
         return src
-    fit = [c for c in have if c[0] >= w] or [have[-1]]
-    return "/images/" + fit[0][2]
+    # Shape first, size second. Several bases carry more than one crop at the
+    # same width — derek-at-the-chair has a 480x270 and a 480x360 — and picking
+    # on width alone hands a 16:9 file to a slot built for 4:3, so the photo
+    # changes crop between one breakpoint and the next. Compare shapes in log
+    # space, keep the closest, then take the smallest wide-enough file in it.
+    want = math.log(w / max(1, h))
+    shape = lambda c: round(abs(math.log(c[0] / c[1]) - want) / 0.05)
+    keep = min(shape(c) for c in have)
+    same = [c for c in have if shape(c) == keep]
+    fit = [c for c in same if c[0] >= w] or [same[-1]]
+    return "/images/" + min(fit, key=lambda c: c[0])[2]
 
 
 # role -> (candidate widths, sizes attribute, rendered aspect ratio or None to
@@ -1332,6 +1638,17 @@ IMG_ROLES = {
     "card":        ([320, 480, 640, 800], "(min-width: 901px) 380px, (min-width: 601px) 50vw, 100vw", 4 / 3),
     "portrait":    ([280, 420, 560], "(min-width: 901px) 280px, (min-width: 601px) 50vw, 100vw", 1.0),
     "gallery":     ([320, 480, 640, 800], "(min-width: 901px) 380px, 50vw", 4 / 3),
+    # The location studio thumbnails are deliberately small — three across half
+    # of a 1200px block, so about 160px each, and never more than 45vw. Reusing
+    # "gallery" here would advertise 380px and pull the 640px file for a 157px
+    # slot. Widths stop at 640 because that is the largest 4:3 crop committed.
+    "loc-thumb":   ([320, 480, 640], "(min-width: 901px) 160px, (min-width: 521px) 30vw, 45vw", 4 / 3),
+    # The two location cards on the homepage. Content width inside the card's
+    # 3rem padding is about 500px in the two-column layout and 625px when the
+    # grid collapses to one column at 900px, which is why the middle band is
+    # the widest of the three. The photographs are 3:2 and the card slot is
+    # 16:9, so object-fit trims a little top and bottom.
+    "loc-card":    ([640, 960, 1280], "(min-width: 901px) 500px, (min-width: 601px) 630px, 300px", 3 / 2),
 }
 
 
@@ -1352,6 +1669,8 @@ def classify_img(tag, before):
         "blog-card-img": "card",
         "service-card-img": "card",
         "svc-shot": "gallery",
+        "loc-shot": "loc-thumb",
+        "location-shot": "loc-card",
         "loc-hero-img": "hero-full",
         "blog-hero-img": "article",
     }.get(parent, "card")
@@ -1481,6 +1800,36 @@ def classify(path):
     return "page", parts[0]
 
 
+STUDIO_HERO_RE = re.compile(r'\s*<p class="page-studio">.*?</p>', re.S)
+
+
+def apply_studio_label(slug, txt):
+    """Put the studio label on a stylist hero, from STYLIST_STUDIO.
+
+    Idempotent: any existing attribute and label come out before the current
+    ones go in, so running this twice leaves the page identical.
+
+    The label goes AFTER the </h1>, never before it. stylist_meta() and
+    get_faqs() both read the name with class="name">(.*?)</h1> and the role
+    with class="page-eyebrow">(.*?)< , so anything inserted between the eyebrow
+    and the name, or inside the h1, changes the title, the meta description and
+    all five generated FAQ answers for that stylist.
+    """
+    txt = re.sub(r'(<section id="main" class="hero)"', r'\1"', txt)
+    txt = re.sub(r'(<section id="main" class="hero") data-studio="[a-z-]+"', r'\1', txt)
+    txt = STUDIO_HERO_RE.sub("", txt)
+    if slug in STUDIO_UNLABELLED:
+        return txt
+    m = re.search(r'<h1 class="name">.*?</h1>', txt, re.S)
+    if not m:
+        return txt
+    txt = txt.replace('<section id="main" class="hero"',
+                      f'<section id="main" class="hero" data-studio="{studio_of(slug)}"', 1)
+    m = re.search(r'<h1 class="name">.*?</h1>', txt, re.S)
+    indent = " " * 6
+    return txt[:m.end()] + "\n" + indent + studio_label("page-studio") + txt[m.end():]
+
+
 def page_url(path):
     p = path.replace(os.sep, "/")
     if p == "index.html":
@@ -1488,7 +1837,31 @@ def page_url(path):
     return SITE + "/" + p[: -len("/index.html")]
 
 
+# FAQ BLOCKS ARE OFF, SITE-WIDE. Removed Sept 2026 at the owner's request:
+# "just please remove all frequently ask questions we do not need these a lot
+# are confusing". He was right on both counts. The 425 entries collapsed to
+# roughly 213 distinct answer templates -- the eight commonest accounted for
+# half of every answer on the site -- and a good number had drifted into
+# contradicting the pages they sat on: 38 stylist pages answered "Where does
+# {name} work?" with "call to confirm which location" directly below a hero
+# that already said CANONSBURG ONLY. FAQ rich results were restricted to
+# government and health sites in Aug 2023 and dropped from Google Search
+# entirely on 7 May 2026, so there was nothing to lose by it either.
+#
+# /faq keeps its own hand-built accordion and is untouched. Its FAQPage
+# schema comes from scrape_visible_faq() rather than from here, so returning
+# None below leaves that page working exactly as before -- and if its visible
+# accordion ever goes, the scrape finds nothing and the schema goes with it.
+#
+# To bring the blocks back, delete the two lines under the docstring. Every
+# table below (SERVICE_FAQ, BLOG_FAQ, PAGE_FAQ, area_faq, stylist_faq) is
+# intact and still correct.
+FAQ_BLOCKS_ENABLED = False
+
+
 def get_faqs(kind, slug, txt):
+    if not FAQ_BLOCKS_ENABLED:
+        return None
     if kind == "service":
         return SERVICE_FAQ.get(slug)
     if kind == "location":
@@ -1496,6 +1869,8 @@ def get_faqs(kind, slug, txt):
     if kind == "blog-post":
         return BLOG_FAQ.get(slug)
     if kind == "stylist":
+        if slug in STYLIST_NO_FAQ:
+            return None
         name = re.search(r'class="name">(.*?)</h1>', txt, re.S)
         name = " ".join(re.sub(r"<[^>]+>", " ", name.group(1)).split()) if name else slug.replace("-", " ").title()
         role = re.search(r'class="page-eyebrow">(.*?)<', txt, re.S)
@@ -1587,7 +1962,7 @@ def blogposting(slug, txt, url):
             "@type": "Person",
             "name": "Derek Piekarski",
             "url": f"{SITE}/derek-piekarski",
-            "jobTitle": "Owner & Master Stylist",
+            "jobTitle": "Owner / Stylist",
         },
         "publisher": {"@id": f"{SITE}/#organization"},
         "isPartOf": {"@type": "Blog", "name": "Craft Collective Salon Group Blog", "url": f"{SITE}/blog"},
@@ -1629,7 +2004,7 @@ def scrape_visible_faq(txt):
 TITLE_OVERRIDES = {
     "index.html": (
         "Best Hair Salon Pittsburgh PA | Craft Collective Salon",
-        "Pittsburgh's top-rated hair salon — 4.9 stars from 247 reviews. Balayage, highlights, "
+        "Pittsburgh's top-rated hair salon — 5.0 stars from 809 reviews. Balayage, highlights, "
         "hair color, extensions and keratin treatments across greater Pittsburgh. Led by Wella "
         f"Professionals artist Derek Piekarski. North Hills & Canonsburg. Call {PHONE}.",
     ),
@@ -1642,13 +2017,13 @@ TITLE_OVERRIDES = {
     "services/highlights-pittsburgh/index.html": (
         "Highlights Pittsburgh PA | Partial & Full Foils",
         "Highlights in Pittsburgh — partial foils, full foils, lowlights and dimensional blonding "
-        "at Craft Collective Salon Group. Wella Professionals color, 4.9-star rated. North Hills "
+        "at Craft Collective Salon Group. Wella Professionals and R+Co color, 5.0-star rated. North Hills "
         f"& Canonsburg. Book online or call {PHONE}.",
     ),
     "services/hair-color-pittsburgh/index.html": (
         "Hair Color Pittsburgh PA | Correction & Glossing",
-        "Hair color in Pittsburgh: single-process, grey coverage, dimensional color, glossing and "
-        "full color correction at Craft Collective Salon Group. Wella Professionals exclusively. "
+        "Hair color in Pittsburgh: single-process, gray coverage, dimensional color, glossing and "
+        "full color correction at Craft Collective Salon Group. Wella Professionals and R+Co color. "
         f"Book online or call {PHONE}.",
     ),
     "services/hair-extensions-pittsburgh/index.html": (
@@ -1681,13 +2056,14 @@ TITLE_OVERRIDES = {
     ),
     "services/mens-grooming-pittsburgh/index.html": (
         "Men's Haircuts Pittsburgh PA | Fades & Beard Trims",
-        "Men's grooming in Pittsburgh: precision cuts, fades, beard shaping and grey blending at "
+        "Men's grooming in Pittsburgh: precision cuts, fades, beard shaping and gray blending at "
         f"Craft Collective Salon Group. North Hills & Canonsburg. Book online or call {PHONE}.",
     ),
     "locations/north-hills-pittsburgh/index.html": (
         "Hair Salon North Hills Pittsburgh | Babcock Blvd",
         "Craft Collective Salon Group in Pittsburgh's North Hills — 2014D Babcock Blvd, free "
-        "parking, open Tue-Fri 9-7 and Sat 9-5. Balayage, highlights, color, keratin and "
+        "parking, open Mon 10-6, Tue-Thu 10-9, Fri 9-5 and Sat 9-4. Balayage, highlights, "
+        "color, keratin and "
         f"extensions. Book online 24/7 or call {PHONE}.",
     ),
     "locations/canonsburg/index.html": (
@@ -1721,8 +2097,8 @@ TITLE_OVERRIDES = {
         "you what it takes on your hair.",
     ),
     "reviews/index.html": (
-        "Reviews | Best Hair Salon Pittsburgh PA | 4.9 Stars",
-        "4.9 stars from 247 client reviews. Read what Pittsburgh clients say about balayage, "
+        "Reviews | Best Hair Salon Pittsburgh PA | 5.0 Stars",
+        "5.0 stars from 809 client reviews. Read what Pittsburgh clients say about balayage, "
         "highlights, color correction and precision cutting at Craft Collective Salon Group in "
         "the North Hills and Canonsburg.",
     ),
@@ -1739,7 +2115,7 @@ TITLE_OVERRIDES = {
     ),
     "blog/index.html": (
         "Hair Care Blog | Pittsburgh Salon Advice",
-        "Colour technique, hair care and trend guides from the stylists at Craft Collective Salon "
+        "Color technique, hair care and trend guides from the stylists at Craft Collective Salon "
         "Group in Pittsburgh — balayage, highlights, extensions, keratin and seasonal care for "
         "Pittsburgh's climate.",
     ),
@@ -1747,7 +2123,12 @@ TITLE_OVERRIDES = {
         "About Craft Collective | Hair Salon Pittsburgh PA",
         "Craft Collective Salon Group serves greater Pittsburgh from studios in the North Hills "
         "and Canonsburg. Every colorist trained by Wella Professionals artist Derek Piekarski. "
-        "4.9 stars from 247 reviews.",
+        "5.0 stars from 809 reviews.",
+    ),
+    "artist-team/index.html": (
+        "Wella Professionals & R+Co Artist Team | Craft Collective",
+        "Two Craft Collective stylists sit on the Wella Professionals and R+Co artist "
+        "teams. Meet Kim Hughes and Sherry Maiolini at our Pittsburgh North Hills studio.",
     ),
     "hair-care-tips/index.html": (
         "Hair Care Tips from Pittsburgh Salon Stylists",
@@ -1757,7 +2138,7 @@ TITLE_OVERRIDES = {
     "pittsburgh-hair-salon-guide-2026/index.html": (
         "Pittsburgh Hair Salon Guide 2026 | How to Choose a Colorist",
         "How to choose a hair salon in Pittsburgh in 2026: credentials that matter, what a real "
-        "colour consultation covers, what colour actually costs, and the neighbourhoods served by "
+        "color consultation covers, what color actually costs, and the neighbourhoods served by "
         "Craft Collective Salon Group.",
     ),
 }
@@ -1790,8 +2171,8 @@ def area_meta(slug):
             f"Hair Salon Near {name} PA | Craft Collective Salon",
         ),
         f"Craft Collective Salon Group serves {name} clients from our Pittsburgh North Hills and "
-        f"Canonsburg studios. Balayage, highlights, hair color, keratin and extensions — 4.9 stars "
-        f"from 247 reviews. Book online or call {PHONE}.",
+        f"Canonsburg studios. Balayage, highlights, hair color, keratin and extensions — 5.0 stars "
+        f"from 809 reviews. Book online or call {PHONE}.",
     )
 
 
@@ -1812,7 +2193,7 @@ def stylist_meta(slug, txt):
             f"{nm} | {short_role} Pittsburgh | Craft Collective",
             f"{nm} | {short_role} Pittsburgh | Craft Collective Salon",
         ),
-        f"Book {nm}, {role.lower()} at Craft Collective Salon Group in Pittsburgh. Specialising in "
+        f"Book {nm}, {role.lower()} at Craft Collective Salon Group in Pittsburgh. Specializing in "
         f"{sp}. Trained by Wella Professionals artist Derek Piekarski. Book online or call {PHONE}.",
     )
 
@@ -1839,6 +2220,16 @@ def blog_meta(slug, txt):
 
 def og_crop(src):
     """Re-point a social image at a true 1200x630 crop.
+
+    CAUTION, and this has bitten twice. The value returned here is a ROOT
+    RELATIVE path, and set_meta() applies it to og:image and twitter:image on
+    every page it touches. Scrapers require an absolute URL; a relative one is
+    dropped, and the page loses its social image silently. Thirty-five pages
+    still carry the absolute form because the build has not been run over them.
+    Calling set_meta() by hand -- which is how this repository currently applies
+    generated metadata, the build pass being unrunnable on main -- downgrades
+    whichever pages it touches. Re-absolutise afterwards, or fix this to return
+    SITE + "/og-card.jpg", which is what it should have returned all along.
 
     The og:image:width/height tags below claim 1200x630. Both CDNs can crop to
     order, so the claim is made true rather than dropped — an accurate size
@@ -1889,6 +2280,7 @@ def process(path):
         title, desc = area_meta(slug)
     elif kind == "stylist":
         title, desc = stylist_meta(slug, txt)
+        txt = apply_studio_label(slug, txt)
     elif kind == "blog-post" and slug in BLOG_POSTS:
         title, desc = blog_meta(slug, txt)
     else:
@@ -1977,8 +2369,15 @@ def process(path):
         txt = strip_schema(txt, {"Service"})
         head_bits.append(jsonld(service_schema(slug, url)))
 
-    # Reviews and the team roster are lifted off the rendered page, so the
-    # markup can never claim testimonials the page does not actually show.
+    # The team roster is lifted off the rendered page, so the markup can never
+    # claim people the page does not actually show.
+    #
+    # Reviews are NOT lifted. reviews_schema() is disabled at source and always
+    # returns None — the displayed reviews are third-party Google reviews, and
+    # marking those up as first-party review data breaches Google's structured
+    # data policy. The full reasoning is at the reviews_schema() definition.
+    # The strip_schema call below also clears any Review ItemList left behind by
+    # an older build. Both are deliberate; read that comment before changing it.
     txt = strip_schema(txt, {"ItemList"})
     if slug == "reviews":
         rv = reviews_schema(txt, url)
@@ -2007,7 +2406,7 @@ def process(path):
 
     # ---- 3. body ----------------------------------------------------------
 
-    # Inline colour overrides were written for the dark theme. An inline style
+    # Inline color overrides were written for the dark theme. An inline style
     # attribute outranks every stylesheet rule, so these have to be rewritten
     # rather than overridden — but only inside the body, never inside <style>,
     # where the same declarations are load-bearing for the nav and footer.
@@ -2130,6 +2529,8 @@ def process(path):
     art = None
     if kind == "service" and slug in SERVICE_ART:
         art = SERVICE_ART[slug][:2]
+    elif kind == "location" and slug in STUDIO_ART:
+        art = STUDIO_ART[slug]
     elif kind == "location":
         i = sorted(AREAS).index(slug) % len(AREA_ART) if slug in AREAS else 0
         src, alt = AREA_ART[i]
@@ -2178,7 +2579,7 @@ def process(path):
     # question AND the same code runs again, so the first click toggled open
     # and straight back closed. Rather than work around a duplicate listener,
     # the inline handlers come out and assets/site.js owns every accordion on
-    # the site, which also gives these pages the independent-toggle behaviour
+    # the site, which also gives these pages the independent-toggle behavior
     # and the max-height fix the generated blocks already have.
     txt = re.sub(
         r'[ \t]*<script>(?:(?!</script>).)*?\.faq-question(?:(?!</script>).)*?</script>[ \t]*\n?',
@@ -2226,7 +2627,8 @@ def build_sitemap(paths):
         }.get(kind, ("0.7", "monthly"))
         if slug in ("book", "hair-services-pittsburgh", "derek-piekarski"):
             pri, freq = "0.9", "monthly"
-        if slug in ("reviews", "meet-the-team", "hair-salon-gallery-pittsburgh"):
+        if slug in ("reviews", "meet-the-team", "hair-salon-gallery-pittsburgh",
+                    "artist-team"):
             pri = "0.8"
         return (f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{today}</lastmod>\n"
                 f"    <changefreq>{freq}</changefreq>\n    <priority>{pri}</priority>\n  </url>")

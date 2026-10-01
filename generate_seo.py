@@ -1,7 +1,25 @@
 #!/usr/bin/env python3
 """
 Craft Collective Salon Group - SEO Enhancement Generator
-Generates: location landing pages, service pages, blog posts, enhanced sitemap
+
+SUPERSEDED. This is the scaffolding script that generated the location,
+service and blog pages in the first place. `optimize.py` is the build pass
+now; see the README. This file is kept for reference, not for running.
+
+DO NOT RUN IT. Two things here will damage the live site:
+
+  * `gen_sitemap()` writes sitemap.xml from the hardcoded tables below.
+    `optimize.py` also writes sitemap.xml, but from the pages that actually
+    exist on disk. Running this one clobbers the real sitemap with whatever
+    these tables happen to say, which is how a stylist who has left gets
+    resurrected into the index.
+
+  * `team_members` and the other rosters here are hand-maintained copies of
+    what the site contains. They go stale the moment anyone joins or leaves,
+    and nothing checks them.
+
+If you need to add a service, area or post, edit the tables near the top of
+`optimize.py` and re-run that instead.
 """
 import os
 import json
@@ -130,7 +148,7 @@ FOOTER_HTML = """
           <a href="mailto:info@craftcollectivesalongroup.com">info@craftcollectivesalongroup.com</a><br><br>
           2014D Babcock Blvd, Pittsburgh PA 15209<br>
           115 W Pike St, Canonsburg PA 15317<br><br>
-          <div class="footer-rating">&#9733; 5.0 Stars - 700+ Reviews</div>
+          <div class="footer-rating">&#9733; 5.0 Stars - 800+ Reviews</div>
         </div>
       </div>
       <div>
@@ -219,13 +237,13 @@ def make_page(title, description, canonical, og_type, breadcrumbs, schema_json, 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>{SHARED_CSS}</style>
-  <link rel="stylesheet" href="/assets/site.css?v=0ff8c409" />
+  <link rel="stylesheet" href="/assets/site.css?v=9148f717" />
 </head>
 <body>
 {NAV_HTML}
 {body_html}
 {FOOTER_HTML}
-  <script src="/assets/site.js?v=ceb510cb" defer></script>
+  <script src="/assets/site.js?v=755b7037" defer></script>
 </body>
 </html>"""
 
@@ -324,7 +342,7 @@ def gen_location_pages():
                 {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "17:00"}
             ],
             "areaServed": [name, "Pittsburgh", "North Hills"],
-            "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "worstRating": "1", "ratingCount": "247", "reviewCount": "247"}
+            "aggregateRating": {"@type": "AggregateRating", "ratingValue": "5.0", "bestRating": "5", "worstRating": "1", "ratingCount": "809", "reviewCount": "809"}
         }
         
         faq_schema = {
@@ -363,7 +381,7 @@ def gen_location_pages():
       <h2 class="section-headline">Just <em>{dist}</em> from {name}</h2>
       <div class="prose">
         <p>Craft Collective Salon Group has two locations serving the greater Pittsburgh area. Our flagship studio is at <strong>{NH_ADDRESS}, Pittsburgh PA {NH_ZIP}</strong> in the North Hills, and our second studio is at <strong>{CB_ADDRESS}, Canonsburg PA {CB_ZIP}</strong>.</p>
-        <p>Both locations are led by owner and globally recognized stylist Derek Piekarski, a former Wella Professionals Signature Artist and Aveda/Estee Lauder Technical Capabilities Manager. Our team of 39 stylists specializes in balayage, highlights, blonding, dimensional color, keratin treatments, hair extensions, and precision cuts.</p>
+        <p>Both locations are led by owner and globally recognized stylist Derek Piekarski, a former Wella Professionals Signature Artist and Aveda/Estee Lauder Technical Capabilities Manager. With over 40 stylists and specialists, we specialize in balayage, highlights, blonding, dimensional color, keratin treatments, hair extensions, and precision cuts.</p>
       </div>
       <div class="nap-box">
         <h3>Craft Collective Salon Group</h3>
@@ -372,7 +390,7 @@ def gen_location_pages():
           <strong>Canonsburg:</strong> {CB_ADDRESS}, Canonsburg PA {CB_ZIP}<br>
           <strong>Phone:</strong> <a href="tel:{PHONE_TEL}">{PHONE}</a><br>
           <strong>Email:</strong> <a href="mailto:{EMAIL}">{EMAIL}</a><br>
-          <strong>Hours:</strong> Tue-Fri 9am-7pm, Sat 9am-5pm<br>
+          <strong>Hours:</strong> Mon 10am-6pm, Tue-Thu 10am-9pm, Fri 9am-5pm, Sat 9am-4pm<br>
           <strong>Booking:</strong> <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book Online 24/7</a>
         </p>
       </div>
@@ -384,7 +402,7 @@ def gen_location_pages():
       <p class="section-label">Why {name} Clients Choose Us</p>
       <h2 class="section-headline">Pittsburgh's <em>top-rated</em> salon</h2>
       <div class="prose">
-        <p>With a 4.9-star rating from over 247 reviews, Craft Collective is consistently ranked as one of the best hair salons in the Pittsburgh area. {name} residents choose us for our expert colorists, welcoming atmosphere, and the kind of personalized service you will not find at a chain salon.</p>
+        <p>With a 5.0-star rating from over 809 reviews, Craft Collective is consistently ranked as one of the best hair salons in the Pittsburgh area. {name} residents choose us for our expert colorists, welcoming atmosphere, and the kind of personalized service you will not find at a chain salon.</p>
         <p>Our team includes specialists in balayage and dimensional color, extension experts certified in hand-tied and tape-in methods, keratin smoothing treatment pros, and stylists who specialize in men's grooming, bridal styling, and corrective color work.</p>
         <p><a href="/meet-the-team">Meet our full team of stylists</a> or <a href="/reviews">read what our clients say about us</a>.</p>
       </div>
@@ -434,7 +452,7 @@ SERVICES = [
         <h3>Types of Highlights We Offer</h3>
         <p><strong>Partial highlights</strong> focus on the face-framing sections and crown for a natural brightening effect. <strong>Full highlights</strong> cover the entire head for maximum dimension and lift. <strong>Lowlights</strong> add depth and richness, perfect for blondes who want more contrast or brunettes who want warmth without going lighter.</p>
         <h3>Our Approach</h3>
-        <p>Every highlight appointment starts with a consultation. Your stylist will assess your current color, discuss your goals, and recommend the best placement strategy. We use Wella Professionals lighteners and toners exclusively, ensuring consistent, healthy results.</p>
+        <p>Every highlight appointment starts with a consultation. Your stylist will assess your current color, discuss your goals, and recommend the best placement strategy. We use Wella Professionals lighteners and toners, ensuring consistent, healthy results.</p>
         <p>Appointment times range from 2 to 3.5 hours. Book online or call <a href="tel:+17245147231">724-514-7231</a>.</p>
         """
     },
@@ -445,7 +463,7 @@ SERVICES = [
         "title": "Hair Color Pittsburgh PA | Full Color, Gloss & Toner | Craft Collective",
         "meta": "Professional hair color services in Pittsburgh. Full color, root touch-ups, glossing, toning, and color corrections at Craft Collective Salon Group. Book now.",
         "content": """
-        <p>From single-process color to full transformations, Craft Collective Salon Group offers the complete spectrum of professional hair color services. Our colorists work with Wella Professionals formulas to achieve rich, lasting color that protects hair integrity.</p>
+        <p>From single-process color to full transformations, Craft Collective Salon Group offers the complete spectrum of professional hair color services. Our colorists work with Wella Professionals and R+Co formulas to achieve rich, lasting color that protects hair integrity.</p>
         <h3>Our Color Services</h3>
         <p><strong>Full color</strong> provides all-over coverage and can take you darker, warmer, cooler, or brighter. <strong>Root touch-ups</strong> maintain your existing color with seamless blending. <strong>Glossing and toning</strong> refresh your shade between full color appointments, adding shine and neutralizing unwanted warmth or brassiness.</p>
         <h3>Corrective Color</h3>
@@ -564,7 +582,7 @@ def gen_service_pages():
                 "url": SITE_URL,
                 "telephone": PHONE_TEL,
                 "address": {"@type": "PostalAddress", "streetAddress": NH_ADDRESS, "addressLocality": NH_CITY, "addressRegion": NH_STATE, "postalCode": NH_ZIP, "addressCountry": "US"},
-                "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "ratingCount": "247"}
+                "aggregateRating": {"@type": "AggregateRating", "ratingValue": "5.0", "bestRating": "5", "ratingCount": "809"}
             },
             "areaServed": {"@type": "City", "name": "Pittsburgh", "sameAs": "https://en.wikipedia.org/wiki/Pittsburgh"}
         }
@@ -595,7 +613,7 @@ def gen_service_pages():
           <strong>North Hills:</strong> {NH_ADDRESS}, Pittsburgh PA {NH_ZIP}<br>
           <strong>Canonsburg:</strong> {CB_ADDRESS}, Canonsburg PA {CB_ZIP}<br>
           <strong>Phone:</strong> <a href="tel:{PHONE_TEL}">{PHONE}</a><br>
-          <strong>Hours:</strong> Tue-Fri 9am-7pm, Sat 9am-5pm<br>
+          <strong>Hours:</strong> Mon 10am-6pm, Tue-Thu 10am-9pm, Fri 9am-5pm, Sat 9am-4pm<br>
           <strong>Booking:</strong> <a href="https://phorest.com/book/salons/craftcollectivesalongroup" target="_blank" rel="noreferrer noopener">Book Online 24/7</a>
         </p>
       </div>
@@ -799,7 +817,7 @@ def gen_sitemap():
         "derek-piekarski", "abigail-radziminski", "alexis-tara", "allison-logan",
         "alyvia-merz", "amanda-melvin", "angie-beattie", "bethany-yates", "billy-bremer",
         "carlena-bonomi", "caroline-radziminski", "cori-patterson", "delilah-keller",
-        "erin-mccleary", "grace-hartle", "greg-mckenzie", "greta-healy", "ha-na-ko",
+        "erin-mccleary", "greg-mckenzie", "greta-healy", "ha-na-ko",
         "jess-imler", "jess-mitsch", "kayla-quinn", "kelly-buttermore", "kerrie-kipp",
         "kim-hughes", "laurel-seager", "lauren-trudeau", "liz-potts", "logan-goetz",
         "mallory-puniak", "marie-puniak", "nicolette-chieffe", "olivia-spearl",

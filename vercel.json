@@ -51,6 +51,7 @@
     { "source": "/highlights", "destination": "/services/highlights-pittsburgh", "permanent": true },
     { "source": "/extensions", "destination": "/services/hair-extensions-pittsburgh", "permanent": true },
     { "source": "/keratin", "destination": "/services/keratin-treatment-pittsburgh", "permanent": true },
-    { "source": "/derek", "destination": "/derek-piekarski", "permanent": true }
+    { "source": "/derek", "destination": "/derek-piekarski", "permanent": true },
+    { "source": "/team/grace-hartle", "destination": "/meet-the-team", "permanent": true }
   ]
 }

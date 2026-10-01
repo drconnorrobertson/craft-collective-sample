@@ -49,7 +49,7 @@
 
   /* Brand gold, in two mixes.
 
-     Page CSS reaches for var(--gold) far more often as a *text* colour than
+     Page CSS reaches for var(--gold) far more often as a *text* color than
      as a fill — stylist roles, "Learn More" links, section labels, star rows —
      across selectors too varied to enumerate. At #b08d57 every one of those
      lands at 3.09:1 on white, under AA. So the token defaults to the
@@ -789,7 +789,7 @@ h3 em {
 /* --------------------------------------------------- 4c-bis. gold fills */
 
 /* The closed set of surfaces painted with the brand gold. Everything here
-   also states its own text colour, because ink on gold is the only pairing
+   also states its own text color, because ink on gold is the only pairing
    on that ground that clears AA. */
 .nav-book,
 .nav-book-mobile,
@@ -807,7 +807,7 @@ h3 em {
 
 /* `:not([class*='btn'])` again: the contact strip contains a .btn-dark, and
    forcing ink on it painted ink type onto an ink button. Buttons carry their
-   own ground and so must be exempt from any container-level colour. */
+   own ground and so must be exempt from any container-level color. */
 .about-image-badge,
 .about-image-badge .badge-num,
 .about-image-badge .badge-text,
@@ -837,7 +837,7 @@ h3 em {
 /* Reversed context: the footer and nav keep the dark ground, so gold there has
    to move the other way — the text-safe mix is 3.5:1 against #1A2440. This is
    a bare `footer a` on purpose: it is the catch-all for links the theme layer
-   has not named, and every footer link class that wants a different colour
+   has not named, and every footer link class that wants a different color
    (.footer-links a) outranks it on specificity anyway. */
 footer .footer-col-head,
 footer .section-label,
@@ -1502,7 +1502,7 @@ footer {
 
 /* The four values are set in different faces and sizes (stars, a word, two
    numerals), so a fixed box keeps their baselines on one line across the row
-   instead of letting each float to the centre of its own label height. */
+   instead of letting each float to the center of its own label height. */
 .trust-value {
   display: flex;
   align-items: center;
@@ -2599,7 +2599,7 @@ footer {
 
 /* The stylist photos are square crops, framed on each sitter's own face so the
    head sits at the same height and the same scale across all thirty-nine. The
-   card has to honour that or the work is thrown away at the last step: a
+   card has to honor that or the work is thrown away at the last step: a
    fixed-height well re-crops the square to a letterbox band and puts the
    frame back where the CSS wants it rather than where the face is. A square
    well shows the crop exactly as cut. */
@@ -2675,4 +2675,885 @@ footer a.tel-link:focus {
   }
 
   .strip-inner { animation: none; transform: none; }
+}
+
+/* The trust band's labels are set in wide-tracked uppercase in four equal
+   columns, so anything longer than a couple of words wraps. Left to itself the
+   wrap goes ragged — "Pittsburgh-area studios" broke 118px/56px on a phone.
+   Balancing evens the lines out so a two- or three-line label reads as a
+   deliberate block rather than an overflow. */
+.trust-label {
+  text-wrap: balance;
+}
+
+/* The award badge on /derek-piekarski carried a 2.5rem bottom margin to clear
+   the booking button that used to sit under it. With that button gone the
+   margin is trailing: 88px of dead space under the badge on a phone against
+   the 48px the padding intends, and a 20px upward shift of the whole block
+   where the hero centers it vertically. Scoped to :last-child so the spacing
+   comes back on its own if anything is ever placed after it again. */
+.award-badge:last-child {
+  margin-bottom: 0;
+}
+
+/* One cell of the four-across trust band links out; the other three do not.
+   Inheriting the label's size and tracking keeps the row's rhythm, and the
+   gold plus a resting underline is what marks it as a link rather than a
+   stray tappable area. Only the words are the target — making the whole
+   cell clickable next to three inert ones reads as a bug, not an affordance. */
+.trust-link {
+  color: var(--gold-deep);
+  text-decoration: underline;
+  text-decoration-color: rgba(184,154,106,0.45);
+  text-underline-offset: 0.28em;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.trust-link:hover,
+.trust-link:focus-visible {
+  color: var(--gold);
+  text-decoration-color: currentColor;
+}
+
+/* The homepage hero slot changes orientation across the breakpoints: portrait
+   beside the headline on desktop (roughly 0.64–0.80 depending on window
+   height), landscape 4:3 once the two columns stack at 900px. The photograph
+   is a 2:3 portrait, so desktop needs almost no crop and simply loses empty
+   floor off the bottom — but the stacked 4:3 slot keeps only half the frame,
+   and anchored at the top that half is all ceiling trusses. Dropping the
+   anchor to 45% moves the window to 22%–72% of the frame, which is where the
+   chairs, mirrors and the artwork at the far end actually are. */
+@media (max-width: 900px) {
+  .hero-image-panel img {
+    object-position: center 45%;
+  }
+}
+
+/* ==========================================================================
+   18. REVIEWS — POINTING AT THE SOURCE
+   ========================================================================== */
+
+/* The testimonials that used to sit here were not real and have been removed.
+   Until genuine ones are copied across, both places send the reader to the
+   Google listing, which is where the actual reviews are. These rules do not
+   touch .review-card or .testimonial-card, so restoring real cards needs no
+   CSS work. */
+
+.reviews-source {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 5rem 2rem;
+}
+
+.reviews-source-inner {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.reviews-source-copy {
+  margin: 1.5rem 0 2.5rem;
+  font-size: 0.92rem;
+  line-height: 1.9;
+  font-weight: 300;
+  color: var(--mid);
+  text-wrap: pretty;
+}
+
+.testimonials-source {
+  max-width: 560px;
+  margin: 1.5rem auto 2rem;
+  font-size: 0.92rem;
+  line-height: 1.9;
+  font-weight: 300;
+  color: var(--mid);
+  text-align: center;
+  text-wrap: pretty;
+}
+
+/* The homepage section centers its heading already; the link follows it. */
+/* The rating is the one genuine piece of proof either block has, so it does
+   the visual work the cards used to. */
+.reviews-source-proof {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  margin: 0 0 2.5rem;
+}
+
+.reviews-source-stars {
+  color: var(--gold-deep);
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+}
+
+.reviews-source-figure {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+.testimonials-inner > .btn-primary,
+.testimonials-inner > .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+@media (max-width: 600px) {
+  .reviews-source { padding: 3.5rem 1.25rem; }
+  .reviews-source-copy { margin-bottom: 2rem; }
+}
+
+/* ============================================================== 19
+   LOCATION STUDIO PHOTOGRAPHS + LIGHTBOX
+
+   The location pages are a two-column block: contact details and hours down
+   the left, the map top right. The map is 4:3 and the left column is taller,
+   so the right column always ends with dead space. This fills it with a row of
+   small studio photographs, each opening full size.
+
+   Built as a reusable component, not a North Hills special: any location page
+   gets the same row by wrapping its .map-embed in .loc-media and adding a
+   .loc-gallery beside it. Canonsburg has no photographs yet, so it has none.
+
+   The thumbnails are 4:3 to rhyme with the map above them, and they are
+   deliberately small — around 160px in the desktop column. The photographs
+   are landscape and portrait mixed, so object-fit does the cropping rather
+   than shipping a second set of crops.
+   ------------------------------------------------------------------------ */
+
+.loc-media {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+  min-width: 0;
+}
+
+.loc-gallery .info-label {
+  margin-bottom: 0.9rem;
+}
+
+.loc-shots {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.loc-shots li {
+  margin: 0;
+}
+
+.loc-shot {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  cursor: zoom-in;
+}
+
+.loc-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.loc-shot:hover img,
+.loc-shot:focus-visible img {
+  transform: scale(1.06);
+}
+
+.loc-shot:focus-visible {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loc-shot img { transition: none; }
+  .loc-shot:hover img,
+  .loc-shot:focus-visible img { transform: none; }
+}
+
+/* Under ~520px three across leaves ~96px thumbnails, which is too small to
+   read a room in. Two across gives back half the width again. */
+@media (max-width: 520px) {
+  .loc-shots { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* -------------------------------------------------------------- lightbox */
+
+/* A <dialog> rather than a hand-rolled overlay: showModal() gives the focus
+   trap, the inert background and Escape-to-close for free, and the ::backdrop
+   pseudo-element means no extra scrim element in the markup. */
+
+.lightbox {
+  border: none;
+  padding: 0;
+  background: transparent;
+  /* The UA centers a modal dialog with margin:auto against inset:0. The site's
+     reset zeroes margins on everything, which pins it to the top-left corner
+     instead, so the centring is restored explicitly here. */
+  margin: auto;
+  max-width: min(94vw, 1200px);
+  max-height: 94vh;
+  overflow: visible;
+  color: var(--paper);
+}
+
+.lightbox::backdrop {
+  background: rgba(12, 14, 22, 0.9);
+}
+
+.lightbox img {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 88vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -2.75rem;
+  right: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(247, 244, 239, 0.35);
+  background: transparent;
+  color: rgba(247, 244, 239, 0.85);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* On a phone there is no room above the image for the close control, so it
+   sits inside the top-right corner of the frame instead. */
+@media (max-width: 600px) {
+  .lightbox-close {
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(12, 14, 22, 0.65);
+  }
+}
+
+/* ============================================================== 20
+   HOMEPAGE LOCATION CARDS — PARITY
+
+   The two cards were already identical in treatment, but the front page only
+   ever showed one of the two rooms: every photograph on it was North Hills.
+   Each card now carries a photograph of its own studio and a link through to
+   its own location page, which neither had.
+
+   Every selector here is scoped to .locations-grid on purpose. The bare
+   .location-card class is shared with the "Also serving ..." block at the
+   bottom of both location pages, which has a different internal structure and
+   must not pick these up.
+
+   Parity is the whole point of this section, so the photograph sits in a fixed
+   16:9 box with object-fit rather than flowing at its own ratio. The two
+   photographs are both 3:2 today, but a future replacement of a different
+   shape must not make one card taller than the other.
+
+   What is deliberately NOT equalised: Canonsburg keeps "By appointment only"
+   and a tel: call-to-action, because it is genuinely appointment-only and a
+   Phorest link would send people to the wrong booking system.
+   ------------------------------------------------------------------------ */
+
+.locations-grid .location-shot {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin-bottom: 2.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(184, 154, 106, 0.15);
+}
+
+.locations-grid .location-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.locations-grid .location-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* The button carries its own top margin in the page's stylesheet; inside the
+   flex row that would push it out of line with the link beside it. */
+.locations-grid .location-cta {
+  margin-top: 0;
+}
+
+.locations-grid .location-view {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold);
+  text-decoration: none;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(184, 154, 106, 0.45);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.locations-grid .location-view:hover,
+.locations-grid .location-view:focus-visible {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold-light);
+}
+
+/* Stacked cards on a phone: the two actions sit on one line if they fit and
+   wrap cleanly if they do not, and the photograph loses a little height so the
+   card does not become a scroll of its own. */
+@media (max-width: 600px) {
+  .locations-grid .location-shot {
+    aspect-ratio: 3 / 2;
+    margin-bottom: 1.75rem;
+  }
+  .locations-grid .location-actions {
+    gap: 1.25rem;
+  }
+}
+
+/* Below ~380px "North Hills, Pittsburgh" wraps to two lines while "Canonsburg"
+   stays on one, and that is the single place the two cards stop matching —
+   everything else in them (photograph, eyebrow, address block, actions) is
+   already identical to the pixel. Reserve the second line on both. */
+@media (max-width: 380px) {
+  .locations-grid .location-name {
+    min-height: 2.45em;
+  }
+}
+
+/* ============================================================== 21
+   MEET THE TEAM — WHICH STUDIO EACH STYLIST WORKS AT
+
+   Every card states, beside the stylist's name, where that stylist works. One
+   of exactly three strings:
+
+       North Hills only
+       Canonsburg only
+       North Hills / Canonsburg
+
+   This replaced an earlier plan for a gold outline plus a key. Stating the
+   fact is better than encoding it in a color: there is no key to have missed,
+   nothing to misread if you cannot separate gold from the card edge, nothing
+   extra for a screen reader, and — the point the owner actually cared about —
+   a stylist who works at both can no longer be mistaken for Canonsburg-only.
+
+   TO ASSIGN A STYLIST: add data-studio to their .team-card in
+   meet-the-team/index.html, with one of three values:
+
+       data-studio="north-hills"   ->  North Hills only
+       data-studio="canonsburg"    ->  Canonsburg only
+       data-studio="both"          ->  North Hills / Canonsburg
+
+   That is the whole edit. The visible string is generated from the attribute,
+   so the wording lives here and only here, and nothing has to be kept in step
+   across 37 cards.
+
+   EVERY CARD NEEDS ONE. A card with no data-studio renders no label at all —
+   it makes no claim, which is correct while the assignments are unknown, but
+   it also means the page is unfinished until all 37 carry one. To list what is
+   still missing:
+
+     grep -c 'class="team-card"' meet-the-team/index.html   # total
+     grep -c 'data-studio'       meet-the-team/index.html   # assigned
+
+   AS OF THIS COMMIT NO CARD IS ASSIGNED. The owner is identifying who works
+   where. Do not treat this page as finished until those two counts match.
+
+   Why the text comes from CSS rather than being written into each card: the
+   attribute is then the single source of truth and the wording is in one
+   place. The cost is that the label is not selectable or machine-translatable,
+   and would vanish if the stylesheet failed to load. That trade is worth
+   revisiting once the build pass can be run again — at that point optimize.py
+   can write the same three strings into the markup from the same attribute,
+   and these rules become the fallback rather than the source.
+   ------------------------------------------------------------------------ */
+
+/* The label sits AFTER .team-card-role in the source and is placed by CSS.
+   That ordering is not cosmetic: TEAM_CARD in optimize.py requires the name
+   element to be followed by the role element with only whitespace between
+   them, and it builds the roster ItemList off that match. Anything inserted
+   between the two — including a wrapper around the name — silently empties the
+   roster schema. Leave the source order alone and let the grid do the placing.
+
+   Default is the label on its own line under the name. Beside the name, which
+   is where it was asked for, only applies from 1100px up. Below that a card's
+   text column is genuinely too narrow to share: at 1024 it is about 170px, and
+   putting "North Hills / Canonsburg" next to "Caroline Radziminski" there
+   squeezed the name to 42px and six lines. */
+.team-card-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "name"
+    "studio"
+    "role"
+    "bio"
+    "link";
+  align-content: center;
+}
+
+.team-card-name   { grid-area: name; }
+.team-card-studio { grid-area: studio; }
+.team-card-role   { grid-area: role; }
+.team-card-bio    { grid-area: bio; }
+.team-card-content .link-arrow {
+  grid-area: link;
+  justify-self: start;
+}
+
+.team-card-studio {
+  margin: 0.15rem 0 0.6rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--mid);
+}
+
+/* It sits under the name rather than beside it, and that is a deliberate
+   climb-down from where it was asked for. The card's text column is 258px at
+   1440 and 170px at 1024 — the grid keeps two cards per row down to 900px, so
+   the column never gets wider than that. "Caroline Radziminski" alone is about
+   190px set at 1.5rem Cormorant. Beside the name, the longest label broke that
+   name across three lines at 1440 and six at 1024. One line down, full width,
+   it is legible at every size and no name is ever squeezed.
+
+   If the right-hand position matters more than the name setting, the place
+   with room is beside .team-card-role — "Stylist" is short — which is a swap
+   of two grid-area names, not a rebuild. */
+
+
+/* The three strings are assembled from four spans that ship on every card, so
+   the attribute still drives everything and the visible words are real text —
+   selectable, translatable, and present whether or not this stylesheet loads.
+   The spacing lives inside the spans (" / ", " only"), so hiding a part hides
+   its spacing with it and no stray gaps survive.
+
+       north-hills  ->  North Hills only
+       canonsburg   ->  Canonsburg only
+       both         ->  North Hills / Canonsburg
+*/
+.team-card-studio > span { display: none; }
+
+.team-card[data-studio="north-hills"] .studio-nh,
+.team-card[data-studio="north-hills"] .studio-only,
+.team-card[data-studio="canonsburg"]  .studio-cb,
+.team-card[data-studio="canonsburg"]  .studio-only,
+.team-card[data-studio="both"]        .studio-nh,
+.team-card[data-studio="both"]        .studio-sep,
+.team-card[data-studio="both"]        .studio-cb {
+  display: inline;
+}
+
+/* A card with no data-studio makes no claim and takes no space. Once every
+   stylist is assigned this should never match — it is the guard, not a state
+   the finished page is meant to be in. */
+.team-card:not([data-studio]) .team-card-studio {
+  display: none;
+}
+
+/* Color is reinforcement here, not the carrier of meaning — the words say it
+   outright — so this is purely a legibility question, and both tones clear AA
+   for normal text on all three card grounds:
+
+       --ink  #1A2440   15.33:1 on white, 14.57 on off-white, 13.38 on cream
+       --gold #866336    5.45:1 on white,  5.18 on off-white,  4.76 on cream
+
+   --gold rather than --gold-fill #b08d57, which is the brand gold for grounds
+   and buttons and manages only 3.09:1 as text. The palette already draws that
+   line; see the note on the tokens above. The separator and the word "only"
+   stay in the label's own --mid (6.38:1), so the two studio names are the only
+   colored words and the grammar around them recedes. */
+.studio-nh { color: var(--ink); font-weight: 500; }
+.studio-cb { color: var(--gold); font-weight: 500; }
+
+/* -------------------------------------------------- the same label, on a
+   stylist's own page.
+
+   Same markup, same attribute, same three strings, and — after checking — the
+   same colors as the card.
+
+   The trap here: the stylist page's own inline stylesheet says
+   .hero { background: var(--black) } with the name in --off-white, which reads
+   as a dark panel. It is not one. Section 7 of this file re-points it:
+
+       .hero, .derek-hero { background: var(--paper-warm); }
+
+   and .page-eyebrow is forced to --gold-deep a few lines later. The hero
+   actually renders #fbf9f5 with a navy name and a gold title, so the card's
+   tones are the correct ones and a light-on-dark treatment would have been
+   invisible. Measured on the real ground rather than the declared one:
+
+       --ink  #1A2440  (North Hills)        14.57:1 on #fbf9f5
+       --gold #866336  (Canonsburg)          5.18:1
+       --mid  #565F75  (slash and "only")    6.07:1
+
+   Those colors come from the shared .studio-nh / .studio-cb rules above, so
+   there is nothing to override here — only the block's own placement.
+
+   Position: directly under the name, above the italic .title line, so the hero
+   reads name → studio → title and the studio sits in the same relation to the
+   name as it does on the roster card. Not beside the name: the name is set at
+   clamp(3rem, 5vw, 5.5rem) and several run to two lines, so there is no
+   right-hand space to put it in.
+   ------------------------------------------------------------------------ */
+
+.page-studio {
+  margin: -0.5rem 0 1.25rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--mid);
+}
+
+.page-studio > span { display: none; }
+
+.hero[data-studio="north-hills"] .studio-nh,
+.hero[data-studio="north-hills"] .studio-only,
+.hero[data-studio="canonsburg"]  .studio-cb,
+.hero[data-studio="canonsburg"]  .studio-only,
+.hero[data-studio="both"]        .studio-nh,
+.hero[data-studio="both"]        .studio-sep,
+.hero[data-studio="both"]        .studio-cb {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .page-studio {
+    margin: -0.25rem 0 1rem;
+    font-size: 0.64rem;
+  }
+}
+
+/* Caveat under an hours grid. Monday at North Hills runs with limited staff;
+   that belongs with the hours but not inside them — a longer string in a
+   .hours-time cell reads as a correction to the time rather than a note about
+   the day, and the grid is meant to be scannable. Outside the grid it also
+   cannot affect the day/time column alignment at any width. */
+.hours-note {
+  margin: 0.9rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--mid);
+  font-weight: 300;
+}
+
+/* ============================================================== 22
+   GALLERY HERO — THE LINK OUT TO INSTAGRAM
+
+   The gallery is a curated set and got a good deal smaller when fourteen
+   photographs came out of it. Instagram is where the volume is and where the
+   salon actually posts, so the empty half of the hero beside the headline
+   earns its keep as a link out rather than being filled with more tiles.
+
+   THE GROUND IS LIGHT, NOT DARK. The page's own stylesheet says
+   .page-hero { background: var(--black) } and colours the headline
+   --off-white. Section 9 of this file overrides both: the hero renders as a
+   cream-to-paper gradient with a navy headline and a --gold-deep italic, and
+   the override is !important. Colours here are measured against the real
+   ground, top and bottom of the gradient:
+
+       --gold-deep #7a5b31  the mark      5.44:1 / 5.93:1
+       --mid       #565F75  the sentence  5.57:1 / 6.07:1
+       --gold      #866336  the handle    4.76:1 / 5.18:1
+
+   All clear AA for normal text, and the mark is a graphic rather than text so
+   3:1 would have been enough for it.
+
+   THE GLYPH is drawn here rather than pulled from an icon set, in the same
+   idiom as the two icons the site already has in the mobile call bar: a
+   24-unit grid, no fill, stroke: currentColor, round joins. It is the
+   Instagram mark's geometry -- rounded square, concentric circle, offset dot
+   -- not a copy of Meta's filled brand file. If exact brand compliance is
+   ever wanted, replace the three shapes with the official asset from Meta's
+   brand resources and drop the stroke rules; nothing else has to change.
+   ------------------------------------------------------------------------ */
+
+/* SCOPED TO .hero-split, AND IT MUST STAY THAT WAY.
+
+   .page-hero-inner is a site-wide class: twenty pages use it, and on
+   nineteen of them the breadcrumb, eyebrow, h1 and intro are its direct
+   children with no wrapper. Making the bare class a flex row turned those
+   four into four narrow columns side by side. It looked far worse than a
+   normal flex accident because site.css already sets overflow-wrap: anywhere
+   on every h1 and p: `anywhere` (unlike `break-word`) also shrinks an
+   element's min-content contribution, so the columns collapsed past the
+   longest word and "transformation" broke across two lines mid-word.
+
+   Only the gallery hero has a .page-hero-text wrapper and an .ig-card to sit
+   beside it, so only the gallery hero carries .hero-split. Any future hero
+   that wants two columns needs the wrapper AND the class -- never the bare
+   .page-hero-inner. */
+
+@media (min-width: 901px) {
+  .page-hero-inner.hero-split {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+  }
+
+  .hero-split .page-hero-text { flex: 1 1 auto; min-width: 0; }
+
+  .hero-split .ig-card {
+    flex: 0 0 auto;
+    align-items: flex-end;
+    text-align: right;
+    max-width: 20rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+.ig-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  text-decoration: none;
+  margin-top: 2.5rem;
+}
+
+/* Large, as asked, but still a step below a headline that runs to 5rem. */
+.ig-mark {
+  width: 3.5rem;
+  height: 3.5rem;
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.2s, transform 0.2s;
+}
+
+.ig-mark-dot {
+  fill: var(--gold-deep);
+  stroke: none;
+  transition: fill 0.2s;
+}
+
+.ig-copy {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  font-weight: 300;
+  color: var(--mid);
+}
+
+.ig-handle {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold);
+}
+
+.ig-card:hover .ig-mark,
+.ig-card:focus-visible .ig-mark {
+  stroke: var(--gold);
+  transform: translateY(-2px);
+}
+
+.ig-card:hover .ig-mark-dot,
+.ig-card:focus-visible .ig-mark-dot { fill: var(--gold); }
+
+.ig-card:hover .ig-handle,
+.ig-card:focus-visible .ig-handle { color: var(--gold-deep); }
+
+.ig-card:focus-visible {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-mark { transition: stroke 0.2s; }
+  .ig-card:hover .ig-mark,
+  .ig-card:focus-visible .ig-mark { transform: none; }
+}
+
+/* Stacked under the headline on a phone, left-aligned with it, and with room
+   above the filter row so the two do not read as one block. */
+@media (max-width: 900px) {
+  .ig-card {
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 2rem;
+    max-width: 22rem;
+  }
+  .ig-mark { width: 2.75rem; height: 2.75rem; }
+}
+
+/* Group headings on /meet-the-team: Hair, Skin, Nails.
+
+   Reuses .section-label rather than introducing a third heading size — the
+   page already has one big .section-headline over the whole section, and three
+   more at that weight would compete with it, especially above groups of one
+   and two. Carried on an h3 so the grouping is in the document outline and not
+   only in the type.
+
+   The ItemList on this page is scraped off the rendered cards by TEAM_CARD in
+   optimize.py, which runs name -> role -> the next /team/ href. These headings
+   sit BETWEEN cards, outside that match, so they do not disturb it — verified
+   at 38 matches with the headings in place. Keep any future heading outside a
+   .team-card and it stays true. */
+.team-group {
+  margin: 3.5rem 0 1.25rem;
+}
+
+.team-group:first-of-type {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .team-group { margin: 2.5rem 0 1rem; }
+  .team-group:first-of-type { margin-top: 0; }
+}
+
+/* ============================================================== 23
+   GALLERY — THE FILTER ROW IS GONE, AND INSTAGRAM IS THE POINT
+
+   1. SPACING. The filter row used to carry 114px of air between the hero and
+      the grid: its own 2.5rem top padding, 74px of buttons, then .gallery-main's
+      2.5rem. With the row gone only that last 2.5rem remains and the grid rides
+      up under the hero. The padding is restored here rather than in the page's
+      own stylesheet so that uncommenting the row later means deleting one rule,
+      not hunting for a number.
+   ------------------------------------------------------------------------ */
+
+.gallery-main {
+  padding-top: 7rem;
+}
+
+@media (max-width: 900px) {
+  .gallery-main { padding-top: 4rem; }
+}
+
+/* 2. THE CLOSING BAND.
+
+      The page has two Instagram links now and that is deliberate. The one
+      beside the headline is a signpost read before you look at anything; this
+      one is the ask, read after. They say different things, which is what
+      keeps two from reading as one repeated banner.
+
+      Light --cream rather than dark: the booking CTA further down this page is
+      already a dark centred band, and two of those in sequence read as a page
+      that has run out of ideas. Cream also steps cleanly out of the white grid
+      above and the off-white FAQ below, and lets the mark keep the same
+      --gold-deep treatment it has in the hero.
+
+      The mark is 88px here against 56px in the hero -- big enough to be the
+      thing you notice on that screen, small enough to sit under a headline the
+      page sets at 80px. Restraint is the site's whole character; this is not
+      the place to put a 200px logo. */
+
+.ig-band {
+  background: var(--cream);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 6rem 4rem;
+  text-align: center;
+}
+
+.ig-band-inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.ig-band-mark {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0 auto 2rem;
+  display: block;
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ig-band .section-label {
+  margin-bottom: 0.9rem;
+}
+
+.ig-band-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 2.9rem);
+  font-weight: 300;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 1.25rem;
+}
+
+.ig-band-headline em {
+  font-style: italic;
+  color: var(--gold-deep);
+}
+
+.ig-band-copy {
+  font-size: 0.9rem;
+  line-height: 1.85;
+  font-weight: 300;
+  color: var(--mid);
+  margin: 0 0 2.5rem;
+}
+
+.ig-band .btn-primary {
+  margin-top: 0;
+}
+
+/* The handle sits under the button as text, not as a second link: the button
+   is the ask, and "@craftcollectivesalongroup" is one unbreakable 26-character
+   token that blows past the button's box at 375px if you put it inside the
+   control. As a line of its own it can shrink instead of overflowing. */
+.ig-band-handle {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--gold-deep);
+  margin: 1.25rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .ig-band { padding: 4.5rem 2rem; }
+  .ig-band-mark { width: 4rem; height: 4rem; margin-bottom: 1.5rem; }
+}
+
+@media (max-width: 600px) {
+  .ig-band { padding: 3.5rem 1.5rem; }
+  .ig-band-mark { width: 3.5rem; height: 3.5rem; }
+  .ig-band-copy { margin-bottom: 2rem; }
 }

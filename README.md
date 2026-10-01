@@ -55,7 +55,7 @@ It handles:
 - **Performance** — the Google Fonts stylesheet is taken off the critical path
   with a `<noscript>` fallback.
 - **Accessibility** — skip link, `#main` target, `aria-current` on the nav, and
-  removal of inline colour overrides left over from the previous dark theme.
+  removal of inline color overrides left over from the previous dark theme.
 
 To add a service, area or post, add it to the relevant table near the top of the
 script (`SERVICES`, `AREAS`, `BLOG_POSTS`, `SERVICE_ART`) along with its FAQ
@@ -72,7 +72,7 @@ action shot, so his card uses the frontal frame from the About page instead.
 The originals arrive at sixteen different aspect ratios, from 0.46 to 1.5, so
 they are not cropped to a fixed rectangle — each is framed on its own sitter's
 face (detected with OpenCV's YuNet) to a square whose side is four times the
-face height, with the face centred at 36% down. That is what makes the set read
+face height, with the face centered at 36% down. That is what makes the set read
 as one team: identical head size and eyeline on every card regardless of how
 the photograph was shot. Seven sizes per stylist, 280 to 1024 square plus a
 1200×800 for schema.

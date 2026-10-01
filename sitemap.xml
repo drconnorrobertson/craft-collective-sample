@@ -187,6 +187,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.craftcollectivesalongroup.com/artist-team</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.craftcollectivesalongroup.com/book</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
@@ -391,12 +397,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://www.craftcollectivesalongroup.com/team/grace-hartle</loc>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.craftcollectivesalongroup.com/team/greg-mckenzie</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
@@ -404,6 +404,12 @@
   </url>
   <url>
     <loc>https://www.craftcollectivesalongroup.com/team/greta-healy</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.craftcollectivesalongroup.com/team/angelina-labella</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -501,6 +507,12 @@
   <url>
     <loc>https://www.craftcollectivesalongroup.com/team/rachel-batykefer</loc>
     <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.craftcollectivesalongroup.com/team/sarah-burke</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
