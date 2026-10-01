@@ -243,3 +243,10 @@ for f in ['index.html','reviews/index.html']:
     s=re.sub(r'<!-- cc:reviewchecked -->.*?<!-- /cc:reviewchecked -->','',s,flags=re.S)
     s=s.replace('<span class="reviews-source-figure">5.0 from 834 reviews</span>','<span class="reviews-source-figure">5.0 from 834 reviews</span><!-- cc:reviewchecked --><p class="reviews-source-copy">Google rating and displayed review sources checked October 1, 2026.</p><!-- /cc:reviewchecked -->')
     p.write_text(s)
+# The legacy category map contained only /blog, already in pages-sitemap.xml.
+# Retain its endpoint for compatibility, but retire the empty map from the index.
+p=R/'sitemap.xml';tree=ET.parse(p);root=tree.getroot()
+for e in list(root):
+    loc=e.find('{'+NS+'}loc')
+    if loc is not None and loc.text==D+'/blog-categories-sitemap.xml':root.remove(e)
+tree.write(p,encoding='UTF-8',xml_declaration=True)
