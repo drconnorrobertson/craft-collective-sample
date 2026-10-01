@@ -5,53 +5,228 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=(), interest-cohort=()" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains; preload" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-        { "key": "X-DNS-Prefetch-Control", "value": "on" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        }
       ]
     },
     {
       "source": "/(.*).html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate, stale-while-revalidate=86400"
+        }
       ]
     },
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=2592000" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
       ]
     },
     {
       "source": "/(favicon.svg|favicon.ico|apple-touch-icon.png|icon-192.png|icon-512.png|icon-maskable-512.png|og-card.jpg)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=31536000" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, stale-while-revalidate=31536000"
+        }
       ]
     },
     {
       "source": "/(sitemap.xml|robots.txt|site.webmanifest)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/services", "destination": "/hair-services-pittsburgh", "permanent": true },
-    { "source": "/locations", "destination": "/locations/north-hills-pittsburgh", "permanent": true },
-    { "source": "/team", "destination": "/meet-the-team", "permanent": true },
-    { "source": "/about", "destination": "/about-pittsburgh-hair-salon", "permanent": true },
-    { "source": "/gallery", "destination": "/hair-salon-gallery-pittsburgh", "permanent": true },
-    { "source": "/contact", "destination": "/book", "permanent": true },
-    { "source": "/appointments", "destination": "/book", "permanent": true },
-    { "source": "/balayage", "destination": "/services/balayage-pittsburgh", "permanent": true },
-    { "source": "/highlights", "destination": "/services/highlights-pittsburgh", "permanent": true },
-    { "source": "/extensions", "destination": "/services/hair-extensions-pittsburgh", "permanent": true },
-    { "source": "/keratin", "destination": "/services/keratin-treatment-pittsburgh", "permanent": true },
-    { "source": "/derek", "destination": "/derek-piekarski", "permanent": true },
-    { "source": "/team/grace-hartle", "destination": "/meet-the-team", "permanent": true }
+    {
+      "source": "/services",
+      "destination": "/hair-services-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/locations",
+      "destination": "/locations/north-hills-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/team",
+      "destination": "/meet-the-team",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/about-pittsburgh-hair-salon",
+      "permanent": true
+    },
+    {
+      "source": "/gallery",
+      "destination": "/hair-salon-gallery-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/book",
+      "permanent": true
+    },
+    {
+      "source": "/appointments",
+      "destination": "/book",
+      "permanent": true
+    },
+    {
+      "source": "/balayage",
+      "destination": "/services/balayage-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/highlights",
+      "destination": "/services/highlights-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/extensions",
+      "destination": "/services/hair-extensions-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/keratin",
+      "destination": "/services/keratin-treatment-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/derek",
+      "destination": "/derek-piekarski",
+      "permanent": true
+    },
+    {
+      "source": "/team/grace-hartle",
+      "destination": "/meet-the-team",
+      "permanent": true
+    },
+    {
+      "source": "/homepage",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/gloss-shine-enhancements-north-hills",
+      "destination": "/post/gloss-shine-enhancements-in-north-hills-reviving-tone-and-radiance-between-appointments",
+      "permanent": true
+    },
+    {
+      "source": "/blog/hashtags/1",
+      "destination": "/blog/archive",
+      "permanent": true
+    },
+    {
+      "source": "/blog/hashtags/event",
+      "destination": "/blog/archive",
+      "permanent": true
+    },
+    {
+      "source": "/blog/deep-conditioning-mask-treatments-north-hills",
+      "destination": "/post/the-benefits-of-deep-conditioning-treatments-in-north-hills-pittsburgh",
+      "permanent": true
+    },
+    {
+      "source": "/blog/product-education-hair-care-north-hills",
+      "destination": "/post/product-education-hair-care-in-north-hills-building-the-perfect-routine-for-long-lasting-color-an",
+      "permanent": true
+    },
+    {
+      "source": "/blog/hydration-moisture-treatments-north-hills",
+      "destination": "/post/hydration-moisture-treatments-in-north-hills-restoring-softness-and-managing-frizz",
+      "permanent": true
+    },
+    {
+      "source": "/blog/hand-tied-hair-extensions-north-hills",
+      "destination": "/post/hand-tied-hair-extensions-in-north-hills-lightweight-volume-and-seamless-blend",
+      "permanent": true
+    },
+    {
+      "source": "/blog/tape-in-hair-extensions-north-hills",
+      "destination": "/post/tape-in-hair-extensions-in-north-hills-effortless-fullness-with-invisible-blending",
+      "permanent": true
+    },
+    {
+      "source": "/blog/dimensional-brunette-techniques-north-hills",
+      "destination": "/post/dimensional-brunette-techniques-in-north-hills-rich-tone-subtle-movement-lasting-shine",
+      "permanent": true
+    },
+    {
+      "source": "/blog/balayage-with-extensions-north-hills",
+      "destination": "/post/balayage-with-extensions-in-north-hills-creating-natural-dimension-and-depth",
+      "permanent": true
+    },
+    {
+      "source": "/blog/scalp-detox-clarifying-treatments-north-hills",
+      "destination": "/post/scalp-detox-clarifying-treatments-in-north-hills-removing-buildup-refreshing-the-scalp-and-rest",
+      "permanent": true
+    },
+    {
+      "source": "/blog/product-education-hair-care-north-hillsseries",
+      "destination": "/post/product-education-hair-care-in-north-hills-building-the-perfect-routine-for-long-lasting-color-an",
+      "permanent": true
+    },
+    {
+      "source": "/blog/sustainable-eco-friendly-salon-north-hills",
+      "destination": "/post/sustainable-eco-friendly-salon-in-north-hills-beauty-with-purpose-and-environmental-responsibilit",
+      "permanent": true
+    },
+    {
+      "source": "/blog/scalp-hydration-moisture-treatments-north-hills",
+      "destination": "/post/scalp-hydration-moisture-treatments-in-north-hills-restoring-comfort-reducing-dryness-and-impro",
+      "permanent": true
+    },
+    {
+      "source": "/blog/repair-strengthening-treatments-north-hills",
+      "destination": "/post/repair-strengthening-treatments-in-north-hills-restoring-health-to-color-treated-and-extension-ha",
+      "permanent": true
+    },
+    {
+      "source": "/blog/porosity-balancing-treatments-north-hills",
+      "destination": "/post/porosity-balancing-treatments-in-north-hills-smoothing-rough-texture-and-improving-color-absorption",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cuticle-smoothing-treatments-north-hills",
+      "destination": "/post/cuticle-smoothing-treatments-in-north-hills-reducing-roughness-frizz-and-uneven-texture-for-a-sil",
+      "permanent": true
+    }
   ]
 }
