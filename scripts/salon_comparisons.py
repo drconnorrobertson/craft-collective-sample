@@ -84,6 +84,51 @@ p('Look at stylist portfolios with examples close to your starting hair. Review 
 sec('Compare services as well as salons',p('If you are unsure what to book, explore '+link('/guides/hair-color-comparisons-pittsburgh','color options')+', '+link('/guides/hair-extension-comparisons-pittsburgh','extension options')+' and '+link('/guides/low-maintenance-color-alternatives','lower-maintenance color alternatives')+'. The best next step may be a consultation about your goal before choosing a technique.'))+
 sec('Explore Craft’s locations and work',craft+p('Browse '+link('/hair-salon-gallery-pittsburgh','the gallery')+', '+link('/reviews','client reviews')+' and '+link('/guides/switching-hair-salons-pittsburgh','our switching-salons checklist')+'. Sources for the comparisons were checked October 1, 2026. Contact each salon to verify current services, policies and availability.')))
 
+# Turn the comparisons into scannable decision pages, with source-linked evidence.
+facts={
+ 'studio-raw-elite':('Studio Raw Elite','https://www.studiorawelite.com/',[
+  ('Location','3185 Babcock Boulevard, Pittsburgh','North Hills: 2014D Babcock Blvd; Canonsburg: 115 W Pike St'),
+  ('Color menu','Dimensional and hand-painted color listed','Balayage, highlights, blonding and dimensional color listed'),
+  ('Booking','Online booking; walk-in options advertised','Online booking or telephone help choosing a service'),
+  ('Setting','Onsite café and deck described','Explore the gallery to see Craft’s space and work')],
+  'If an onsite café, deck or walk-in option matters most, explore Studio Raw’s current offering. If you want to compare Craft’s color work or use our Canonsburg location, explore our stylists and booking options.'),
+ 'copacetic-beauty-lounge':('Copacetic Beauty Lounge','https://www.copaceticpgh.com/',[
+  ('Location','North Hills, Pittsburgh','North Hills and Canonsburg locations'),
+  ('Color estimates','Hourly color pricing advertised','Request an individual service estimate'),
+  ('Extensions','Consultation required; methods discussed individually','Consultation required; confirm method, hair and maintenance'),
+  ('Specialized needs','Toppers, wigs and hair-loss consultations advertised','Confirm specific needs directly; equivalent offerings are not established')],
+  'If toppers, wigs or a dedicated hair-loss consultation are your priority, check Copacetic’s advertised offerings. If you are comparing color or extensions, use the same goal and full-budget checklist at both salons.'),
+ 'salon-13':('Salon 13','https://www.salon13.net/contact/',[
+  ('Location','2400 Ferguson Road, Allison Park','2014D Babcock Blvd, Pittsburgh; 115 W Pike St, Canonsburg'),
+  ('Stylist selection','Team biographies and portfolio links published','Individual stylist profiles and gallery available'),
+  ('Booking','Online and telephone booking','Online and telephone booking'),
+  ('Policies','Cancellation terms published on contact page','Confirm current policies for the reservation you choose')],
+  'If Allison Park is your preferred location, explore Salon 13’s team and reservations. If Craft’s North Hills or Canonsburg location fits your routine, compare our stylist work before choosing the appointment.'),
+ 'bloom-beauty-parlor':('BLOOM Beauty Parlor','https://bloombeautyparlor.com/',[
+  ('Location','214 N. Highland Avenue, East Liberty','North Hills and Canonsburg'),
+  ('Stated priorities','Sustainability, cruelty-free practices and inclusion','Compare Craft’s services, stylist profiles and client feedback'),
+  ('Booking help','Online booking and text help advertised','Online booking or call 724-514-7231'),
+  ('Matching practices','Ask about practices for your chosen service','Do not assume matching environmental practices; ask directly')],
+  'If East Liberty and BLOOM’s stated sustainability priorities match your needs, explore its service options. If Craft’s locations and stylist portfolio fit your plan, arrange a consultation and compare the proposed work.')}
+proof=json.loads((R/'scripts/verified-google-reviews.json').read_text())
+for record in comparisons:
+    key=record['path'].split('craft-collective-vs-')[1]
+    name,source,rows,fit=facts[key]
+    table='<div class="comparison-scroll" role="region" aria-label="Salon comparison table" tabindex="0"><table><caption>At a glance: '+html.escape(name)+' and Craft Collective</caption><thead><tr><th scope="col">Compare</th><th scope="col">'+html.escape(name)+'</th><th scope="col">Craft Collective</th></tr></thead><tbody>'
+    for topic,other,ours in rows:table+='<tr><th scope="row">'+topic+'</th><td>'+other+'</td><td>'+ours+'</td></tr>'
+    table+='</tbody></table></div>'+p('Competitor details: '+link(source,name+' official information')+'. Craft details: '+link('/hair-services-pittsburgh','services')+', '+link('/meet-the-team','stylists')+' and '+link('/locations/north-hills-pittsburgh','locations')+'. Checked October 1, 2026. This is not a price or quality ranking.')
+    review=next(r for r in proof['reviews'] if r['name']==('Elizabeth Mormer' if key=='salon-13' else 'Cindy Scozio' if key=='copacetic-beauty-lounge' else 'Diane Budziszewski' if key=='studio-raw-elite' else 'Maria Harvey'))
+    evidence=sec('Evidence to explore at Craft',p('Compare '+link('/derek-piekarski','Derek’s published professional background')+' and '+link('/hair-salon-gallery-pittsburgh','our work gallery')+' with the experience and style you want. Ask to see examples relevant to your starting hair.'))+'<blockquote><p>“'+html.escape(review['excerpt'])+'”</p><cite>'+html.escape(review['name'])+' · '+link(review['url'],'Google review excerpt')+'</cite></blockquote>'+p('Review source checked '+proof['verifiedDate']+'. This is one client’s experience; it does not establish a comparative advantage or guarantee your result.')
+    faq=sec('Questions before choosing', '<h3>Is Craft Collective cheaper than '+html.escape(name)+'?</h3>'+p('We have not established that. Ask both salons for the total estimate for the same service plan, including finishing and expected maintenance. An advertised starting price is not necessarily your final quote.')+'<h3>Can I keep my current color when changing salons?</h3>'+p('Describe the tone and placement you want to preserve and share your recent color history. Your new stylist can assess which reservation fits that goal. See our '+link('/guides/switching-hair-salons-pittsburgh','switching-salons checklist')+'.')+'<h3>Which salon should I choose?</h3>'+p(fit))
+    file=R/record['path'].lstrip('/')/'index.html';s=file.read_text()
+    s=s.replace('<article class="archive-body">','<article class="archive-body"><p><a href="#compare-at-a-glance">Compare at a glance</a> · <a href="#craft-evidence">Craft’s work and reviews</a> · <a href="#choosing-questions">Booking questions</a></p>',1)
+    s=s.replace(disclosure,disclosure+'<section id="compare-at-a-glance">'+table+'</section>',1)
+    s=s.replace('<aside class="archive-cta">','<section id="craft-evidence">'+evidence+'</section><section id="choosing-questions">'+faq+'</section><aside class="archive-cta">',1)
+    breadcrumb={'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':D+'/'},{'@type':'ListItem','position':2,'name':'Salon comparisons','item':D+'/guides/pittsburgh-salon-alternatives'},{'@type':'ListItem','position':3,'name':record['title'],'item':D+record['path']}]}
+    s=s.replace('</head>','<script type="application/ld+json">'+json.dumps(breadcrumb)+'</script></head>',1)
+    file.write_text(s)
+    record['words']=len(re.sub('<[^>]+>',' ',re.search(r'<article class="archive-body">(.*?)</article>',s,re.S)[1]).split())
+
 # Add discovery links to existing hubs; preserve all other content.
 for target in ['guides/index.html','blog/index.html','hair-services-pittsburgh/index.html']:
     f=R/target;s=f.read_text()
@@ -103,8 +148,17 @@ NS='http://www.sitemaps.org/schemas/sitemap/0.9';ET.register_namespace('',NS)
 f=R/'site-pages-sitemap.xml';tree=ET.parse(f);root=tree.getroot()
 known={e.text for e in root.findall('.//{'+NS+'}loc')}
 for r in records:
-    if D+r['path'] not in known:
-        e=ET.SubElement(root,'{'+NS+'}url');ET.SubElement(e,'{'+NS+'}loc').text=D+r['path'];ET.SubElement(e,'{'+NS+'}lastmod').text='2026-10-01'
+    for e in list(root):
+        loc=e.find('{'+NS+'}loc')
+        if loc is not None and loc.text==D+r['path']:root.remove(e)
 tree.write(f,encoding='UTF-8',xml_declaration=True)
+comparison_root=ET.Element('{'+NS+'}urlset')
+for r in records:
+    e=ET.SubElement(comparison_root,'{'+NS+'}url');ET.SubElement(e,'{'+NS+'}loc').text=D+r['path'];ET.SubElement(e,'{'+NS+'}lastmod').text='2026-10-01'
+ET.ElementTree(comparison_root).write(R/'salon-comparisons-sitemap.xml',encoding='UTF-8',xml_declaration=True)
+index_file=R/'sitemap.xml';index_tree=ET.parse(index_file);index_root=index_tree.getroot()
+if D+'/salon-comparisons-sitemap.xml' not in {e.text for e in index_root.findall('.//{'+NS+'}loc')}:
+    e=ET.SubElement(index_root,'{'+NS+'}sitemap');ET.SubElement(e,'{'+NS+'}loc').text=D+'/salon-comparisons-sitemap.xml'
+index_tree.write(index_file,encoding='UTF-8',xml_declaration=True)
 (R/'scripts/salon-comparisons-manifest.json').write_text(json.dumps({'pages':records,'source_date':'2026-10-01','sources':['https://www.studiorawelite.com/','https://www.copaceticpgh.com/','https://www.copaceticpgh.com/color','https://www.salon13.net/contact/','https://www.salon13.net/our-team/','https://bloombeautyparlor.com/']},indent=2)+'\n')
 print(json.dumps(records,indent=2))
