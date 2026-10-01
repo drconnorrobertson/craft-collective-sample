@@ -5,7 +5,7 @@ R=Path(__file__).resolve().parents[1]
 tracked=subprocess.check_output(['git','ls-files'],cwd=R,text=True).splitlines()
 for name in tracked:
     f=R/name
-    if f.suffix not in {'.html','.py','.json','.md'} or not f.exists():continue
+    if f==Path(__file__).resolve() or f.suffix not in {'.html','.py','.json','.md'} or not f.exists():continue
     s=f.read_text();new=s
     new=re.sub(r'Olivia([\s\u00a0]+)Spearl',r'Olivia\1Sperl',new)
     new=new.replace('Delilah','Delila')
@@ -27,7 +27,7 @@ s=s.replace(marker,'<!-- cc:assistants -->'+assistants+'<!-- /cc:assistants -->\
 new_names=[('Kyra Poskey','Stylist','kyra-poskey'),('Kaylan','Assistant','kaylan'),('Ella','Assistant','ella'),('Luc','Assistant','luc')]
 def schema_update(m):
     data=json.loads(m[1])
-    if data.get('@type')!='ItemList':return m[0]
+    if not isinstance(data,dict) or data.get('@type')!='ItemList':return m[0]
     items=data.get('itemListElement',[])
     items=[i for i in items if i.get('item',{}).get('name') not in {n for n,_,_ in new_names}]
     for name,role,anchor in new_names:
