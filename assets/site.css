@@ -3574,3 +3574,6 @@ p, blockquote { text-wrap: pretty; }
 
 @media (min-width: 901px) { .nav-inner { gap: 1.25rem; } .nav-links { gap: clamp(.65rem,1.1vw,1.2rem); } .nav-links li { flex-shrink: 0; } .nav-links a { white-space: nowrap; letter-spacing: .08em; } .nav-logo { flex-shrink: 0; } }
 .section-headline { letter-spacing: -.018em; } .testimonial-text { line-height: 1.8; }
+
+/* Honor reduced-motion preferences without repeating shortened animations. */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-iteration-count: 1 !important; } }
