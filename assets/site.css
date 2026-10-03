@@ -3557,3 +3557,20 @@ footer a.tel-link:focus {
   .ig-band-mark { width: 3.5rem; height: 3.5rem; }
   .ig-band-copy { margin-bottom: 2rem; }
 }
+
+/* Visual refinement 2026-10: preserve the existing brand, layout and content. */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+h1, h2, h3 { text-wrap: balance; }
+p, blockquote { text-wrap: pretty; }
+:where(a, button, input, select, textarea):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+:where(article, .content, .article-content) a { text-underline-offset: .2em; text-decoration-thickness: 1px; }
+:where(.hero-grid, .features-grid, .cards-grid, .grid, .footer-grid) > * { min-width: 0; }
+@media (max-width: 600px) { input, select, textarea { font-size: 16px; } :where(.hero-cta, .hero-actions, .cta-actions) { flex-wrap: wrap; row-gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; } }
+
+.testimonial-card, .blog-card, .service-card { box-shadow: 0 1px 2px rgba(15,23,42,.035), 0 10px 30px rgba(15,23,42,.055); }
+
+.btn-primary, .btn-outline, .book-cta, .nav-book { transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+
+@media (min-width: 901px) { .nav-inner { gap: 1.25rem; } .nav-links { gap: clamp(.65rem,1.1vw,1.2rem); } .nav-links li { flex-shrink: 0; } .nav-links a { white-space: nowrap; letter-spacing: .08em; } .nav-logo { flex-shrink: 0; } }
+.section-headline { letter-spacing: -.018em; } .testimonial-text { line-height: 1.8; }
