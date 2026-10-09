@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {profiles,competitors,slug} from './pittsburgh-guide-profiles.mjs';
+import {buildSalonPlanning} from './build-salon-planning.mjs';
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OUT=path.join(ROOT,'dist');
@@ -285,3 +286,4 @@ for(const r of records){
  }
 }
 console.log(JSON.stringify({articles:records.length,hubPages:urls.length-records.length,families:Object.fromEntries(families.map(f=>[f,records.filter(x=>x.family===f).length])),minimumWords:Math.min(...records.map(x=>x.wordCount)),output:OUT,validated:'unique titles and routes; one H1; canonical; schema; content links; sitemap index'},null,2));
+buildSalonPlanning(ROOT,OUT);

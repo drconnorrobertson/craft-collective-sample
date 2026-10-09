@@ -128,3 +128,21 @@ sitemap references `/pittsburgh-guides-sitemap.xml`. Source code controls the
 generated library, so edit the profiles or generator rather than files inside
 `dist/`. `scripts/search_visibility_oct2026.py` separately applies the focused
 metadata and booking improvements to 17 priority pages.
+
+## Detailed salon planning expansion
+
+The same build now runs `scripts/build-salon-planning.mjs`, with 24 individually
+authored service and purchase-decision guides in `salon-planning-content.mjs`.
+Six specialist service pages live under `/services/`; the other 18 guides
+and their hub live under `/pittsburgh-salon-planning`. Topics include complete
+quotes, extension methods, bridal logistics, haircuts and evening bookings.
+The generator strengthens 9 existing service pages, 20 area pages and 3 main
+entry pages, links the new hub from the question library, and includes the
+24 new pages in the existing search index. The original keyword CSV remains
+the map of the first 2,000 articles.
+
+The root sitemap includes `/salon-planning-sitemap.xml` with 25 new URLs.
+Prices and availability require direct confirmation; the content does not
+infer stylist certifications, publish fabricated case studies or add branches.
+A factual correction also clarifies that at-home color products differ,
+replacing the overly broad metallic-salts statement in the existing FAQ.
