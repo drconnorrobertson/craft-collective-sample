@@ -8,6 +8,7 @@ const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OUT=path.join(ROOT,'dist');
 const SITE='https://www.craftcollectivesalongroup.com';
 const DATE='2026-10-08';
+const MODIFIED='2026-10-09';
 const BASE='/pittsburgh-hair-guide';
 const esc=t=>String(t).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 const p=t=>`<p>${t}</p>`;
@@ -15,7 +16,12 @@ const ul=xs=>`<ul>${xs.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
 const section=(title,body)=>`<section><h2>${esc(title)}</h2>${body}</section>`;
 const link=(href,title)=>`<a href="${esc(href)}">${esc(title)}</a>`;
 const lower=x=>x.label.toLowerCase();
-const serviceFor=x=>({color:'/services/hair-color-pittsburgh',extensions:'/services/hair-extensions-pittsburgh',styling:'/services/blowout-pittsburgh',treatments:'/services/keratin-treatment-pittsburgh',cuts:'/services/haircuts-pittsburgh',care:'/hair-services-pittsburgh'}[x.family]);
+const serviceFor=x=>{
+ if(x.family==='styling'&&x.slug.includes('bridal'))return '/services/bridal-hair-pittsburgh';
+ if(x.family==='color'&&/balayage|foilyage/.test(x.slug))return '/services/balayage-pittsburgh';
+ if(x.family==='color'&&/highlight|babylight|foil|lowlights/.test(x.slug))return '/services/highlights-pittsburgh';
+ return {color:'/services/hair-color-pittsburgh',extensions:'/services/hair-extensions-pittsburgh',styling:'/services/blowout-pittsburgh',treatments:'/services/keratin-treatment-pittsburgh',cuts:'/services/haircuts-pittsburgh',care:'/hair-services-pittsburgh'}[x.family];
+};
 const familyNames={color:'Color and blonding',extensions:'Hair extensions',styling:'Styling and events',treatments:'Smoothing consultations',cuts:'Haircuts and shapes',care:'Hair care and routines',comparisons:'Service comparisons',salons:'Pittsburgh salon comparisons'};
 const records=[];
 const bodyByPath=new Map();
@@ -178,10 +184,10 @@ function save(route,title,description,body,{family='color',article=true,keywords
   t=t.replace(new RegExp(`(<meta ${attr}="${key}" content=")[^"]*(")`),(_,a,b)=>a+esc(value)+b);
  }
  t=t.replace(/(<link rel="canonical" href=")[^"]*(")/,(_,a,b)=>a+url+b);
- t=t.replace(/<header class="archive-hero">.*?<\/header>/s,`<header class="archive-hero"><nav aria-label="Breadcrumb">${link('/','Home')} / ${link(BASE,'Pittsburgh hair guide')}${parent!==BASE?' / '+link(parent,'Topic guide'):''}</nav><h1>${esc(title)}</h1><p class="archive-meta">Craft Collective Salon Group · October 8, 2026</p></header>`);
+ t=t.replace(/<header class="archive-hero">.*?<\/header>/s,`<header class="archive-hero"><nav aria-label="Breadcrumb">${link('/','Home')} / ${link(BASE,'Pittsburgh hair guide')}${parent!==BASE?' / '+link(parent,'Topic guide'):''}</nav><h1>${esc(title)}</h1><p class="archive-meta">Craft Collective Salon Group · Updated October 9, 2026</p></header>`);
  t=t.replace(/<article class="archive-body">.*?<\/article>/s,`<article class="archive-body">${body}${booking()}</article>`);
  const org={'@type':'Organization','@id':SITE+'/#organization',name:'Craft Collective Salon Group',url:SITE,logo:{'@type':'ImageObject',url:SITE+'/images/logo.png'}};
- const schema={'@context':'https://schema.org','@graph':[org,{'@type':article?'Article':'CollectionPage','@id':url,url,name:title,...(article?{headline:title,datePublished:DATE,dateModified:DATE,author:{'@id':SITE+'/#organization'},publisher:{'@id':SITE+'/#organization'},mainEntityOfPage:url}:{}),description},{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:SITE+'/'},{'@type':'ListItem',position:2,name:'Pittsburgh hair guide',item:SITE+BASE},...(route===BASE?[]:[{'@type':'ListItem',position:3,name:title,item:url}])]}]};
+ const schema={'@context':'https://schema.org','@graph':[org,{'@type':article?'Article':'CollectionPage','@id':url,url,name:title,...(article?{headline:title,datePublished:DATE,dateModified:MODIFIED,author:{'@id':SITE+'/#organization'},publisher:{'@id':SITE+'/#organization'},mainEntityOfPage:url}:{}),description},{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:SITE+'/'},{'@type':'ListItem',position:2,name:'Pittsburgh hair guide',item:SITE+BASE},...(parent!==BASE?[{'@type':'ListItem',position:3,name:'Topic guide',item:SITE+parent}]:[]),...(route===BASE?[]:[{'@type':'ListItem',position:parent===BASE?3:4,name:title,item:url}])]}]};
  t=t.replace(/<script type="application\/ld\+json">.*?<\/script>/gs,'');
  t=t.replace('</head>',`<link rel="stylesheet" href="/assets/pittsburgh-guides.css"><script type="application/ld+json">${JSON.stringify(schema).replaceAll('</','<\\/')}</script></head>`);
  const file=path.join(OUT,route,'index.html');fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,t);
@@ -200,7 +206,8 @@ for(const x of profiles){
   const keywords=[`${lower(x)} ${label.toLowerCase()} pittsburgh`,`${lower(x)} ${label.toLowerCase()} north hills pittsburgh`,`${lower(x)} ${label.toLowerCase()} canonsburg`,`${lower(x)} salon questions pittsburgh`];
   const intro=p(`This guide focuses on ${esc(label.toLowerCase())} for ${esc(lower(x))}. Use it to prepare a specific salon conversation, then confirm the plan with the stylist who assesses your hair.`);
   const table=`<div class="comparison-scroll"><table><thead><tr><th>Decision</th><th>What to clarify for ${esc(lower(x))}</th></tr></thead><tbody><tr><td>Goal</td><td>${esc(x.decision)}</td></tr><tr><td>Key question</td><td>${esc(x.question)}</td></tr><tr><td>Alternative</td><td>Discuss ${esc(x.alternative)} and the difference in the finish.</td></tr></tbody></table></div>`;
-  const related=selectedIntents.filter(y=>y[0]!==intent).slice(0,4).map(y=>link(topicRoute+'/'+y[0],`${x.label}: ${y[1]}`));
+  const current=selectedIntents.findIndex(y=>y[0]===intent);
+  const related=[-1,1,-2,2].map(offset=>selectedIntents[(current+offset+selectedIntents.length)%selectedIntents.length]).map(y=>link(topicRoute+'/'+y[0],`${x.label}: ${y[1]}`));
   save(route,title,desc,intro+bodyFn(x)+table+section('Related planning guides',p(related.join(' · '))+p(`${link(serviceFor(x),'Explore the related Craft Collective service menu')}. Confirm availability of the specific technique and stylist before booking.`)),{family:x.family,parent:topicRoute,keywords});
   pages.push([route,label]);
  }
@@ -255,10 +262,10 @@ const directory=p('Find a focused answer before choosing your next Pittsburgh ha
  section('Plan the location of your visit',p('Craft Collective has two studios: North Hills Pittsburgh and Canonsburg. The area guides below describe where guests are traveling from; they do not indicate additional Craft Collective storefronts.')+p(existingAreas.map(a=>link('/locations/'+a,a.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '))).join(' · ')))+
  section('Use the keyword and page map',p(`${link(BASE+'/keyword-map.csv','Download the keyword and page map')}. The map includes editorial search phrases for each page. It does not claim measured search volume, current rankings or that every phrase has been observed in Search Console.`));
 save(BASE,'Pittsburgh Hair Guide: Color, Cuts, Care and Comparisons','Explore Pittsburgh hair questions, service comparisons and salon planning guides. Search balayage, haircuts, extensions, styling, maintenance and costs.',directory,{article:false});
-const rootPage=path.join(OUT,BASE,'index.html');fs.writeFileSync(rootPage,fs.readFileSync(rootPage,'utf8').replace('</body>','<script src="/assets/pittsburgh-guide-search.js" defer></script></body>'));
+const rootPage=path.join(OUT,BASE,'index.html');fs.writeFileSync(rootPage,fs.readFileSync(rootPage,'utf8').replace('</body>','<script type="module" src="/assets/pittsburgh-guide-search.js"></script></body>'));
 fs.writeFileSync(path.join(OUT,'assets/pittsburgh-guides.css'),`.guide-topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem}.guide-topic-grid .archive-cta{margin:0}.guide-topic-grid h2,.guide-topic-grid h3{font-size:1.5rem;margin:0 0 .8rem}.guide-search{background:#ede9e1;padding:1.4rem;margin:2rem 0;border-radius:8px}.guide-search label{display:block;font-weight:500;margin-bottom:.5rem}.guide-search input{width:100%;min-height:48px;font:inherit;border:1px solid #765329;background:white;padding:.65rem}.guide-links{padding-left:1.3rem;line-height:1.7}.guide-links li{margin-bottom:.65rem}.archive-body>section{margin:2rem 0}.comparison-scroll table{font-size:.95rem}#guide-results:empty{display:none}`);
-fs.writeFileSync(path.join(OUT,'assets/pittsburgh-guide-search.js'),`const field=document.getElementById('guide-search'),results=document.getElementById('guide-results'),status=document.getElementById('guide-status');let data;async function search(){const q=field.value.trim().toLowerCase();results.replaceChildren();if(q.length<2){status.textContent='Enter at least two characters, or browse the topics below.';return}try{data??=await fetch('/pittsburgh-hair-guide/search-index.json').then(r=>{if(!r.ok)throw Error();return r.json()});const terms=q.split(/\\s+/);const matches=data.filter(x=>terms.every(t=>(x.title+' '+x.primaryKeyword).toLowerCase().includes(t)));status.textContent=matches.length+' matching guides. Showing up to 40.';for(const x of matches.slice(0,40)){const li=document.createElement('li'),a=document.createElement('a');a.href=x.path;a.textContent=x.title;li.append(a);results.append(li)}}catch{status.textContent='Search is unavailable. Please use the topic links below.'}}let timer;field.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(search,180)});`);
-fs.writeFileSync(path.join(OUT,BASE,'search-index.json'),JSON.stringify(records.map(({path,title,primaryKeyword})=>({path,title,primaryKeyword}))));
+for(const name of ['pittsburgh-guide-search.js','hair-guide-search.mjs'])fs.copyFileSync(path.join(ROOT,'scripts',name),path.join(OUT,'assets',name));
+fs.writeFileSync(path.join(OUT,BASE,'search-index.json'),JSON.stringify(records.map(({path,title,primaryKeyword,relatedKeywords})=>({path,title,primaryKeyword,relatedKeywords}))));
 const csv=s=>'"'+String(s).replaceAll('"','""')+'"';
 fs.writeFileSync(path.join(OUT,BASE,'keyword-map.csv'),'Category,Primary keyword,Related keywords,Page title,URL,Research status\n'+records.map(x=>[familyNames[x.family],x.primaryKeyword,x.relatedKeywords.join('; '),x.title,SITE+x.path,'Editorial topic; search volume not measured'].map(csv).join(',')).join('\n')+'\n');
 fs.writeFileSync(path.join(OUT,BASE,'page-manifest.json'),JSON.stringify({created:DATE,articleCount:records.length,keywordStatus:'Editorial coverage, not search-volume estimates',sources:competitors.map(x=>({name:x.name,url:x.url,checked:DATE})),pages:records},null,2));
@@ -269,7 +276,7 @@ for(const rel of ['index.html','blog/index.html','hair-services-pittsburgh/index
  fs.writeFileSync(file,t);
 }
 const urls=[...bodyByPath.keys()];
-fs.writeFileSync(path.join(OUT,'pittsburgh-guides-sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(route=>`<url><loc>${esc(SITE+route)}</loc><lastmod>${DATE}</lastmod></url>`).join('')}</urlset>`);
+fs.writeFileSync(path.join(OUT,'pittsburgh-guides-sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(route=>`<url><loc>${esc(SITE+route)}</loc><lastmod>${MODIFIED}</lastmod></url>`).join('')}</urlset>`);
 const sitemapFile=path.join(OUT,'sitemap.xml');let sitemap=fs.readFileSync(sitemapFile,'utf8');
 if(!sitemap.includes('/pittsburgh-guides-sitemap.xml'))sitemap=sitemap.replace('</sitemapindex>',`<sitemap><loc>${SITE}/pittsburgh-guides-sitemap.xml</loc><lastmod>${DATE}</lastmod></sitemap></sitemapindex>`);
 if(!sitemap.includes('/pittsburgh-guides-sitemap.xml'))throw Error('Root sitemap is not an index');

@@ -146,3 +146,15 @@ Prices and availability require direct confirmation; the content does not
 infer stylist certifications, publish fabricated case studies or add branches.
 A factual correction also clarifies that at-home color products differ,
 replacing the overly broad metallic-salts statement in the existing FAQ.
+
+## Search and navigation improvements
+
+Search uses `hair-guide-search.mjs` for normalization and relevance ranking,
+including grey/gray, price/cost, wedding/bridal and haircut variants. The
+client script supports shareable `?q=` URLs and ignores stale async results.
+The index includes 2,000 question pages, 24 detailed service/planning pages
+and 20 existing area pages, with relevant detailed guides ranked first.
+Question navigation connects neighboring intents evenly; 1,745 question
+pages link directly to relevant detailed service or planning guides.
+Article breadcrumbs include the topic hub. Modified dates reflect these
+content changes while original publication dates remain unchanged.

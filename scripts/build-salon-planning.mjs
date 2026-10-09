@@ -11,6 +11,7 @@ const para=s=>`<p>${esc(s)}</p>`;
 const section=(h,b)=>`<section><h2>${esc(h)}</h2>${b}</section>`;
 const routes=new Map(pages.map(p=>[p.slug,p.group==='Specialist services'?'/services/'+p.slug:BASE+'/'+p.slug]));
 const names=new Map(pages.map(p=>[p.slug,p.title]));
+const areaName=slug=>({'mccandless':'McCandless','mcmurray':'McMurray','mt-lebanon':'Mt. Lebanon','washington-pa':'Washington, PA','north-hills-pittsburgh':'North Hills Pittsburgh'}[slug]||slug.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '));
 const refs=slugs=>`<ul>${slugs.map(s=>`<li>${link(routes.get(s),names.get(s))}</li>`).join('')}</ul>`;
 
 export function buildSalonPlanning(ROOT,OUT){
@@ -49,7 +50,7 @@ export function buildSalonPlanning(ROOT,OUT){
  save(BASE,'Pittsburgh Salon Planning: Services, Prices and Appointments','Plan Pittsburgh hair appointments with detailed guides to pricing, curly cuts, color, extensions, bridal styling and the two Craft Collective studios.',
   para('Choose a guide for the decision you are making, then confirm the service with the salon. These pages explain appointment scope, individual estimates, stylist selection and upkeep. They complement the hair-question library with more detailed help for choosing a visit.')+
   groups.map(g=>section(g,refs(pages.filter(p=>p.group===g).map(p=>p.slug)))).join('')+
-  section('Explore your nearby area',`<p>${['wexford','mccandless','ross-township','cranberry-township','south-hills','mcmurray','mt-lebanon','washington-pa'].map(a=>link('/locations/'+a,a.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '))).join(' · ')}</p>`)+
+  section('Explore your nearby area',`<p>${['wexford','mccandless','ross-township','cranberry-township','south-hills','mcmurray','mt-lebanon','washington-pa'].map(a=>link('/locations/'+a,areaName(a))).join(' · ')}</p>`)+
   section('Find a specific hair question',`<p>${link('/pittsburgh-hair-guide','Search the Pittsburgh hair-question library')} for focused questions about shapes, color choices, upkeep and service comparisons.</p>`),{hub:true,group:'Planning'});
 
  const enhancements={
@@ -90,7 +91,7 @@ export function buildSalonPlanning(ROOT,OUT){
  };
  for(const area of fs.readdirSync(path.join(OUT,'locations'))){
   const rel=`locations/${area}/index.html`;if(!fs.existsSync(path.join(OUT,rel)))continue;
-  const label=area.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
+  const label=areaName(area);
   const target=south.has(area)?'canonsburg':'north-hills-pittsburgh';
   const note=localNotes[area]||`If you are planning a visit from ${label}, compare the actual studio addresses and selected stylist before booking. Your requested service, full appointment time and travel arrangements should determine the location you choose.`;
   inject(rel,`<h2>Plan your ${esc(label)}-area salon visit</h2>${para(note)}<p>Craft Collective has two storefronts, in North Hills Pittsburgh and Canonsburg. This nearby-area page does not represent a separate branch. Explore ${link('/locations/'+target,'the '+(target==='canonsburg'?'Canonsburg':'North Hills')+' studio')} and call to confirm another location if it better suits your plan.</p><h3>Choose the service before the calendar slot</h3><p>For new color, share your recent color history and a current photograph. For a haircut, explain the desired shape and everyday styling routine. For extensions, begin with the required consultation. Ask for a complete estimate and the next maintenance appointment before committing to a larger change.</p>${refs(['curly-haircuts-pittsburgh','gray-blending-pittsburgh','balayage-prices-pittsburgh','hair-extensions-cost-pittsburgh','bridal-party-hair-pittsburgh'])}`);
@@ -105,7 +106,45 @@ export function buildSalonPlanning(ROOT,OUT){
  fs.writeFileSync(path.join(OUT,'assets/salon-planning.css'),`.salon-planning-resources{padding:4rem 1.5rem;background:#ede9e1;color:#2a2724}.salon-planning-resources>div{max-width:900px;margin:auto}.salon-planning-resources h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.2;margin:0 0 1rem}.salon-planning-resources h3{font-size:1.15rem;margin:1.5rem 0 .8rem}.salon-planning-resources p,.salon-planning-resources li{font-size:1rem;line-height:1.8}.salon-planning-resources p{margin:1rem 0}.salon-planning-resources ul{padding-left:1.25rem;margin:1rem 0}.salon-planning-resources li{margin:.5rem 0}.salon-planning-resources a{color:#715323;text-decoration:underline;text-underline-offset:3px}.salon-planning-resources a:focus-visible{outline:2px solid #715323;outline-offset:4px}`);
  // Include the new records in the existing usable search, without changing the original CSV.
  const searchFile=path.join(OUT,'pittsburgh-hair-guide/search-index.json');const search=JSON.parse(fs.readFileSync(searchFile,'utf8'));
- search.push(...records.filter(r=>r.path!==BASE).map(r=>({path:r.path,title:r.title,primaryKeyword:r.title.toLowerCase()})));fs.writeFileSync(searchFile,JSON.stringify(search));
+ search.push(...records.filter(r=>r.path!==BASE).map(r=>({path:r.path,title:r.title,primaryKeyword:r.title.toLowerCase(),relatedKeywords:[r.group,r.path.startsWith('/services/')?'North Hills Pittsburgh Canonsburg hair service':'North Hills Pittsburgh Canonsburg appointment planning'],priority:30})));fs.writeFileSync(searchFile,JSON.stringify(search));
+ for(const area of fs.readdirSync(path.join(OUT,'locations'))){
+  if(!fs.existsSync(path.join(OUT,'locations',area,'index.html')))continue;
+  search.push({path:'/locations/'+area,title:`Salon visits from ${areaName(area)}: Craft Collective`,primaryKeyword:`hair salon near ${areaName(area)}`,relatedKeywords:['balayage highlights color haircuts extensions bridal North Hills Canonsburg'],priority:15});
+ }
+ fs.writeFileSync(searchFile,JSON.stringify(search));
+ const questionManifest=JSON.parse(fs.readFileSync(path.join(OUT,'pittsburgh-hair-guide/page-manifest.json'),'utf8'));
+ let connected=0;
+ for(const r of questionManifest.pages){
+  const topic=r.path.split('/').at(-2),intent=r.path.split('/').at(-1);
+  let choices=[];
+  if(r.family==='color'){
+   if(/correction|box-dye|dark-to-light/.test(topic))choices=['color-correction-pittsburgh','color-correction-cost-pittsburgh'];
+   else if(/gray/.test(topic))choices=['gray-blending-pittsburgh'];
+   else if(/gloss|toner/.test(topic))choices=['hair-gloss-toner-pittsburgh'];
+   else if(/lived-in|root-shadow/.test(topic))choices=['lived-in-color-pittsburgh','balayage-prices-pittsburgh'];
+   else if(/balayage|foilyage/.test(topic))choices=['balayage-prices-pittsburgh','blonde-colorist-pittsburgh'];
+   else if(/highlight|babylight|foil|lowlights/.test(topic))choices=['highlights-prices-pittsburgh'];
+   else if(/blonde|bronde/.test(topic))choices=['blonde-colorist-pittsburgh','balayage-prices-pittsburgh'];
+   else choices=['affordable-hair-salon-pittsburgh','hair-gloss-toner-pittsburgh'];
+  }else if(r.family==='cuts'){
+   if(/curly|wavy|coily/.test(topic))choices=['curly-haircuts-pittsburgh','haircut-prices-pittsburgh'];
+   else if(/fine/.test(topic))choices=['fine-hair-haircuts-pittsburgh','haircut-prices-pittsburgh'];
+   else if(/bob|pixie|crop/.test(topic))choices=['short-haircuts-pittsburgh','haircut-prices-pittsburgh'];
+   else choices=['haircut-prices-pittsburgh'];
+  }else if(r.family==='extensions'){
+   choices=[/tape/.test(topic)?'tape-in-extensions-pittsburgh':/keratin/.test(topic)?'keratin-bond-extensions-pittsburgh':/hand-tied/.test(topic)?'hand-tied-extensions-pittsburgh':'hair-extensions-cost-pittsburgh','hair-extensions-cost-pittsburgh'];
+  }else if(r.family==='styling')choices=/bridal/.test(topic)?['bridal-hair-trial-pittsburgh','bridal-party-hair-pittsburgh']:['last-minute-hair-appointments-pittsburgh'];
+  else if(r.family==='treatments')choices=['keratin-treatment-cost-pittsburgh'];
+  else if(r.family==='care'&&/brassy|uneven.*tone|dull/.test(topic))choices=['hair-gloss-toner-pittsburgh'];
+  else if(r.family==='salons'||r.family==='comparisons')choices=['affordable-hair-salon-pittsburgh'];
+  choices=[...new Set(choices)];if(!choices.length)continue;
+  if(intent==='cost')choices.sort((a,b)=>Number(/cost|prices/.test(b))-Number(/cost|prices/.test(a)));
+  const file=path.join(OUT,r.path,'index.html');let s=fs.readFileSync(file,'utf8');
+  const block=section('Turn this question into an appointment plan',refs(choices));
+  s=s.replace('<aside class="archive-cta">',block+'<aside class="archive-cta">');
+  s=s.replace(/"dateModified":"[0-9-]+"/g,`"dateModified":"${DATE}"`).replace('Craft Collective Salon Group · October 8, 2026','Craft Collective Salon Group · Updated October 9, 2026');
+  fs.writeFileSync(file,s);modifiedRoutes.add(r.path);connected++;
+ }
  fs.mkdirSync(path.join(OUT,BASE),{recursive:true});fs.writeFileSync(path.join(OUT,BASE,'page-manifest.json'),JSON.stringify({updated:DATE,pages:records,enhancedExistingPages:enhanced,sources:['/faq','/hair-services-pittsburgh','/services/hair-extensions-pittsburgh','/services/bridal-hair-pittsburgh'],pricing:'Individual quotes; no invented prices'},null,2));
  const sitemap='/salon-planning-sitemap.xml';fs.writeFileSync(path.join(OUT,sitemap),`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${records.map(r=>`<url><loc>${SITE+r.path}</loc><lastmod>${DATE}</lastmod></url>`).join('')}</urlset>`);
  const rootSitemap=path.join(OUT,'sitemap.xml');let xml=fs.readFileSync(rootSitemap,'utf8');if(!xml.includes(sitemap))xml=xml.replace('</sitemapindex>',`<sitemap><loc>${SITE+sitemap}</loc><lastmod>${DATE}</lastmod></sitemap></sitemapindex>`);fs.writeFileSync(rootSitemap,xml);
@@ -126,5 +165,5 @@ export function buildSalonPlanning(ROOT,OUT){
   for(const m of body.matchAll(/href="(\/[^"#?]*)/g)){const f=path.join(OUT,m[1]);if(!fs.existsSync(f)&&!fs.existsSync(path.join(f,'index.html')))throw Error('Broken link '+r.path+' '+m[1]);}
  }
  if(pages.length!==24)throw Error('Unexpected new page count '+pages.length);
- console.log(JSON.stringify({newPlanningAndServicePages:pages.length,newHub:1,enhancedExistingPages:enhanced,searchEntries:search.length,minimumNewPageWords:Math.min(...records.filter(r=>r.path!==BASE).map(r=>r.wordCount))},null,2));
+ console.log(JSON.stringify({newPlanningAndServicePages:pages.length,newHub:1,enhancedExistingPages:enhanced,questionPagesConnectedToDetailedGuides:connected,searchEntries:search.length,minimumNewPageWords:Math.min(...records.filter(r=>r.path!==BASE).map(r=>r.wordCount))},null,2));
 }
