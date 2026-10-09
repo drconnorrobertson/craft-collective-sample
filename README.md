@@ -100,3 +100,31 @@ http.server` redirects `/book` to `/book/`, which is close enough for review.
 ## Contact
 
 Booking 724-514-7231 · info@craftcollectivesalongroup.com
+
+## Pittsburgh question library
+
+Run `node scripts/build-pittsburgh-guides.mjs` to copy the existing site into
+`dist/` and generate 2,000 draft question and comparison articles, 99 hubs, a
+search index, a keyword CSV and a dedicated sitemap. Vercel uses this command
+and serves `dist/`. No dependency installation is required. Existing URLs and
+content stay in the source tree.
+
+`scripts/pittsburgh-guide-profiles.mjs` contains the topic-specific definitions,
+decisions and consultation prompts. `scripts/build-pittsburgh-guides.mjs`
+contains the question templates, navigation and validation. The keyword map
+contains editorial search phrases, not measured search volumes or rankings.
+The pages are concise planning guides assembled from authored topic profiles
+and shared question templates. They do not represent 2,000 independently
+researched essays or a guarantee of local rankings.
+
+The library adds 800 color articles, 600 haircut articles, 300 hair-care
+articles, 125 extension articles, 50 styling articles, 25 smoothing articles,
+90 service comparisons and 10 source-linked salon comparisons. Competitor
+facts are limited to official information checked October 8, 2026. Update
+those facts and check dates when the source changes.
+
+The public keyword map is `/pittsburgh-hair-guide/keyword-map.csv`; the root
+sitemap references `/pittsburgh-guides-sitemap.xml`. Source code controls the
+generated library, so edit the profiles or generator rather than files inside
+`dist/`. `scripts/search_visibility_oct2026.py` separately applies the focused
+metadata and booking improvements to 17 priority pages.

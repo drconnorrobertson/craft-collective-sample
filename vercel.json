@@ -263,5 +263,8 @@
       "destination": "/post/how-much-does-balayage-highlights-or-color-cost-in-pittsburgh-salons",
       "permanent": true
     }
-  ]
+  ],
+  "buildCommand": "node scripts/build-pittsburgh-guides.mjs",
+  "outputDirectory": "dist",
+  "installCommand": ""
 }
