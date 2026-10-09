@@ -1,11 +1,17 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
 import {profiles,competitors,slug} from './pittsburgh-guide-profiles.mjs';
 import {buildSalonPlanning} from './build-salon-planning.mjs';
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const OUT=path.join(ROOT,'dist');
+const fingerprint=s=>createHash('sha256').update(s).digest('hex').slice(0,12);
+const searchEngine=fs.readFileSync(path.join(ROOT,'scripts/hair-guide-search.mjs'),'utf8');
+const searchEngineName=`hair-guide-search.${fingerprint(searchEngine)}.mjs`;
+const searchClient=fs.readFileSync(path.join(ROOT,'scripts/pittsburgh-guide-search.js'),'utf8').replace('./hair-guide-search.mjs','./'+searchEngineName);
+const searchClientName=`pittsburgh-guide-search.${fingerprint(searchClient)}.js`;
 const SITE='https://www.craftcollectivesalongroup.com';
 const DATE='2026-10-08';
 const MODIFIED='2026-10-09';
@@ -163,9 +169,15 @@ const careIntents=[...intents.filter(x=>['overview','consultation','inspiration-
 
 fs.rmSync(OUT,{recursive:true,force:true});
 fs.mkdirSync(OUT,{recursive:true});
+function copySource(source,destination){
+ if(fs.statSync(source).isDirectory()){
+  fs.mkdirSync(destination,{recursive:true});
+  for(const name of fs.readdirSync(source))copySource(path.join(source,name),path.join(destination,name));
+ }else fs.copyFileSync(source,destination);
+}
 for(const ent of fs.readdirSync(ROOT,{withFileTypes:true})){
  if(['.git','dist','node_modules','.vercel','.codex','scripts'].includes(ent.name))continue;
- fs.cpSync(path.join(ROOT,ent.name),path.join(OUT,ent.name),{recursive:true});
+ copySource(path.join(ROOT,ent.name),path.join(OUT,ent.name));
 }
 const template=fs.readFileSync(path.join(ROOT,'guides/first-salon-visit-checklist-pittsburgh/index.html'),'utf8');
 if(!template.includes('<article class="archive-body">'))throw Error('Guide template missing');
@@ -262,9 +274,10 @@ const directory=p('Find a focused answer before choosing your next Pittsburgh ha
  section('Plan the location of your visit',p('Craft Collective has two studios: North Hills Pittsburgh and Canonsburg. The area guides below describe where guests are traveling from; they do not indicate additional Craft Collective storefronts.')+p(existingAreas.map(a=>link('/locations/'+a,a.split('-').map(w=>w[0].toUpperCase()+w.slice(1)).join(' '))).join(' · ')))+
  section('Use the keyword and page map',p(`${link(BASE+'/keyword-map.csv','Download the keyword and page map')}. The map includes editorial search phrases for each page. It does not claim measured search volume, current rankings or that every phrase has been observed in Search Console.`));
 save(BASE,'Pittsburgh Hair Guide: Color, Cuts, Care and Comparisons','Explore Pittsburgh hair questions, service comparisons and salon planning guides. Search balayage, haircuts, extensions, styling, maintenance and costs.',directory,{article:false});
-const rootPage=path.join(OUT,BASE,'index.html');fs.writeFileSync(rootPage,fs.readFileSync(rootPage,'utf8').replace('</body>','<script type="module" src="/assets/pittsburgh-guide-search.js"></script></body>'));
+const rootPage=path.join(OUT,BASE,'index.html');fs.writeFileSync(rootPage,fs.readFileSync(rootPage,'utf8').replace('</body>',`<script type="module" src="/assets/${searchClientName}"></script></body>`));
 fs.writeFileSync(path.join(OUT,'assets/pittsburgh-guides.css'),`.guide-topic-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem}.guide-topic-grid .archive-cta{margin:0}.guide-topic-grid h2,.guide-topic-grid h3{font-size:1.5rem;margin:0 0 .8rem}.guide-search{background:#ede9e1;padding:1.4rem;margin:2rem 0;border-radius:8px}.guide-search label{display:block;font-weight:500;margin-bottom:.5rem}.guide-search input{width:100%;min-height:48px;font:inherit;border:1px solid #765329;background:white;padding:.65rem}.guide-links{padding-left:1.3rem;line-height:1.7}.guide-links li{margin-bottom:.65rem}.archive-body>section{margin:2rem 0}.comparison-scroll table{font-size:.95rem}#guide-results:empty{display:none}`);
-for(const name of ['pittsburgh-guide-search.js','hair-guide-search.mjs'])fs.copyFileSync(path.join(ROOT,'scripts',name),path.join(OUT,'assets',name));
+fs.writeFileSync(path.join(OUT,'assets',searchEngineName),searchEngine);
+fs.writeFileSync(path.join(OUT,'assets',searchClientName),searchClient);
 fs.writeFileSync(path.join(OUT,BASE,'search-index.json'),JSON.stringify(records.map(({path,title,primaryKeyword,relatedKeywords})=>({path,title,primaryKeyword,relatedKeywords}))));
 const csv=s=>'"'+String(s).replaceAll('"','""')+'"';
 fs.writeFileSync(path.join(OUT,BASE,'keyword-map.csv'),'Category,Primary keyword,Related keywords,Page title,URL,Research status\n'+records.map(x=>[familyNames[x.family],x.primaryKeyword,x.relatedKeywords.join('; '),x.title,SITE+x.path,'Editorial topic; search volume not measured'].map(csv).join(',')).join('\n')+'\n');
