@@ -158,3 +158,25 @@ Question navigation connects neighboring intents evenly; 1,745 question
 pages link directly to relevant detailed service or planning guides.
 Article breadcrumbs include the topic hub. Modified dates reflect these
 content changes while original publication dates remain unchanged.
+
+## October 10 long-tail refresh
+
+The final build pass, `scripts/build-long-tail-refresh.mjs`, revises five
+existing articles selected from Search Console questions about flat roots,
+dull hair, workout hair care, blowout comparisons and curly stylist selection.
+`scripts/long-tail-refresh-content.mjs` holds the authored answers. It also
+expands the existing gray-blending and curly-haircut service pages, links six
+relevant topic hubs, and updates the search index and sitemap modification dates.
+No new public URLs are added. Original publication dates, article media,
+appointment CTAs, Phorest links, homepage and shared scripts are preserved.
+
+To verify the booking and URL contracts against a build made from the previous
+source revision, run:
+
+```bash
+python3 scripts/verify-long-tail-refresh.py ../baseline-dist dist
+```
+
+The check requires identical file inventories, unchanged homepage and shared
+assets, identical existing Phorest anchor attributes, iframe and external script
+elements, valid internal links and schema, and unchanged publication dates.
