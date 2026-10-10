@@ -345,3 +345,22 @@
   }
 
 })();
+
+/* Booking interest only: never label an outbound click as a completed booking.
+   Activates when the site's approved GA4 tag is configured. Does not interrupt
+   navigation or send customer details, URL parameters or booking selections. */
+(function () {
+  document.addEventListener('click', function (event) {
+    var anchor = event.target.closest && event.target.closest('a[href]');
+    if (!anchor || typeof window.gtag !== 'function') return;
+    var href = anchor.getAttribute('href');
+    var booking = /^https:\/\/phorest\.com\/book\/salons\/craftcollectivesalongroup(?:[/?#]|$)/.test(href);
+    var call = /^tel:/.test(href);
+    if (!booking && !call) return;
+    window.gtag('event', booking ? 'booking_click' : 'phone_click', {
+      page_path: window.location.pathname,
+      booking_provider: booking ? 'phorest' : 'phone',
+      transport_type: 'beacon'
+    });
+  });
+})();
