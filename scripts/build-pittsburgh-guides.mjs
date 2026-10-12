@@ -1,4 +1,5 @@
 import {buildBuyerIntent} from './build-buyer-intent.mjs';
+import {buildSearchPathways} from './build-search-pathways.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -311,3 +312,4 @@ console.log(JSON.stringify({articles:records.length,hubPages:urls.length-records
 buildSalonPlanning(ROOT,OUT);
 buildLongTailRefresh(OUT);
 buildBuyerIntent(OUT);
+buildSearchPathways(OUT);
