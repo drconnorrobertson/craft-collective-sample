@@ -313,3 +313,6 @@ buildSalonPlanning(ROOT,OUT);
 buildLongTailRefresh(OUT);
 buildBuyerIntent(OUT);
 buildSearchPathways(OUT);
+
+const {execFileSync}=await import('node:child_process');
+execFileSync(process.execPath,[path.join(ROOT,'scripts/search-intent.mjs'),'--write','--dist'],{cwd:ROOT,stdio:'inherit'});

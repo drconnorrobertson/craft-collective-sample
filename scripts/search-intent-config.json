@@ -1,0 +1,14 @@
+{
+  "index.html": {
+    "title": "Hair Salon in Pittsburgh & Canonsburg | Craft Collective",
+    "description": "Book haircuts, balayage, highlights and color at Craft Collective Salon Group. Explore North Hills Pittsburgh and Canonsburg salon locations.",
+    "heading": "Choose your salon location and next hair service",
+    "body": "<p>Explore <a href=\"/hair-services-pittsburgh\">hair services in Pittsburgh</a>, find <a href=\"/locations/north-hills-pittsburgh\">our North Hills salon</a>, or review <a href=\"/locations/canonsburg\">the Canonsburg location</a>. Bring your goal and recent hair history so the salon can help identify the appointment you need.</p><p><a href=\"https://phorest.com/book/salons/craftcollectivesalongroup\" class=\"btn btn-gold\" target=\"_blank\" rel=\"noopener\">Book a North Hills Appointment</a> \u00b7 <a href=\"tel:+17245147231\">Call for Canonsburg or booking questions</a></p>"
+  },
+  "hair-services-pittsburgh/index.html": {
+    "title": "Haircuts, Balayage & Color in Pittsburgh | Craft Collective",
+    "description": "Explore Pittsburgh haircuts, balayage, highlights, color, keratin and extensions. Review Craft Collective services and choose the right appointment.",
+    "heading": "Choose an appointment for your hair goal",
+    "body": "<p>Compare <a href=\"/services/balayage-pittsburgh\">balayage</a>, <a href=\"/services/highlights-pittsburgh\">highlights</a>, <a href=\"/services/hair-color-pittsburgh\">hair color</a>, <a href=\"/services/haircuts-pittsburgh\">haircuts</a> and <a href=\"/services/hair-extensions-pittsburgh\">extensions</a> before booking. Ask which service, consultation and maintenance plan fit your starting point.</p><p>Review <a href=\"/locations/north-hills-pittsburgh\">North Hills location details</a> or <a href=\"/locations/canonsburg\">Canonsburg appointment information</a>. <a href=\"https://phorest.com/book/salons/craftcollectivesalongroup\" target=\"_blank\" rel=\"noopener\">Book online for North Hills</a>, or <a href=\"tel:+17245147231\">call 724-514-7231</a> to confirm the service and location.</p>"
+  }
+}
