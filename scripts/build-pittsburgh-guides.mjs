@@ -1,3 +1,4 @@
+import {buildPricingPathways} from './build-pricing-pathways.mjs';
 import {buildBuyerIntent} from './build-buyer-intent.mjs';
 import {buildSearchPathways} from './build-search-pathways.mjs';
 import fs from 'node:fs';
@@ -315,6 +316,7 @@ buildLongTailRefresh(OUT);
 buildServiceQuality(OUT);
 buildBuyerIntent(OUT);
 buildSearchPathways(OUT);
+buildPricingPathways(ROOT,OUT);
 
 const {execFileSync}=await import('node:child_process');
 execFileSync(process.execPath,[path.join(ROOT,'scripts/search-intent.mjs'),'--write','--dist'],{cwd:ROOT,stdio:'inherit'});

@@ -180,3 +180,18 @@ python3 scripts/verify-long-tail-refresh.py ../baseline-dist dist
 The check requires identical file inventories, unchanged homepage and shared
 assets, identical existing Phorest anchor attributes, iframe and external script
 elements, valid internal links and schema, and unchanged publication dates.
+
+## Salon pricing coverage
+
+The `/pricing` section contains 20 source-linked competitor pricing guides,
+Craft Collective's published prices and estimate guidance, six service-price
+comparison pages, and a searchable directory. Reviewed amounts, qualifications,
+and source URLs are recorded in `scripts/pricing-research.json`. Missing prices
+remain unknown; do not infer Craft hair rates from competitor menus.
+
+After reviewing and updating source evidence, regenerate pages with
+`python3 scripts/build-pricing-expansion.py`. The ordinary production build
+(`node scripts/build-pittsburgh-guides.mjs`) copies those pages and adds pricing
+pathways from all 20 salon comparisons plus the shared Resources footer.
+Run `python3 scripts/verify-pricing-expansion.py` after the production build to
+check the resulting pages, research rows, Craft menu entries and sitemap.
