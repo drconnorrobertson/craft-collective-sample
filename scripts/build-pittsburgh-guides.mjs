@@ -1,3 +1,4 @@
+import {buildSiteSearch} from './build-site-search.mjs';
 import {buildDiscoveryQuality} from './build-discovery-quality.mjs';
 import {buildPricingPathways} from './build-pricing-pathways.mjs';
 import {buildBuyerIntent} from './build-buyer-intent.mjs';
@@ -321,4 +322,5 @@ buildPricingPathways(ROOT,OUT);
 
 const {execFileSync}=await import('node:child_process');
 execFileSync(process.execPath,[path.join(ROOT,'scripts/search-intent.mjs'),'--write','--dist'],{cwd:ROOT,stdio:'inherit'});
+buildSiteSearch(ROOT,OUT);
 buildDiscoveryQuality(ROOT,OUT);

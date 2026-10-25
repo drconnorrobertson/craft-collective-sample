@@ -214,3 +214,21 @@ output. It checks pricing evidence, non-regressing sitemap dates, branch schema,
 booking-location choice, and three verified exact-duplicate redirects. Further
 local checks: `python3 scripts/verify-discovery-quality.py` and
 `python3 scripts/verify-pricing-expansion.py`.
+
+## Search and browse utilities
+
+The build creates `/search` and `/explore`. Search reads a fingerprinted static
+index of canonical, non-redirected, indexable pages only after a visitor enters
+a query. Services, pricing, studios and artists take precedence over general
+question articles. The index includes titles, descriptions and curated keywords;
+it does not scrape visitor data or query a third-party search API.
+
+`/search` is `noindex, follow` and excluded from sitemaps. `/explore` is a
+browsable HTML directory included in the sitemap and usable without JavaScript.
+Both are linked from the Resources footer and major entry pages.
+
+Search implementation: `scripts/build-site-search.mjs`,
+`scripts/site-search-core.mjs`, and `scripts/site-search-client.mjs`.
+`node scripts/verify-site-search.mjs` checks search ranking and aliases against
+the production index, record destinations, filters and utility indexing rules.
+The production build command runs this check before accepting a release.
