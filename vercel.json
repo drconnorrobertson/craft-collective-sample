@@ -94,11 +94,6 @@
       "permanent": true
     },
     {
-      "source": "/locations",
-      "destination": "/locations/north-hills-pittsburgh",
-      "permanent": true
-    },
-    {
       "source": "/team",
       "destination": "/meet-the-team",
       "permanent": true
@@ -262,9 +257,24 @@
       "source": "/post/how-much-does-balayage-and-highlights-cost-in-pittsburgh",
       "destination": "/post/how-much-does-balayage-highlights-or-color-cost-in-pittsburgh-salons",
       "permanent": true
+    },
+    {
+      "source": "/post/sewickley-s-luxury-salon-experience-sustainable-and-sophisticated-craft-collective-salon-group",
+      "destination": "/post/sewickleys-luxury-salon-experience-sustainable-and-sophisticated",
+      "permanent": true
+    },
+    {
+      "source": "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last-1",
+      "destination": "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last",
+      "permanent": true
+    },
+    {
+      "source": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite-craft-collective-salon-group",
+      "destination": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite",
+      "permanent": true
     }
   ],
-  "buildCommand": "node scripts/build-pittsburgh-guides.mjs",
+  "buildCommand": "node scripts/build-pittsburgh-guides.mjs && node scripts/verify-site-release.cjs",
   "outputDirectory": "dist",
   "installCommand": ""
 }

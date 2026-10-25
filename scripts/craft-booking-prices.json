@@ -1,0 +1,32 @@
+{
+ "checked":"2026-10-25",
+ "source":"https://phorest.com/book/salons/craftcollectivesalongroup",
+ "scope":"North Hills online booking menu only; selected public entries before choosing a stylist",
+ "method":"Read the public Haircuts, Color, Styling and Texture category lists in Craft's embedded Phorest booking menu. No service checkbox or appointment was selected.",
+ "rows":[
+  ["cut","Haircut","From $50","Confirm selected stylist"],
+  ["cut","Women's Haircut","From $55","Separate booking label"],
+  ["cut","Men's Haircut","From $30","Separate booking label"],
+  ["cut","Child's Haircut","From $25","Confirm age and scope"],
+  ["cut","Clipper Cut","From $25","Separate booking label"],
+  ["cut","Dry Cut","From $45","Confirm preparation and finish"],
+  ["cut","Long Cut","From $90","Separate booking label"],
+  ["cut","Barber Haircut","From $33","Different from the Barber Cut entry"],
+  ["root","Single Process","From $70","Starting price depends on desired result"],
+  ["root","All Over Color w/ Blowdry","From $140","Starting price depends on desired result"],
+  ["root","All Over Color w/ Cut","From $150","Starting price depends on desired result"],
+  ["balayage","Balayage w/ Blowdry","From $170","Starting price depends on desired result"],
+  ["balayage","Balayage w/ Cut","From $220","Starting price depends on desired result"],
+  ["highlights","Highlights w/ Blowdry","From $140","Starting price depends on desired result"],
+  ["highlights","Highlights w/ Cut","From $200","Starting price depends on desired result"],
+  ["root","Root Retouch","From $220","Distinct unhyphenated booking entry"],
+  ["root","Root-Retouch","From $140","Distinct hyphenated booking entry"],
+  ["gloss","Shine and Dust","$100 displayed","Confirm exact included services"],
+  ["gloss","Toner/R+Co Treatment/Trim","From $140","Package; not a toner-only quote"],
+  ["blowout","Blow Dry","From $40","Confirm styling finish"],
+  ["other","Updo","From $80","Confirm event and styling plan"],
+  ["smoothing","Brazilian Blowout","$350 displayed","Confirm chosen provider and final quote"]
+ ],
+ "excludedZeroEntries":["Perm","Tinsel"],
+ "exclusionReason":"A zero-dollar menu display does not establish a free completed service; these entries need direct confirmation."
+}

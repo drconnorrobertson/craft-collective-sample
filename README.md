@@ -195,3 +195,22 @@ After reviewing and updating source evidence, regenerate pages with
 pathways from all 20 salon comparisons plus the shared Resources footer.
 Run `python3 scripts/verify-pricing-expansion.py` after the production build to
 check the resulting pages, research rows, Craft menu entries and sitemap.
+
+## Local discovery and release checks
+
+`/locations` is the two-studio chooser; main navigation points there. Physical
+location pages each carry a distinct HairSalon entity with public address and
+phone details. `python3 scripts/build-local-discovery.py` refreshes those source
+pages and the booking-location choice from the checked-in studio information.
+
+`scripts/craft-booking-prices.json` records 22 selected North Hills starting-price
+entries read from the public Phorest booking menu on October 25, 2026. Keep
+similarly named entries distinct; do not infer Canonsburg rates or publish
+placeholder zero values as free completed services. Regenerate the pricing pages
+with `python3 scripts/build-pricing-expansion.py` after verifying changes.
+
+The production build runs `node scripts/verify-site-release.cjs` after generating
+output. It checks pricing evidence, non-regressing sitemap dates, branch schema,
+booking-location choice, and three verified exact-duplicate redirects. Further
+local checks: `python3 scripts/verify-discovery-quality.py` and
+`python3 scripts/verify-pricing-expansion.py`.

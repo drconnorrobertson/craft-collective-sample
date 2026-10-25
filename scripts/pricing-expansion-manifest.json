@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-24",
+  "date": "2026-10-25",
   "pages": [
     {
       "path": "/pricing/copacetic-beauty-lounge",
@@ -104,7 +104,7 @@
     {
       "path": "/pricing/craft-collective",
       "title": "Craft Collective Pricing: Services, Published Prices & Hair Estimates",
-      "description": "See Craft Collective published skincare, brow and lash prices, plus how to request hair-service estimates for North Hills and Canonsburg."
+      "description": "See Craft Collective North Hills haircut, color and styling starting prices, skincare rates, and guidance for confirming your artist and Canonsburg quote."
     },
     {
       "path": "/pricing/haircut-prices-pittsburgh",
@@ -144,5 +144,6 @@
   ],
   "salons": 20,
   "craftPublishedPriceRows": 19,
+  "craftBookingPriceRows": 22,
   "serviceComparisons": 6
 }

@@ -3,7 +3,7 @@ from pathlib import Path
 import html, json, re, xml.etree.ElementTree as ET
 R=Path(__file__).resolve().parents[1]
 D='https://www.craftcollectivesalongroup.com'
-DATE='2026-10-24'
+DATE='2026-10-25'
 template=(R/'guides/first-salon-visit-checklist-pittsburgh/index.html').read_text()
 records=[]
 def a(path,label): return f'<a href="{path}">{html.escape(label)}</a>'
@@ -16,10 +16,10 @@ def publish(slug,title,desc,body):
     for kind,key,value in [('name','description',desc),('property','og:title',title),('property','og:description',desc),('property','og:url',url)]:
         s=re.sub(r'(<meta '+kind+'="'+key+r'" content=")[^"]*(")',lambda m:m[1]+html.escape(value,quote=True)+m[2],s)
     s=re.sub(r'(<link rel="canonical" href=")[^"]*(")',lambda m:m[1]+url+m[2],s)
-    s=re.sub(r'<header class="archive-hero">.*?</header>','<header class="archive-hero"><p>'+a('/','Home')+' / '+a('/pricing','Salon pricing')+'</p><h1>'+html.escape(title.split(' | ')[0])+'</h1><p class="archive-meta">Craft Collective Salon Group · October 24, 2026</p></header>',s,flags=re.S)
+    s=re.sub(r'<header class="archive-hero">.*?</header>','<header class="archive-hero"><p>'+a('/','Home')+' / '+a('/pricing','Salon pricing')+'</p><h1>'+html.escape(title.split(' | ')[0])+'</h1><p class="archive-meta">Craft Collective Salon Group · Updated October 25, 2026</p></header>',s,flags=re.S)
     cta='<aside class="archive-cta"><h2>Find your next Craft appointment</h2>'+p('Explore '+a('/meet-the-team','our stylists')+', '+a('/hair-salon-gallery-pittsburgh','our work')+' and '+a('/hair-services-pittsburgh','services')+'. Book online for North Hills, or call 724-514-7231 for help with either location. Canonsburg is by appointment only.')+p(a('/book','View booking options'))+'</aside>'
     s=re.sub(r'<article class="archive-body">.*?</article>','<article class="archive-body">'+body+cta+'</article>',s,flags=re.S)
-    schema={'@context':'https://schema.org','@type':'Article','headline':title,'description':desc,'datePublished':DATE,'dateModified':DATE,'mainEntityOfPage':url,'author':{'@type':'Organization','name':'Craft Collective Salon Group','url':D},'publisher':{'@type':'Organization','name':'Craft Collective Salon Group','url':D}}
+    schema={'@context':'https://schema.org','@type':'Article','headline':title,'description':desc,'datePublished':'2026-10-24','dateModified':DATE,'mainEntityOfPage':url,'author':{'@type':'Organization','name':'Craft Collective Salon Group','url':D},'publisher':{'@type':'Organization','name':'Craft Collective Salon Group','url':D}}
     s=re.sub(r'<script type="application/ld\+json">.*?</script>','<script type="application/ld+json">'+json.dumps(schema,ensure_ascii=False)+'</script>',s,flags=re.S)
     f=R/'pricing'/slug/'index.html';f.parent.mkdir(parents=True,exist_ok=True);f.write_text(s)
     records.append({'path':'/pricing'+('/'+slug if slug else ''),'title':title,'description':desc})
@@ -29,6 +29,8 @@ def table(caption,heads,rows):
 research=json.loads((R/'scripts/pricing-research.json').read_text())
 salons=research['salons']
 assert len(salons)==20
+booking=json.loads((R/'scripts/craft-booking-prices.json').read_text())
+assert len(booking['rows'])==22
 
 def pricing_links():
     return section('Continue your comparison',ul([a('/pricing','Browse the salon pricing directory'),a('/pricing/craft-collective','Craft Collective prices and estimates'),a('/guides/salon-quote-comparison-tool','Compare two complete quotes'),a('/guides/pittsburgh-salon-alternatives','Explore salon alternatives')]))
@@ -41,7 +43,7 @@ for c in salons:
     body+=p('Pricing structure: '+html.escape(c['model'])+'. “Quote not established here” means the reviewed page did not establish a numerical quote for that item; it is not a claim that no price exists elsewhere. A plus sign or “from” amount is a starting figure, not a ceiling.')
     body+=section(c['focus'],p(html.escape(c['detail'])))
     body+=section('Request the complete appointment total',p('Send the salon a current photo, your recent color or treatment history and a description of the result you want. Say whether you are maintaining the current look or asking for a substantial change. Ask which artist and reservation fit that starting point, then request a complete estimate.')+ul(['Is the listed amount for my chosen stylist and appointment location?','Does the quote include consultation, toning, cutting and the finish I want?','What additional time, product or preparation could change the estimate?','Which follow-up services should I budget for after this visit?']))
-    body+=section('Compare with a Craft Collective appointment',p('Craft lists selected skincare, brow and lash prices on its '+a('/hair-services-pittsburgh','service menu')+'. Its reviewed hair menu does not establish fixed dollar quotes for most color, cut or extension appointments. '+a('/pricing/craft-collective','Craft’s pricing guide')+' separates published amounts from services needing an individual estimate.')+p('Use the same goal and inclusions when requesting a Craft quote. North Hills has online booking; Canonsburg is by appointment and should be confirmed by phone at 724-514-7231. A missing public number cannot be treated as zero or as evidence that one salon is less expensive.'))
+    body+=section('Compare with a Craft Collective appointment',p('Craft lists selected North Hills hair-service starting prices alongside skincare, brow and lash prices on its '+a('/hair-services-pittsburgh','service menu')+'. The public booking menu contains different service labels and provider-dependent starting amounts; confirm the exact reservation and complete quote. '+a('/pricing/craft-collective','Craft’s pricing guide')+' separates North Hills booking-menu examples from services needing an individual estimate.')+p('Use the same goal and inclusions when requesting a Craft quote. North Hills has online booking; Canonsburg is by appointment and should be confirmed by phone at 724-514-7231. A missing public number cannot be treated as zero or as evidence that one salon is less expensive.'))
     body+=section('Check the repeat-visit budget',p('Ask about maintenance after the initial result, including which smaller services might be needed between larger visits. For extensions, separate hair purchase, installation, adjustments and removal. Compare totals over the same period and keep optional purchases separate. Confirm deposits and cancellation terms before reserving; a deposit credited toward the service is not an extra service charge.'))
     body+=p(a(c['comparison'],'Read the '+c['name']+' vs. Craft Collective comparison')+'.')+pricing_links()
     publish(c['slug'],title,'Explore '+c['name']+' published prices, service inclusions and estimate questions. Compare the full appointment with Craft Collective.',body)
@@ -57,15 +59,16 @@ for block in re.findall(r'<div class="service-item">(.*?)</div>',menu,re.S):
         value=html.unescape(re.sub('<[^>]+>','',duration[1])).strip()
         if '$' in value:craft_rows.append((label,value))
 assert len(craft_rows)>=15
-body=p('Find Craft Collective’s published service prices and the next step for an individual hair-service estimate. Review the amounts listed on our services page below. For haircuts, color and extensions, request an individual quote matched to your stylist and service.')
+body=p('Find selected North Hills haircut and color starting prices from Craft’s public booking menu, plus skincare, brow and lash amounts from our services page. Match the booking label and provider to your appointment before confirming the total.')
 body+=section('Published prices from the Craft service menu',p('Source: '+a('/hair-services-pittsburgh','Craft Collective services')+', checked October 24, 2026. Confirm your provider, location and current reservation amount before booking.')+table('Craft Collective published prices',['Service','Menu amount and duration'],craft_rows))
-body+=section('Hair services that need an individual estimate',table('Hair-service pricing status',['Service','Current public-menu status','What to clarify'],[
-['Haircuts and styling','Durations listed; fixed dollar quote not established here','Stylist, cut, shampoo and finish'],['Balayage and highlights','Individual estimate needed','Coverage, tone, root work, cut and finish'],['Full color and root work','Individual estimate needed','Maintenance or transformation; complete inclusions'],['Gloss and toner','Individual estimate needed','Standalone or add-on; finish'],['Extensions','Consultation required','Hair, installation, upkeep and removal'],['Keratin and smoothing','Individual estimate needed','Specific treatment, time and aftercare'],['Nail appointments','Confirm chosen provider and service','Shape, removal, art and finish']]))
+body+=section('North Hills hair-service booking prices',p('Source: '+a(booking['source'],'Craft’s public North Hills booking menu')+', checked October 25, 2026. These are selected menu displays before choosing an artist. “From” amounts are starting prices, not a quote for every provider or result. Canonsburg scheduling and prices must be confirmed by phone.')+table('Selected North Hills booking-menu entries',['Booking service label','Published amount','Scope to confirm'],[(row[1],row[2],row[3]) for row in booking['rows']]))
+body+=section('Similar labels can describe different reservations',p('The menu includes both “Root Retouch” from $220 and “Root-Retouch” from $140. Keep those entries distinct and confirm which one fits your artist and goal. A cut added to color is also a different entry from a standalone haircut. Do not combine the lowest amounts from unrelated entries into a promised package.'))
+body+=section('Services still requiring confirmation',p('Ask for an individual extension plan, corrective-color assessment or Canonsburg quote. Confirm whether toning, cutting and finishing are included in any chosen reservation. Zero-dollar displays for some menu entries do not establish a free completed service; contact the salon about those items.'))
 body+=section('How to get an accurate hair quote',p('Explain your current length, density, recent color or treatments and desired result. Bring daylight photos and identify what you want to preserve. Ask for the service components, expected total, appointment time and upkeep plan. If a menu label is unfamiliar, call rather than choosing a shorter reservation that may not fit your goal.'))
 body+=section('Confirm the studio before booking',p('North Hills is at 2014D Babcock Boulevard, Pittsburgh, and offers online booking. Canonsburg is at 115 W Pike Street and is by appointment; call 724-514-7231. Confirm which studio and artist are on your reservation. A time shown online for North Hills is not a Canonsburg appointment.'))
 body+=section('Compare prices for the same work',p('A published skincare price does not establish a hair-service rate. Likewise, a competitor’s balayage starting amount does not establish the finished total for your hair. Use the same service brief and ask about toning, cutting and finishing at each salon. Our '+a('/guides/salon-quote-comparison-tool','quote worksheet')+' lets you compare the complete initial and maintenance estimates you actually receive.'))
 body+=pricing_links()
-publish('craft-collective','Craft Collective Pricing: Services, Published Prices & Hair Estimates','See Craft Collective published skincare, brow and lash prices, plus how to request hair-service estimates for North Hills and Canonsburg.',body)
+publish('craft-collective','Craft Collective Pricing: Services, Published Prices & Hair Estimates','See Craft Collective North Hills haircut, color and styling starting prices, skincare rates, and guidance for confirming your artist and Canonsburg quote.',body)
 
 service_info={
 'cut':('haircut-prices-pittsburgh','Pittsburgh Haircut Prices: Compare Published Salon Menus',
@@ -106,7 +109,7 @@ service_info={
 'Confirm when to arrive, whether to come with clean dry hair or expect a shampoo, and how long the visit takes. Ask about an additional service only after the salon has reserved enough time. A style for a wedding party has different scheduling needs from one everyday blowout. Compare the actual finish and provider you would book.')}
 for category,(slug,title,intro,heading,detail,heading2,detail2) in service_info.items():
     rows=[]
-    for c in salons:
+    for c in [{'name':'Craft Collective (North Hills)','slug':'craft-collective','source':booking['source'],'rows':booking['rows']},*salons]:
         for row in c['rows']:
             if row[0]==category:
                 rows.append((c,row))
@@ -117,14 +120,20 @@ for category,(slug,title,intro,heading,detail,heading2,detail2) in service_info.
         t+='<tr><th scope="row">'+a('/pricing/'+c['slug'],c['name'])+'<br>'+html.escape(row[1])+'</th><td>'+html.escape(row[2])+'</td><td>'+html.escape(row[3])+'. '+a(c['source'],'Official source')+'</td></tr>'
     body+=section('Published examples to compare',t+'</tbody></table></div>')
     body+=section(heading,p(detail))+section(heading2,p(detail2))
-    body+=section('What does Craft Collective charge?',p('Craft’s reviewed hair menu does not establish a fixed dollar quote for this appointment. Ask for the individual stylist, studio, full service scope and estimate. See '+a('/pricing/craft-collective','Craft’s published prices and hair-estimate guide')+'. North Hills can be booked online; call 724-514-7231 for Canonsburg or help choosing a reservation.'))
+    body+=section('What does Craft Collective charge?',p('Craft’s North Hills booking menu publishes selected starting prices. Match the exact service label and selected stylist, then confirm the full quote. See '+a('/pricing/craft-collective','Craft’s published prices and hair-estimate guide')+'. North Hills can be booked online; call 724-514-7231 for Canonsburg or help choosing a reservation.'))
     body+=section('Use the same service brief',ul(['Share your starting hair, recent service history and reference photographs.','Name the finish you want and the inclusions you expect.','Ask for the complete first visit and the suggested upkeep.','Confirm the artist, location and current policies before reserving.'])+p('Use the '+a('/guides/salon-quote-comparison-tool','quote worksheet')+' to compare actual proposals over the same period. Unknown costs remain unknown until the salon confirms them; they are not zero-dollar services.'))
     body+=pricing_links()
     publish(slug,title,'Compare selected published Pittsburgh '+category+' prices, service packages and estimate questions, with official sources and Craft booking guidance.',body)
 
+# Add a concise hair-price selection directly to the main service menu.
+f=R/'hair-services-pittsburgh/index.html';markup=f.read_text();markup=re.sub(r'<!-- cc:craft-booking-prices -->.*?<!-- /cc:craft-booking-prices -->','',markup,flags=re.S)
+selected=[row for row in booking['rows'] if row[1] in ["Haircut","Women's Haircut","Men's Haircut","Single Process","Balayage w/ Blowdry","Highlights w/ Blowdry","Blow Dry"]]
+block='<!-- cc:craft-booking-prices --><section class="archive-body" id="hair-booking-prices"><h2>North Hills hair-service starting prices</h2>'+p('Selected public '+a(booking['source'],'North Hills booking-menu')+' entries checked October 25, 2026. Confirm your service label, chosen artist and included finish. Call for Canonsburg quotes.')+table('Selected North Hills starting prices',['Booking label','Starting amount'],[(row[1],row[2]) for row in selected])+p(a('/pricing/craft-collective','See all published price examples and appointment qualifications'))+'</section><!-- /cc:craft-booking-prices -->'
+markup=markup.replace('<footer',block+'<footer',1);assert block in markup;f.write_text(markup)
+
 # Central directory links every new page and gives pricing questions one clear entry point.
 body=p('Find Pittsburgh salon pricing pages, compare published menu examples by service, and see which Craft Collective prices are already listed. Use this directory to gather the actual appointment details before comparing totals.')
-body+=section('Start with Craft Collective',p(a('/pricing/craft-collective','Craft Collective published prices and hair estimates')+' separates the skincare, brow and lash amounts on our menu from hair services requiring an individual quote. '+a('/guides/salon-quote-comparison-tool','Compare two complete salon quotes')+' once you have the inclusions and maintenance plan.'))
+body+=section('Start with Craft Collective',p(a('/pricing/craft-collective','Craft Collective published prices and hair estimates')+' includes North Hills haircut, color and styling starting prices alongside skincare, brow and lash amounts. Canonsburg quotes and custom work should be confirmed directly. '+a('/guides/salon-quote-comparison-tool','Compare two complete salon quotes')+' once you have the inclusions and maintenance plan.'))
 body+=section('Browse competitor pricing guides','<form id="pricing-filter" role="search"><label for="pricing-search">Search salons, areas or pricing structures</label><input type="search" id="pricing-search" aria-controls="pricing-list" placeholder="Try Wexford, hourly, packages or a salon name"><button type="reset" class="worksheet-button">Clear search</button><p id="pricing-count" role="status" aria-live="polite">20 salon pricing guides, listed alphabetically.</p></form><ul id="pricing-list" class="salon-directory">'+''.join('<li>'+a('/pricing/'+c['slug'],c['name']+' prices')+'<p>'+html.escape(c['area'])+' · '+html.escape(c['model'])+'</p></li>' for c in sorted(salons,key=lambda x:x['name'].casefold()))+'</ul><p id="pricing-empty" hidden>No pricing guides match this search. Clear the search to browse all salons.</p>')
 body+=section('Compare published prices by service',ul([a('/pricing/'+v[0],v[1]) for v in service_info.values()]))
 body+=section('How this directory treats prices',p('Each competitor page links the official menu or business booking page reviewed October 24, 2026. Starting figures, ranges, artist levels and exclusions remain attached to the published service. Conflicting amounts are identified rather than silently choosing the lower number. A quote not established on the reviewed page is not described as a free service or as proof that no pricing exists elsewhere.')+p('The service tables are selected examples, not a complete market survey. They do not establish an average Pittsburgh rate, a cheapest provider or a price advantage for Craft. A color package with finishing and a base lightening charge have different scope. Use the linked sources and ask the salon to confirm what applies to your own appointment.'))
@@ -160,5 +169,5 @@ f=R/'sitemap.xml';tree=ET.parse(f);root=tree.getroot()
 if D+'/salon-pricing-sitemap.xml' not in [n.text for n in root.findall('.//{'+NS+'}loc')]:
     node=ET.SubElement(root,'{'+NS+'}sitemap');ET.SubElement(node,'{'+NS+'}loc').text=D+'/salon-pricing-sitemap.xml'
 tree.write(f,encoding='UTF-8',xml_declaration=True)
-(R/'scripts/pricing-expansion-manifest.json').write_text(json.dumps({'date':DATE,'pages':records,'salons':len(salons),'craftPublishedPriceRows':len(craft_rows),'serviceComparisons':len(service_info)},indent=2)+'\n')
+(R/'scripts/pricing-expansion-manifest.json').write_text(json.dumps({'date':DATE,'pages':records,'salons':len(salons),'craftPublishedPriceRows':len(craft_rows),'craftBookingPriceRows':len(booking['rows']),'serviceComparisons':len(service_info)},indent=2)+'\n')
 print(f'Created {len(records)} pricing pages for {len(salons)} salons, with {len(craft_rows)} existing Craft price entries.')

@@ -10,7 +10,7 @@ const nextStep='<section data-service-quality><h2>Choose your studio and next st
 const grayPlan='<section data-gray-plan><h2>Your gray-blending appointment plan</h2><h3>Before booking and your first visit</h3><p>Decide whether you want to keep some gray visible, cover it or transition toward natural silver. Bring current photographs showing your part, hairline and lengths, plus reference pictures of the amount of silver you want. Share your salon and home-color history, especially repeated permanent color on the lengths. Ask which appointment fits that starting point before selecting a menu item.</p><h3>Fine strands and dense hair</h3><p>Explain strand thickness and overall density separately. With fine strands, discuss where lightness and contrast will preserve the appearance of fullness. With dense hair, show the underneath as well as the surface and ask how the placement and time estimate account for each section. The consultation should determine the plan rather than the hair label alone.</p><h3>Maintenance and growing out color</h3><p>Agree on the amount of contrast you are comfortable seeing as roots grow. Ask whether future visits would refresh tone, adjust placement or continue a transition. Photograph your roots in similar lighting between visits so the stylist can assess the change. Confirm a return plan that fits your budget and routine, including which appointment to book next.</p></section>';
 
 export function buildServiceQuality(out){
- let changed=0; const modified=new Set();
+ let changed=0; const modified=new Set(); const contentDates=new Map();
  function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())walk(file);else if(entry.name.endsWith('.html')){
   const route='/'+path.relative(out,file).replaceAll(path.sep,'/').replace(/\/index\.html$/,'').replace(/^index\.html$/,'');
   let html=fs.readFileSync(file,'utf8'),before=html;
@@ -29,13 +29,13 @@ export function buildServiceQuality(out){
    html=html.replace(/(<link\b[^>]*rel="canonical"[^>]*href=")[^"]*(")/,`$1${SITE+gray}$2`);
    html=html.replace('<article class="archive-body">','<article class="archive-body"><aside class="archive-cta"><h2>Read the complete gray-blending plan</h2><p>Booking, hair history, texture and upkeep are covered together in our <a href="'+gray+'">gray-blending service guide</a>.</p></aside>');
   }
-  if(html!==before){fs.writeFileSync(file,html);modified.add(route);changed++;}
+  if(html!==before){fs.writeFileSync(file,html);modified.add(route);const dates=[...html.matchAll(/"date(?:Published|Modified)"\s*:\s*"(\d{4}-\d{2}-\d{2})/g)].map(m=>m[1]);contentDates.set(route,[DATE,...dates].sort().at(-1));changed++;}
  }}}
  walk(out);
  const searchFile=path.join(out,'pittsburgh-hair-guide/search-index.json');
  const search=JSON.parse(fs.readFileSync(searchFile,'utf8')).filter(x=>!consolidated.has(x.path));
  for(const row of search){row.title=natural(row.title);if(row.path===gray)row.priority=40;}
  fs.writeFileSync(searchFile,JSON.stringify(search));
- for(const name of fs.readdirSync(out).filter(x=>x.endsWith('sitemap.xml'))){const file=path.join(out,name);let xml=fs.readFileSync(file,'utf8');xml=xml.replace(/<url>.*?<\/url>/gs,entry=>{const loc=entry.match(/<loc>(.*?)<\/loc>/)?.[1];const route=loc?.replace(SITE,'').replace(/\/$/,'')||'/';if(consolidated.has(route))return '';if(!modified.has(route))return entry;return entry.includes('<lastmod>')?entry.replace(/<lastmod>.*?<\/lastmod>/,`<lastmod>${DATE}</lastmod>`):entry.replace('</url>',`<lastmod>${DATE}</lastmod></url>`);});fs.writeFileSync(file,xml);}
+ for(const name of fs.readdirSync(out).filter(x=>x.endsWith('sitemap.xml'))){const file=path.join(out,name);let xml=fs.readFileSync(file,'utf8');xml=xml.replace(/<url>.*?<\/url>/gs,entry=>{const loc=entry.match(/<loc>(.*?)<\/loc>/)?.[1];const route=loc?.replace(SITE,'').replace(/\/$/,'')||'/';if(consolidated.has(route))return '';if(!modified.has(route))return entry;const existing=entry.match(/<lastmod>(.*?)<\/lastmod>/)?.[1]?.slice(0,10);const date=[DATE,contentDates.get(route),existing].filter(Boolean).sort().at(-1);return entry.includes('<lastmod>')?entry.replace(/<lastmod>.*?<\/lastmod>/,`<lastmod>${date}</lastmod>`):entry.replace('</url>',`<lastmod>${date}</lastmod></url>`);});fs.writeFileSync(file,xml);}
  console.log(JSON.stringify({serviceQuality:{updatedPages:changed,consolidatedGrayGuides:consolidated.size,date:DATE}}));
 }
