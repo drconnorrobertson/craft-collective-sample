@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-24",
+  "pages": [
+    {
+      "path": "/guides/craft-collective-vs-geno-levi-salon",
+      "title": "Craft Collective vs. Geno Levi Salon: McMurray and Canonsburg",
+      "description": "Compare Geno Levi Salon and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/craft-collective-vs-la-pomponnee",
+      "title": "Craft Collective vs. La Pomponn\u00e9e: McMurray and Mt. Lebanon",
+      "description": "Compare La Pomponn\u00e9e and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/craft-collective-vs-sognatore-salon",
+      "title": "Craft Collective vs. Sognatore Salon: Pittsburgh",
+      "description": "Compare Sognatore Salon and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/craft-collective-vs-salon-blanca",
+      "title": "Craft Collective vs. Salon Blanca: Seven Fields",
+      "description": "Compare Salon Blanca and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/craft-collective-vs-salon-vivace",
+      "title": "Craft Collective vs. Salon Vivace: Mt. Lebanon",
+      "description": "Compare Salon Vivace and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/craft-collective-vs-celestial-hair-studio",
+      "title": "Craft Collective vs. Celestial Hair Studio: North Hills Pittsburgh",
+      "description": "Compare Celestial Hair Studio and Craft Collective: published services, appointment differences, location choices and questions before booking."
+    },
+    {
+      "path": "/guides/balayage-vs-foilyage-pittsburgh",
+      "title": "Balayage vs. Foilyage: Choosing Your Pittsburgh Color Appointment",
+      "description": "Compare balayage and foilyage by placement, brightness, appointment scope and upkeep. Bring a result-focused brief to your Pittsburgh color consultation."
+    },
+    {
+      "path": "/guides/dry-cut-vs-wet-cut-pittsburgh",
+      "title": "Dry Cut vs. Wet Cut: Pittsburgh Haircut Consultation Guide",
+      "description": "Compare dry and wet haircut approaches, natural texture, preparation and finishing. Ask the right questions before reserving your Pittsburgh haircut."
+    },
+    {
+      "path": "/guides/salon-toner-vs-purple-shampoo",
+      "title": "Salon Toner vs. Purple Shampoo: What to Book or Ask About",
+      "description": "Understand salon toning versus purple shampoo maintenance. Compare your color goal, current tone and consultation needs before a Pittsburgh appointment."
+    },
+    {
+      "path": "/guides/canonsburg-mcmurray-salon-alternatives",
+      "title": "Canonsburg and McMurray Salon Alternatives & Comparisons",
+      "description": "Compare Canonsburg and McMurray salon options with Craft Collective. Explore specific salons, appointment locations, service scope and complete estimates."
+    },
+    {
+      "path": "/guides/south-hills-salon-alternatives",
+      "title": "South Hills Salon Alternatives & Comparisons",
+      "description": "Compare South Hills salon options with Craft Collective. Explore specific salons, appointment locations, service scope and complete estimates."
+    },
+    {
+      "path": "/guides/salon-quote-comparison-tool",
+      "title": "Salon Quote Comparison Worksheet | Pittsburgh Hair Appointments",
+      "description": "Compare two real salon quotes over the same maintenance period. Calculate entered costs and record service inclusions before booking your hair appointment."
+    },
+    {
+      "path": "/guides/pittsburgh-salon-alternatives",
+      "title": "Pittsburgh Salon Alternatives & Comparisons | Craft Collective",
+      "description": "Browse 23 Pittsburgh salon comparisons, Wexford and South Hills alternatives, technique guides and a quote worksheet to plan your next hair appointment."
+    }
+  ],
+  "directoryCount": 23,
+  "sources": [
+    "https://genolevisalon.com/services/",
+    "https://www.lapomponnee.com/",
+    "https://sognatoresalon.com/index.php/services/",
+    "https://www.salonblancapgh.com/",
+    "https://vivacelebo.com/",
+    "https://booksy.com/en-us/1754962_celestial-hair-studio_hair-salon_33045_pittsburgh"
+  ],
+  "technicalSources": [
+    "https://blog.wella.com/foilyage-ideas-and-techniques",
+    "https://www.hair.com/wet-vs-dry-cutting.html",
+    "https://www.redken.com/blog/what-is-hair-gloss.html?geo=false"
+  ]
+}
