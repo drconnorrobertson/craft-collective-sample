@@ -1,0 +1,6 @@
+fictional_id,component,minutes,meaning
+T1,Serviceestimate,210,Not an actualsalonestimate
+T2,Arrivalallowance,15,Personalplanningonly
+T3,Postvisitallowance,45,No trafficprediction
+T4,Totalpersonalblock,270,210plus15plus45
+T5,Departuremismatch,15,13:15deadlineversus13:30estimatedfinish
