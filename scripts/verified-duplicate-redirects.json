@@ -5,7 +5,8 @@
     "/post/sewickley-s-luxury-salon-experience-sustainable-and-sophisticated-craft-collective-salon-group": "/post/sewickleys-luxury-salon-experience-sustainable-and-sophisticated",
     "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last-1": "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last",
     "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite-craft-collective-salon-group": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite",
-    "/post/why-wexford-residents-love-sustainable-beauty-1": "/post/why-wexford-residents-love-sustainable-beauty"
+    "/post/why-wexford-residents-love-sustainable-beauty-1": "/post/why-wexford-residents-love-sustainable-beauty",
+    "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement"
   },
   "editorialConsolidations": [
     {
@@ -13,6 +14,12 @@
       "from": "/post/why-wexford-residents-love-sustainable-beauty-1",
       "to": "/post/why-wexford-residents-love-sustainable-beauty",
       "reason": "Same-intent Wexford articles reviewed; unsupported broad claims replaced with shared bounded questions. Text was not identical before this editorial consolidation."
+    },
+    {
+      "reviewed": "2026-10-26",
+      "from": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1",
+      "to": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement",
+      "reason": "Same face-framing consultation intent reviewed; different original text curated into bounded shared consultation questions. Not identical before curation; unsupported universal outcome, included-treatment, maintenance and environmental promises removed."
     }
   ]
 }
