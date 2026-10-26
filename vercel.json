@@ -277,6 +277,11 @@
       "source": "/post/why-wexford-residents-love-sustainable-beauty-1",
       "destination": "/post/why-wexford-residents-love-sustainable-beauty",
       "permanent": true
+    },
+    {
+      "source": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1",
+      "destination": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement",
+      "permanent": true
     }
   ],
   "buildCommand": "node scripts/build-pittsburgh-guides.mjs && node scripts/verify-site-release.cjs && node scripts/verify-site-search.mjs",
