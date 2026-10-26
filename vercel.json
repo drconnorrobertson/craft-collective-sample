@@ -272,6 +272,11 @@
       "source": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite-craft-collective-salon-group",
       "destination": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite",
       "permanent": true
+    },
+    {
+      "source": "/post/why-wexford-residents-love-sustainable-beauty-1",
+      "destination": "/post/why-wexford-residents-love-sustainable-beauty",
+      "permanent": true
     }
   ],
   "buildCommand": "node scripts/build-pittsburgh-guides.mjs && node scripts/verify-site-release.cjs && node scripts/verify-site-search.mjs",
