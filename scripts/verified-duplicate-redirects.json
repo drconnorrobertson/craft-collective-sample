@@ -6,7 +6,8 @@
     "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last-1": "/post/why-hair-color-fades-faster-in-pittsburgh-and-how-to-make-it-last",
     "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite-craft-collective-salon-group": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite",
     "/post/why-wexford-residents-love-sustainable-beauty-1": "/post/why-wexford-residents-love-sustainable-beauty",
-    "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement"
+    "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement",
+    "/post/haircut-faces-hape-northhills": "/post/haircut-face-shape-northhills"
   },
   "editorialConsolidations": [
     {
@@ -20,6 +21,12 @@
       "from": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1",
       "to": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement",
       "reason": "Same face-framing consultation intent reviewed; different original text curated into bounded shared consultation questions. Not identical before curation; unsupported universal outcome, included-treatment, maintenance and environmental promises removed."
+    },
+    {
+      "reviewed": "2026-10-30",
+      "from": "/post/haircut-faces-hape-northhills",
+      "to": "/post/haircut-face-shape-northhills",
+      "reason": "Both complete haircut/face-shape articles read; same consultation intent but different original text. Curated original bounded preference/routine questions replace rigid face categories, universal intervals and guaranteed outcomes. Not an automatic identical-text merge."
     }
   ]
 }
