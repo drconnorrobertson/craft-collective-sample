@@ -3577,3 +3577,6 @@ p, blockquote { text-wrap: pretty; }
 
 /* Honor reduced-motion preferences without repeating shortened animations. */
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-iteration-count: 1 !important; } }
+
+/* Profile without a supplied portrait. */
+.stylist-monogram{display:grid;place-items:center;min-height:20rem;background:#ede9e1;color:#765329;font-family:Georgia,serif;font-size:clamp(5rem,12vw,10rem)}

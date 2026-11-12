@@ -22,7 +22,7 @@ const first=query=>searchSite(records,query).results[0]?.path;
 assert.equal(first('balayage prices'),'/pricing/balayage-prices-pittsburgh');
 assert.equal(first('Canonsburg hours'),'/locations/canonsburg');
 assert.equal(first('haircut'),'/services/haircuts-pittsburgh');
-assert.equal(first('Sherry'),'/sherry-maiolini');
+assert.equal(first('Sherry'),'/team/sherry-maiolini');
 assert.equal(first('book'),'/book');
 assert(searchSite(records,'headspace pricing').results.some(x=>x.path==='/pricing/head-space-salon'));
 assert.equal(first('northhills hours'),'/locations/north-hills-pittsburgh');
