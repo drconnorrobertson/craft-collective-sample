@@ -267,9 +267,9 @@
   },
   {
     "stylist": "sherry-maiolini",
-    "instagram": null,
-    "source": null,
-    "status": "needs account confirmation",
+    "instagram": "https://www.instagram.com/sher.mai.hair/",
+    "source": "https://www.craftcollectivesalongroup.com/sherry-maiolini",
+    "status": "salon-published account",
     "checked": "2026-11-12"
   },
   {
@@ -282,7 +282,7 @@
   {
     "stylist": "kyra-poskey",
     "instagram": null,
-    "status": "needs account confirmation; roster has no individual bio",
+    "status": "needs account confirmation",
     "checked": "2026-11-12"
   }
 ]

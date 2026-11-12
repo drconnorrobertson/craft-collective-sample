@@ -20,7 +20,7 @@ s=re.sub(r'<!-- cc:newstylist -->.*?<!-- /cc:newstylist -->','',s,flags=re.S)
 s=re.sub(r'<!-- cc:assistants -->.*?<!-- /cc:assistants -->','',s,flags=re.S)
 hair_marker='<h3 class="section-label team-group">Hair</h3>\n    <div class="team-grid">'
 assert hair_marker in s
-s=s.replace(hair_marker,hair_marker+'<!-- cc:newstylist -->'+card('Kyra Poskey','Stylist','kyra-poskey',True)+'<!-- /cc:newstylist -->',1)
+s=s.replace(hair_marker,hair_marker+'<!-- cc:newstylist -->'+card('Kyra Poskey','Stylist','kyra-poskey',True).replace('href="/book">Check booking options', 'href="/team/kyra-poskey">View Profile')+'<!-- /cc:newstylist -->',1)
 assistants='<h3 class="section-label team-group" id="assistants-heading">Assistants</h3><div class="team-grid">'+''.join(card(n,'Assistant',n.lower()) for n in ['Kaylan','Ella','Luc'])+'</div>'
 marker='  </section>\n\n  <!-- PHILOSOPHY -->';assert marker in s
 s=s.replace(marker,'<!-- cc:assistants -->'+assistants+'<!-- /cc:assistants -->\n'+marker,1)
@@ -31,7 +31,7 @@ def schema_update(m):
     items=data.get('itemListElement',[])
     items=[i for i in items if i.get('item',{}).get('name') not in {n for n,_,_ in new_names}]
     for name,role,anchor in new_names:
-        items.append({'@type':'ListItem','position':len(items)+1,'item':{'@type':'Person','name':name,'jobTitle':role,'worksFor':{'@id':'https://www.craftcollectivesalongroup.com/#organization'},'url':'https://www.craftcollectivesalongroup.com/meet-the-team#'+anchor}})
+        items.append({'@type':'ListItem','position':len(items)+1,'item':{'@type':'Person','name':name,'jobTitle':role,'worksFor':{'@id':'https://www.craftcollectivesalongroup.com/#organization'},'url':('https://www.craftcollectivesalongroup.com/team/kyra-poskey' if anchor=='kyra-poskey' else 'https://www.craftcollectivesalongroup.com/meet-the-team#'+anchor)}})
     data['itemListElement']=items;data['numberOfItems']=len(items)
     return '<script type="application/ld+json">'+json.dumps(data,ensure_ascii=False)+'</script>'
 s=re.sub(r'<script type="application/ld\+json">(.*?)</script>',schema_update,s,flags=re.S)

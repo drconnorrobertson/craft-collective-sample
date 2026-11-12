@@ -289,7 +289,7 @@
       "permanent": true
     }
   ],
-  "buildCommand": "node scripts/build-pittsburgh-guides.mjs && node scripts/verify-site-release.cjs && node scripts/verify-site-search.mjs",
+  "buildCommand": "node scripts/build-pittsburgh-guides.mjs && node scripts/verify-site-release.cjs && node scripts/verify-site-search.mjs && node scripts/verify-stylist-pages.cjs",
   "outputDirectory": "dist",
   "installCommand": ""
 }

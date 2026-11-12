@@ -232,3 +232,20 @@ Search implementation: `scripts/build-site-search.mjs`,
 `node scripts/verify-site-search.mjs` checks search ranking and aliases against
 the production index, record destinations, filters and utility indexing rules.
 The production build command runs this check before accepting a release.
+
+## Individual artist profiles
+
+Every stylist and specialist on the current roster has a dedicated profile URL.
+Kyra Poskey's profile uses only her confirmed name and role until a personal bio
+and portrait are provided. Assistants remain in the team directory.
+
+Current profiles use ProfilePage structured data with a Person main entity.
+The canonical URL for Derek is `/derek-piekarski`; other current artist pages
+use `/team/<name>`. Legacy `/meet-the-team/<name>` biographies preserve their
+content and point their canonical at the current profile. Only preferred URLs
+appear in XML sitemaps. Instagram evidence and unresolved accounts are recorded
+in `research/stylist-instagram-audit.json`.
+
+The production build runs `node scripts/verify-stylist-pages.cjs` to catch missing
+roster pages, incorrect canonicals, missing sitemap entries, or disconnected
+social links. Use `--source` to validate before building.
