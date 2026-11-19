@@ -322,5 +322,6 @@ buildPricingPathways(ROOT,OUT);
 
 const {execFileSync}=await import('node:child_process');
 execFileSync(process.execPath,[path.join(ROOT,'scripts/search-intent.mjs'),'--write','--dist'],{cwd:ROOT,stdio:'inherit'});
+execFileSync(process.execPath,[path.join(ROOT,'scripts/brand-fit.cjs'),OUT],{cwd:ROOT,stdio:'inherit'});
 buildSiteSearch(ROOT,OUT);
 buildDiscoveryQuality(ROOT,OUT);
