@@ -89,6 +89,56 @@
   ],
   "redirects": [
     {
+      "source": "/selena-pace/",
+      "destination": "/team/selena-pace",
+      "permanent": true
+    },
+    {
+      "source": "/selena-pace",
+      "destination": "/team/selena-pace",
+      "permanent": true
+    },
+    {
+      "source": "/kayla-quinn/",
+      "destination": "/team/kayla-quinn",
+      "permanent": true
+    },
+    {
+      "source": "/kayla-quinn",
+      "destination": "/team/kayla-quinn",
+      "permanent": true
+    },
+    {
+      "source": "/sean-boyle/",
+      "destination": "/team/sean-boyle",
+      "permanent": true
+    },
+    {
+      "source": "/sean-boyle",
+      "destination": "/team/sean-boyle",
+      "permanent": true
+    },
+    {
+      "source": "/jess-mitsch/",
+      "destination": "/team/jess-mitsch",
+      "permanent": true
+    },
+    {
+      "source": "/jess-mitsch",
+      "destination": "/team/jess-mitsch",
+      "permanent": true
+    },
+    {
+      "source": "/greta-healy/",
+      "destination": "/team/greta-healy",
+      "permanent": true
+    },
+    {
+      "source": "/greta-healy",
+      "destination": "/team/greta-healy",
+      "permanent": true
+    },
+    {
       "source": "/services",
       "destination": "/hair-services-pittsburgh",
       "permanent": true
