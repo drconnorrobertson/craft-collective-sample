@@ -7,7 +7,8 @@
     "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite-craft-collective-salon-group": "/post/balayage-and-dimensional-color-in-sewickley-a-local-favorite",
     "/post/why-wexford-residents-love-sustainable-beauty-1": "/post/why-wexford-residents-love-sustainable-beauty",
     "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement-1": "/post/face-framing-highlights-in-north-hills-brightening-your-look-with-precision-placement",
-    "/post/haircut-faces-hape-northhills": "/post/haircut-face-shape-northhills"
+    "/post/haircut-faces-hape-northhills": "/post/haircut-face-shape-northhills",
+    "/post/is-pittsburgh-hard-water-ruining-your-hair-here-s-how-to-fix-it": "/post/how-to-manage-hard-water-effects-on-hair-in-the-pittsburgh-area"
   },
   "editorialConsolidations": [
     {
@@ -27,6 +28,12 @@
       "from": "/post/haircut-faces-hape-northhills",
       "to": "/post/haircut-face-shape-northhills",
       "reason": "Both complete haircut/face-shape articles read; same consultation intent but different original text. Curated original bounded preference/routine questions replace rigid face categories, universal intervals and guaranteed outcomes. Not an automatic identical-text merge."
+    },
+    {
+      "reviewed": "2026-11-22",
+      "from": "/post/is-pittsburgh-hard-water-ruining-your-hair-here-s-how-to-fix-it",
+      "to": "/post/how-to-manage-hard-water-effects-on-hair-in-the-pittsburgh-area",
+      "reason": "Both complete hard-water articles reviewed; overlapping intent with different original text. One sourced water-record/filter-claim/consultation guide replaces unsupported local diagnoses, fixed regimens and mineral-reduction promises. Original files retained in build-excluded scripts/editorial-archive/hard-water-originals-20261122.json."
     }
   ]
 }
