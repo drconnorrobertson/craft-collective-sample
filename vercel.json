@@ -89,6 +89,16 @@
   ],
   "redirects": [
     {
+      "source": "/post/is-pittsburgh-hard-water-ruining-your-hair-here-s-how-to-fix-it",
+      "destination": "/post/how-to-manage-hard-water-effects-on-hair-in-the-pittsburgh-area",
+      "permanent": true
+    },
+    {
+      "source": "/post/is-pittsburgh-hard-water-ruining-your-hair-here-s-how-to-fix-it/",
+      "destination": "/post/how-to-manage-hard-water-effects-on-hair-in-the-pittsburgh-area",
+      "permanent": true
+    },
+    {
       "source": "/selena-pace/",
       "destination": "/team/selena-pace",
       "permanent": true
